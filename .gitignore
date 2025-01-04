@@ -4,6 +4,7 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+<<<<<<< HEAD
 pnpm-debug.log*
 lerna-debug.log*
 
@@ -30,6 +31,8 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+=======
+>>>>>>> 8588221a3e5bd013189753122b5c1e4b1592de4d
 lerna-debug.log*
 .pnpm-debug.log*
 
@@ -153,4 +156,8 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .yarn/install-state.gz
+<<<<<<< HEAD
 .pnp.*
+=======
+.pnp.*
+>>>>>>> 8588221a3e5bd013189753122b5c1e4b1592de4d
