@@ -1,9 +1,13 @@
 export interface ActivityType {
-    name: string;
-    entries: Array<ActivityEntry>;
+    id: string;
+    title: string;
+    entries: Array<ActivityEntryType>;
 }
 
 export interface ActivityEntryType {
-    start?: Date | undefined;
-    end?: Date | undefined;
+    id: string;
+
+    startTime?: Date | undefined;
+    endTime?: Date | undefined;
+    running: boolean;
 }

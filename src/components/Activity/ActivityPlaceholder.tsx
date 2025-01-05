@@ -21,7 +21,7 @@ export default function ActivityPlaceholder() {
             </div>
 
             <div className="flex flex-col gap-1 ml-10">
-                <ActivityEntry start={start} end={end} />
+                {/*<ActivityEntry start={start} end={end} />*/}
             </div>
         </div>
     );

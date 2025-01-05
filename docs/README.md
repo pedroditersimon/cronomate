@@ -62,6 +62,3 @@
 ## Timer
 - Opcion para pausar todos los timers y reanudarlos donde quedaron
 - Opcion simple de agregar una entrada eligiendo la hora, sin darle a play a un Activity
-
-
-[Figma](https://www.figma.com/design/mCik4tfyXxZW6hpROCtION)
