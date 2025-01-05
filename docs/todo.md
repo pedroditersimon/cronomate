@@ -1,7 +1,7 @@
 
 ## Todo
 - [x] Implementar Redux.
-- [ ] Renombrar ActivityEntry por Record
+- [x] Renombrar ActivityEntry por Record
 - [ ] Palabras clave para los TimeInput como "ahora", "ya" y "now" que establezcan el tiempo a ahora
 - [ ] Pequeño calendario con el mes, botones para ir al mes anterior y un boton de hoy y ayer para establecer el dia, se despliega al hacer focus a un TimeInput.
 

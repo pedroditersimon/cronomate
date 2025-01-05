@@ -6,7 +6,7 @@ const initialState: Array<ActivityType> = [
     {
         id: "1",
         title: "Reunión",
-        entries: [
+        records: [
             {
                 id: "1",
                 startTime: new Date(new Date().getTime() - 2 * 60 * 60 * 1000), // Hace 2 horas
@@ -18,7 +18,7 @@ const initialState: Array<ActivityType> = [
     {
         id: "2",
         title: "Actividad",
-        entries: [
+        records: [
             {
                 id: "1",
                 startTime: new Date(new Date().getTime() - 3 * 60 * 60 * 1000), // Hace 3 horas

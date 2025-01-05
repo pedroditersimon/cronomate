@@ -1,6 +1,5 @@
 import './App.css'
 import Activity from './components/Activity/Activity';
-import ActivityPlaceholder from './components/Activity/ActivityPlaceholder';
 import Container from './layouts/Container';
 import useTodayActivities from './hooks/useTodayActivities';
 
@@ -16,7 +15,7 @@ function App() {
             onActivityChange={newActivity => setActivity(activity.id, newActivity)}
           />
         ))}
-        <ActivityPlaceholder />
+
       </Container>
     </div>
   )

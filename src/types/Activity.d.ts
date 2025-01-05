@@ -1,12 +1,11 @@
 export interface ActivityType {
     id: string;
     title: string;
-    entries: Array<ActivityEntryType>;
+    records: Array<RecordType>;
 }
 
-export interface ActivityEntryType {
+export interface RecordType {
     id: string;
-
     startTime?: Date | undefined;
     endTime?: Date | undefined;
     running: boolean;

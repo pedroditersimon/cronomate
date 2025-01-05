@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
-import { ActivityEntryType, ActivityType } from "../../types/Activity";
-import { getEntriesElapsedTime } from "../../utils/ActivityUtils";
+import { RecordType, ActivityType } from "../../types/Activity";
+import { getRecordsElapsedTime } from "../../utils/ActivityUtils";
 import { toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
-import ActivityEntry from "./ActivityEntry";
-import ClickableBtn from "../ClickableBtn";
+import Record from "./Record";
+import Clickable from "../Clickable";
 import clsx from "clsx";
-import HSeparator from "../HSeparator";
+import HSeparator from "../../layouts/HSeparator";
 import { generateId } from "../../utils/generateId";
 
 interface Props {
@@ -21,10 +21,10 @@ export default function Activity({ activity, onActivityChange }: Props) {
     // calculated states
     const [hasRunningEntry, totalElapsedTimeTxt] = useMemo(() => {
 
-        const totalElapsedTime = getEntriesElapsedTime(activity.entries);
+        const totalElapsedTime = getRecordsElapsedTime(activity.records);
         const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
 
-        const hasRunningEntry = activity.entries.some(entry => entry.running);
+        const hasRunningEntry = activity.records.some(record => record.running);
 
         return [hasRunningEntry, totalElapsedTimeTxt];
     }, [activity]);
@@ -34,17 +34,17 @@ export default function Activity({ activity, onActivityChange }: Props) {
         const now = new Date();
 
         if (hasRunningEntry) {
-            // set endTime to Now on running entries
-            const newEntries = activity.entries.map(entry => entry.running
-                ? ({ ...entry, endTime: now, running: false })
-                : entry
+            // set endTime to Now on running records
+            const newRecords = activity.records.map(record => record.running
+                ? ({ ...record, endTime: now, running: false })
+                : record
             );
-            onActivityChange({ ...activity, entries: newEntries });
+            onActivityChange({ ...activity, records: newRecords });
         }
         else {
-            // add new running entry
-            const newEntries: typeof activity.entries = [
-                ...activity.entries,
+            // add new running record
+            const newRecords: typeof activity.records = [
+                ...activity.records,
                 {
                     id: generateId(),
                     startTime: now,
@@ -52,16 +52,16 @@ export default function Activity({ activity, onActivityChange }: Props) {
                     running: true
                 }
             ];
-            onActivityChange({ ...activity, entries: newEntries });
+            onActivityChange({ ...activity, records: newRecords });
         }
     }
 
 
-    const handleSetEntry = (id: string, newEntry: ActivityEntryType) => {
-        const newEntries = activity.entries.map(entry =>
-            entry.id === id ? newEntry : entry // Reemplaza solo en el índice específico
+    const handleSetRecord = (id: string, newRecord: RecordType) => {
+        const newRecords = activity.records.map(record =>
+            record.id === id ? newRecord : record
         );
-        onActivityChange({ ...activity, entries: newEntries });
+        onActivityChange({ ...activity, records: newRecords });
     }
 
     const handleSetTitle = (newTitle: string) => {
@@ -93,7 +93,7 @@ export default function Activity({ activity, onActivityChange }: Props) {
                     />
                     <span>{totalElapsedTimeTxt}</span>
 
-                    <ClickableBtn
+                    <Clickable
                         onClick={handleRun}
                         children={hasRunningEntry
                             ? <StopIcon className="hover:text-red-400" />
@@ -103,11 +103,11 @@ export default function Activity({ activity, onActivityChange }: Props) {
             </div>
 
             <div className="flex flex-col gap-1 ml-6">
-                {activity.entries.map(entry => <>
-                    <ActivityEntry
-                        key={entry.id}
-                        entry={entry}
-                        onEntryChange={newEntry => handleSetEntry(entry.id, newEntry)}
+                {activity.records.map(record => <>
+                    <Record
+                        key={record.id}
+                        record={record}
+                        onRecordChange={newRecord => handleSetRecord(record.id, newRecord)}
                     />
                     <HSeparator />
                 </>)}
