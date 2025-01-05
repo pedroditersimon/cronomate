@@ -6,6 +6,7 @@
 
 #### Vista jornada
 - [ ] Timer jornada.
+    - [ ] Funciones de `play` y `stop`.
 - [x] Listado de actividades y records con su timer.
 - [ ] Placeholder de actividad para crear nuevas.
 - [ ] Actividad "Sin registrar"
@@ -14,7 +15,7 @@
 
 
 #### Actividad (Activity)
-- [ ] funciones de `play`, `pause` y `stop`.
+- [ ] funciones de `play` y `stop`.
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
 - [ ] Las pausas se registran como nuevas entradas.
 
@@ -42,3 +43,7 @@
 #### Recomendaciones
 - [ ] Crear una tarea con el mismo nombre de una existe, agrega una entrada a la existente.
 - [ ] Poder configurar formato de TimeInput si 24 (H:MM am/pm) o 12 (HH:MM) horas.
+
+
+#### Estilos
+- [ ] Implementar un slice de temas y colores, que tenga diferentes temas como dark, light y variantes. Ademas que este se utilize a traves de un hook que contenga un useEffect para re-renderizar el componente si el tema cambia.
