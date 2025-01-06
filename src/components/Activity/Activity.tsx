@@ -12,9 +12,10 @@ import { generateId } from "../../utils/generateId";
 interface Props {
     activity: ActivityType;
     onActivityChange: (newActivity: ActivityType) => void;
+    onTitleConfirm?: () => void;
 }
 
-export default function Activity({ activity, onActivityChange }: Props) {
+export default function Activity({ activity, onActivityChange, onTitleConfirm }: Props) {
     // local states
     const [focused, setFocused] = useState(false);
 
@@ -31,7 +32,7 @@ export default function Activity({ activity, onActivityChange }: Props) {
 
 
     const handleRun = () => {
-        const now = new Date();
+        const now = new Date().getTime();
 
         if (hasRunningEntry) {
             // set endTime to Now on running records
@@ -74,43 +75,55 @@ export default function Activity({ activity, onActivityChange }: Props) {
                 <CircleIcon
                     className={clsx({
                         "bg-red-400": hasRunningEntry,
-                        "bg-gray-400": !hasRunningEntry
+                        "bg-gray-600": !hasRunningEntry
                     })}
                 />
                 <div
-                    className={clsx("flex flex-row gap-1 w-full box-border rounded-lg pl-2", {
-                        "bg-red-200": hasRunningEntry,
-                        "bg-gray-200": focused,
-                        "hover:bg-gray-200": !hasRunningEntry,
+                    className={clsx("flex flex-row gap-1 w-full box-border rounded-md pl-2", {
+                        "bg-red-400": hasRunningEntry,
+                        "bg-gray-700": focused,
+                        "hover:bg-gray-700": !hasRunningEntry,
                     })}
                 >
                     <input
                         className="bg-transparent outline-none flex-grow"
                         value={activity.title}
-                        onChange={(e) => handleSetTitle(e.target.value)}
+                        onChange={e => handleSetTitle(e.target.value)}
                         onFocus={() => setFocused(true)}
-                        onBlur={() => setFocused(false)}
+
+                        // on confirm input
+                        onBlur={() => {
+                            setFocused(false);
+                            if (onTitleConfirm) onTitleConfirm();
+                        }}
+                        onKeyUp={e => {
+                            if (e.key !== "Enter") return;
+                            setFocused(false);
+                            e.currentTarget.blur();
+                        }}
                     />
                     <span>{totalElapsedTimeTxt}</span>
 
                     <Clickable
                         onClick={handleRun}
                         children={hasRunningEntry
-                            ? <StopIcon className="hover:text-red-400" />
+                            ? <StopIcon className="hover:text-gray-600" />
                             : <PlayIcon className="hover:text-red-400" />}
                     />
                 </div>
             </div>
 
+            <HSeparator />
             <div className="flex flex-col gap-1 ml-6">
-                {activity.records.map(record => <>
+                {activity.records.map((record, i) => <>
                     <Record
                         key={record.id}
                         record={record}
                         onRecordChange={newRecord => handleSetRecord(record.id, newRecord)}
                     />
-                    <HSeparator />
-                </>)}
+                    {i < activity.records.length - 1 && <HSeparator />}
+                </>
+                )}
             </div>
         </div>
     );

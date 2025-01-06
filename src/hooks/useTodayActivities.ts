@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setActivity, } from "../redux/slices/todayActivities";
+import { addNewActivity, setActivity, } from "../redux/slices/todayActivities";
 import { useTypedSelector } from "./useTypedSelector";
 import { ActivityType } from "../types/Activity";
 
@@ -11,5 +11,9 @@ export default function useTodayActivities() {
         dispatch(setActivity({ id, newActivity }));
     }
 
-    return { activities, setActivity: _setActivity };
+    const _addNewActivity = (newActivity: ActivityType) => {
+        dispatch(addNewActivity({ newActivity }));
+    }
+
+    return { activities, setActivity: _setActivity, addNewActivity: _addNewActivity };
 }

@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActivityType } from "../../types/Activity";
+import { generateId } from "../../utils/generateId";
 
 // 1. Estado incial
 const initialState: Array<ActivityType> = [
@@ -9,8 +10,8 @@ const initialState: Array<ActivityType> = [
         records: [
             {
                 id: "1",
-                startTime: new Date(new Date().getTime() - 2 * 60 * 60 * 1000), // Hace 2 horas
-                endTime: new Date(), // Hora actual
+                startTime: new Date(new Date().getTime() - 2 * 60 * 60 * 1000).getTime(), // Hace 2 horas
+                endTime: new Date().getTime(), // Hora actual
                 running: true
             }
         ]
@@ -21,14 +22,14 @@ const initialState: Array<ActivityType> = [
         records: [
             {
                 id: "1",
-                startTime: new Date(new Date().getTime() - 3 * 60 * 60 * 1000), // Hace 3 horas
-                endTime: new Date(new Date().getTime() - 1 * 60 * 60 * 1000),
+                startTime: new Date(new Date().getTime() - 3 * 60 * 60 * 1000).getTime(), // Hace 3 horas
+                endTime: new Date(new Date().getTime() - 1 * 60 * 60 * 1000).getTime(),
                 running: false
             },
             {
                 id: "2",
-                startTime: new Date(new Date().getTime() - 1 * 60 * 60 * 1000), // Hace 3 horas
-                endTime: new Date(),
+                startTime: new Date(new Date().getTime() - 1 * 60 * 60 * 1000).getTime(), // Hace 3 horas
+                endTime: new Date().getTime(),
                 running: false
             }
         ]
@@ -48,6 +49,11 @@ const todayActivitiesSlice = createSlice({
             return state.map(activity =>
                 activity.id === id ? newActivity : activity
             );
+        },
+        addNewActivity: (state, action: PayloadAction<{ newActivity: ActivityType }>) => {
+            const { newActivity } = action.payload;
+            // TODO: check if exists another activity with given id
+            return [...state, newActivity];
         }
     },
 });
@@ -56,7 +62,7 @@ const todayActivitiesSlice = createSlice({
 export { todayActivitiesSlice };
 
 // 5. Exportamos las acciones (reducers)
-export const { setActivity } = todayActivitiesSlice.actions;
+export const { setActivity, addNewActivity } = todayActivitiesSlice.actions;
 
 // 6. Exportamos el reducer para configurar la Store
 export const todayActivitiesReducer = todayActivitiesSlice.reducer;

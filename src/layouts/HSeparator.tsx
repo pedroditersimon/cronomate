@@ -1,3 +1,3 @@
-export default function HSeparator() {
-    return (<div className="w-[95%] self-center h-0.5 bg-gray-200" />);
+export default function HSeparator({ className }: { className?: string }) {
+    return (<div className={"w-fullself-center h-[1px] rounded bg-gray-600 " + className} />);
 }

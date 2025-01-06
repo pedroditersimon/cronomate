@@ -4,8 +4,8 @@ import useTimer from "../hooks/useTimer";
 import clsx from "clsx";
 
 interface Props {
-    time?: Date | undefined;
-    onTimeChange?: (newState: Date | undefined) => void;
+    time?: Date;
+    onTimeChange?: (newState: Date) => void;
     running?: boolean;
 }
 
@@ -19,7 +19,7 @@ export function TimeInput({ time, onTimeChange, running }: Props) {
 
     useTimer(() => {
         if (onTimeChange) onTimeChange(new Date());
-        console.log("timer");
+        console.log("TimeInput timer");
     }, 1000, running);
 
     const confirmTime = useCallback(() => {
@@ -29,30 +29,31 @@ export function TimeInput({ time, onTimeChange, running }: Props) {
         if (onTimeChange) onTimeChange(newTime);
     }, [formattedTime, time, onTimeChange]);
 
-    const colorVariant = running ? "red-200" : "gray-200";
-
     return (
         <div
-            className={clsx(`flex flex-row justify-center rounded-lg hover:bg-${colorVariant}`, {
-                "bg-red-200": running,
+            className={clsx(`flex flex-row justify-center rounded-md hover:bg-gray-700`, {
+                "text-red-400 hover:bg-red-400 hover:text-white": running
             })}
         >
             <input
-                className={clsx(`max-w-14 bg-transparent outline-none text-center text-${colorVariant}`, {
+                className={clsx(`max-w-12 bg-transparent outline-none text-center`, {
                     "hover:cursor-text": focused,
                     "hover:cursor-pointer": !focused,
                 })}
 
                 value={formattedTime}
-                onChange={(e) => setFormattedTime(e.target.value)}
                 maxLength={5}
+                onChange={(e) => setFormattedTime(e.target.value)}
                 onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select()} // select all text on click
+                onFocus={() => setFocused(true)}
 
                 // on confirm input
                 onBlur={() => { confirmTime(); setFocused(false); }}
-                onKeyUp={(e) => e.key === "Enter" && confirmTime()}
-
-                onFocus={() => setFocused(true)}
+                onKeyUp={e => {
+                    if (e.key !== "Enter") return;
+                    confirmTime();
+                    e.currentTarget.blur();
+                }}
             />
         </div>
     );

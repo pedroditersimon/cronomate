@@ -6,7 +6,7 @@ export interface ActivityType {
 
 export interface RecordType {
     id: string;
-    startTime?: Date | undefined;
-    endTime?: Date | undefined;
+    startTime?: number; // Date
+    endTime?: number;   // Date
     running: boolean;
 }

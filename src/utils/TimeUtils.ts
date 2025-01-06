@@ -1,4 +1,8 @@
 
+export function toDate(timeStamp: number | undefined) {
+  return new Date(timeStamp || 0);
+}
+
 export function to12HourFormat(time: Date) {
   let hours = time.getHours();
   const minutes = time.getMinutes();
