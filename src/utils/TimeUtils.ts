@@ -1,5 +1,7 @@
 
-export function toDate(timeStamp: number | undefined) {
+export function toDate(timeStamp: number | undefined, nowOnUndefined: boolean = true) {
+  if (!timeStamp && nowOnUndefined)
+    return new Date();
   return new Date(timeStamp || 0);
 }
 
@@ -48,7 +50,10 @@ export function toElapsedHourMinutesFormat(elapsedTime: number) {
   return `${hoursPart}${minutesPart}`.trim();
 }
 
-export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: Date | undefined): Date {
+export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: number): Date | undefined {
+  // no contiene numeros
+  if (!/\d/.test(timeTxt)) return undefined;
+
   // Normalizar el formato: eliminar espacios múltiples y convertir caracteres no numéricos (incluidos espacios) a ":"
   let normalizedTime = timeTxt.trim().replace(/[^0-9]/g, ":");
 
@@ -71,7 +76,7 @@ export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: Date |
   const minutes = Math.max(0, Math.min(parsedMinutes, 59));
 
   // Crear un NUEVO objeto Date configurado a la hora indicada
-  const time = new Date(baseTime?.getTime() || 0);
+  const time = new Date(baseTime || new Date());
   time.setHours(hours);
   time.setMinutes(minutes);
   time.setSeconds(0);
@@ -79,3 +84,32 @@ export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: Date |
 
   return time;
 }
+
+
+// Function to check if the time is in the past
+export function isPast(time: number | undefined): boolean {
+  if (time === undefined) return false;
+  const elapsedTime = getElapsedTime(toDate(time), new Date());
+
+  // Check if the time is in the past
+  return elapsedTime < 0;
+}
+
+// Function to check if the time is within 1 second of now
+export function isNow(time: number | undefined, offsetSeconds: number = 1): boolean {
+  if (time === undefined) return false;
+  const elapsedTime = getElapsedTime(toDate(time), new Date());
+
+  // Check if the time is within the offset in seconds
+  return elapsedTime >= 0 && elapsedTime < offsetSeconds * 1000;
+}
+
+// Function to check if the time is now or in the future
+export function isNowOrFuture(time: number | undefined): boolean {
+  if (time === undefined) return false;
+  const elapsedTime = getElapsedTime(toDate(time), new Date());
+
+  // Check if the time is now or in the future
+  return elapsedTime >= 0;
+}
+

@@ -1,6 +1,6 @@
 import { CircleIcon } from "../../assets/Icons";
 import { TimeInput } from "../TimeInput";
-import { getElapsedTime, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { getElapsedTime, isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import type { RecordType } from "../../types/Activity";
 import { useMemo } from "react";
 import clsx from "clsx";
@@ -34,13 +34,17 @@ export default function Record({ record, onRecordChange: onRecordChange }: Props
                 className={clsx("flex flex-row gap-1 w-full rounded-lg pr-2")}
             >
                 <TimeInput
-                    time={toDate(record.startTime)}
-                    onTimeChange={newStartTime => onRecordChange({ ...record, startTime: newStartTime.getTime() })}
+                    time={record.startTime}
+                    onTimeChange={newStartTime => onRecordChange({ ...record, startTime: newStartTime })}
                 />
                 -
                 <TimeInput
-                    time={toDate(record.endTime)}
-                    onTimeChange={newEndTime => onRecordChange({ ...record, endTime: newEndTime.getTime() })}
+                    time={record.endTime}
+                    onTimeChange={newEndTime => onRecordChange({
+                        ...record,
+                        endTime: newEndTime,
+                        running: isNow(newEndTime) && record.running // Stop running if time has changed
+                    })}
                     running={record.running}
                 />
 

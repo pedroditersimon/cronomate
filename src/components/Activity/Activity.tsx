@@ -2,12 +2,13 @@ import { useMemo, useState } from "react";
 import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
 import { getRecordsElapsedTime } from "../../utils/ActivityUtils";
-import { toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { isNow, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import Record from "./Record";
 import Clickable from "../Clickable";
 import clsx from "clsx";
 import HSeparator from "../../layouts/HSeparator";
 import { generateId } from "../../utils/generateId";
+import { findLast } from "lodash";
 
 interface Props {
     activity: ActivityType;
@@ -20,41 +21,53 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
     const [focused, setFocused] = useState(false);
 
     // calculated states
-    const [hasRunningEntry, totalElapsedTimeTxt] = useMemo(() => {
+    const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {
 
         const totalElapsedTime = getRecordsElapsedTime(activity.records);
         const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
 
-        const hasRunningEntry = activity.records.some(record => record.running);
+        const hasRunningRecords = activity.records.some(record => record.running);
 
-        return [hasRunningEntry, totalElapsedTimeTxt];
+        return [hasRunningRecords, totalElapsedTimeTxt];
     }, [activity]);
 
 
     const handleRun = () => {
         const now = new Date().getTime();
 
-        if (hasRunningEntry) {
+        if (hasRunningRecords) {
             // set endTime to Now on running records
             const newRecords = activity.records.map(record => record.running
                 ? ({ ...record, endTime: now, running: false })
                 : record
             );
             onActivityChange({ ...activity, records: newRecords });
+            return; // dont do more
         }
-        else {
-            // add new running record
-            const newRecords: typeof activity.records = [
-                ...activity.records,
-                {
-                    id: generateId(),
-                    startTime: now,
-                    endTime: now,
-                    running: true
-                }
-            ];
-            onActivityChange({ ...activity, records: newRecords });
+
+        // Find the last resumable record (within 2 seconds of current time) 
+        const lastResumableRecord = findLast(activity.records, record => isNow(record.endTime, 120));
+
+        // Resume running the last record if found
+        if (lastResumableRecord) {
+            handleSetRecord(lastResumableRecord.id, {
+                ...lastResumableRecord,
+                running: true
+            });
+            return; // dont do more
         }
+
+        // If no resumable records, add a new running record
+        const newRecords: typeof activity.records = [
+            ...activity.records,
+            {
+                id: generateId(),
+                startTime: now,
+                endTime: now,
+                running: true
+            }
+        ];
+        onActivityChange({ ...activity, records: newRecords });
     }
 
 
@@ -74,15 +87,15 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
             <div className="flex flex-row gap-1">
                 <CircleIcon
                     className={clsx({
-                        "bg-red-400": hasRunningEntry,
-                        "bg-gray-600": !hasRunningEntry
+                        "bg-red-400": hasRunningRecords,
+                        "bg-gray-600": !hasRunningRecords
                     })}
                 />
                 <div
                     className={clsx("flex flex-row gap-1 w-full box-border rounded-md pl-2", {
-                        "bg-red-400": hasRunningEntry,
+                        "bg-red-400": hasRunningRecords,
                         "bg-gray-700": focused,
-                        "hover:bg-gray-700": !hasRunningEntry,
+                        "hover:bg-gray-700": !hasRunningRecords,
                     })}
                 >
                     <input
@@ -106,7 +119,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
 
                     <Clickable
                         onClick={handleRun}
-                        children={hasRunningEntry
+                        children={hasRunningRecords
                             ? <StopIcon className="hover:text-gray-600" />
                             : <PlayIcon className="hover:text-red-400" />}
                     />

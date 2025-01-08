@@ -8,5 +8,5 @@ export interface RecordType {
     id: string;
     startTime?: number; // Date
     endTime?: number;   // Date
-    running: boolean;
+    running?: boolean;
 }

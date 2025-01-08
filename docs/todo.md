@@ -1,3 +1,6 @@
+- agreagr registro de pausas, que no son facturables. pero te muestras las pausas que tuviste, hoy por ejemplo tengo casi 40min de pausa
+
+
 
 ## Todo
 - [x] Implementar Redux.
@@ -9,6 +12,10 @@
     - [ ] Funciones de `play` y `stop`.
 - [x] Listado de actividades y records con su timer.
 - [ ] Placeholder de actividad para crear nuevas.
+    - [ ] Al hacer focus, desplegar un record vacio configurable
+    - [x] Si el endTime se confirma vacio, la actividad se crea corriendo.
+    - [ ] Si se presiona el boton de run, inevitablemente la actividad se crea corriendo.
+    - [ ] Si el record tiene valores ingresados, no vuelve a ocultarse.
 - [ ] Actividad "Sin registrar"
     - [ ] Se puede asignar a otra Actividad con un menu.
     - [ ] Se puede asignar a otra Actividad con arrastre.
@@ -21,15 +28,16 @@
 - [ ] Eliminar las entradas 
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
 - [ ] Si se da a play, buscar Record con endTime menor a 1-2 minutos de now y continuarla.
+- [ ] Ocultar/Contraer el listado de Records.
 
 #### Entradas (Record)
 - [x] input de hora inicio y fin, que que acepte cualquier formato (15.30, 5:24pm, 00-48am).
-- [ ] El Record deja de correr si se confirma un TimeInput.
+- [x] El Record deja de correr si se confirma un cambio en TimeInput, excepto que siga siendo now.
 - [ ] Boton para eliminar entrada
 
 #### input de hora (TimeInput)
 - [ ] No se actualiza si se esta haciendo focus.
-- [ ] Palabras clave como "ahora", "ya" y "now" que establezcan el tiempo a ahora
+- [ ] Palabras clave como "ahora", "ya" y "now" que establezcan el tiempo a ahora.
 - [ ] Al hacer focus desplegar un pequeño calendario con el mes, botones para ir al mes anterior y un boton de hoy y ayer para establecer el dia.
 
 
@@ -48,7 +56,7 @@
 
 
 #### Bugs
-- [ ] Al crear una nueva actividad, corre pero no se actualiza el timer.
+- [ ] Al crear una nueva actividad con el placeholder, corre pero no se actualiza el timer.
 
 
 #### Estilos

@@ -3,6 +3,7 @@ import { ActivityType } from "../../types/Activity";
 import Activity from "./Activity";
 import { generateId } from "../../utils/generateId";
 import clsx from "clsx";
+import Record from "./Record";
 
 interface Props {
     onActivityCreated: (newActivity: ActivityType) => void;
@@ -10,7 +11,7 @@ interface Props {
 
 const activityMock: ActivityType = {
     id: "activityMock",
-    records: [],
+    records: [{ id: "recordMock", running: false }],
     title: "Crear actividad"
 };
 
@@ -26,23 +27,25 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
 
         const now = new Date().getTime();
 
-        // crear nuevo activity con record corriendo
+        // crear nuevo activity
+        const newActivityRecord = newActivity.records[0];
         const newActivityWithRecord = {
             id: generateId(),
             title: newActivity.title,
             records: [{
                 id: generateId(),
-                startTime: now,
-                endTime: now,
-                running: true
+                startTime: newActivityRecord.startTime || now,
+                endTime: newActivityRecord.endTime || now,
+                running: !newActivityRecord.endTime,
             }]
         };
-        console.log("crear el activity");
+
         onActivityCreated(newActivityWithRecord);   // crear el activity
         setActivity(activityMock);                  // reset activity
     }
 
     const handleSetActivity = (newActivity: ActivityType) => {
+        /*
         // Es necesario ingresar un titulo
         if (newActivity.title === activityMock.title) return;
 
@@ -51,7 +54,7 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
             handleCreateActivity(newActivity); // crear el activity
             return;
         }
-
+*/
         // Seguir actualizando el estado local
         setActivity(newActivity);
     }
