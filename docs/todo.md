@@ -5,11 +5,18 @@
 ## Todo
 - [x] Implementar Redux.
 - [x] Renombrar ActivityEntry por Record.
-
+- [ ] Si se cierra la app, todos los timers se hacen stop y se guarda el estado en local storage.
+- [ ] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
 
 #### Vista jornada
 - [ ] Timer jornada.
-    - [ ] Funciones de `play` y `stop`.
+    - [ ] Boton de `play` y `stop`.
+    - [ ] Barra de progreso con tiempo transcurrido.
+    - [ ] Hacerlo clickeable y te desbliegue un rango de inicio a fin.
+    - [ ] La primera vez que haces play 
+    - [ ] Al dar stop al timer jornada, todas las actividad corriendo se hacen stop.
+    - [x] Al darle a play al timer jornada, registrar una pausa desde el endTime a now.
+    - [ ] (!) Al darle play a otra actividad el timer jornada, tambien se da a play.
 - [x] Listado de actividades y records con su timer.
 - [ ] Placeholder de actividad para crear nuevas.
     - [ ] Al hacer focus, desplegar un record vacio configurable
@@ -19,7 +26,7 @@
 - [ ] Actividad "Sin registrar"
     - [ ] Se puede asignar a otra Actividad con un menu.
     - [ ] Se puede asignar a otra Actividad con arrastre.
-
+- [ ] Las actividades se ordenan por startTime
 
 #### Actividad (Activity)
 - [ ] funciones de `play` y `stop`.
@@ -29,6 +36,7 @@
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
 - [ ] Si se da a play, buscar Record con endTime menor a 1-2 minutos de now y continuarla.
 - [ ] Ocultar/Contraer el listado de Records.
+- [ ] Las entradas se ordenan por startTime
 
 #### Entradas (Record)
 - [x] input de hora inicio y fin, que que acepte cualquier formato (15.30, 5:24pm, 00-48am).

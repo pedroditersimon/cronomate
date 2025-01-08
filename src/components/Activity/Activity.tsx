@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
 import { getRecordsElapsedTime } from "../../utils/ActivityUtils";
-import { isNow, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import Record from "./Record";
 import Clickable from "../Clickable";
 import clsx from "clsx";
@@ -33,7 +33,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
 
 
     const handleRun = () => {
-        const now = new Date().getTime();
+        const now = toDate().getTime();
 
         if (hasRunningRecords) {
             // set endTime to Now on running records
@@ -46,7 +46,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
         }
 
         // Find the last resumable record (within 2 seconds of current time) 
-        const lastResumableRecord = findLast(activity.records, record => isNow(record.endTime, 120));
+        const lastResumableRecord = findLast(activity.records, record => isNow(record.endTime, 60));
 
         // Resume running the last record if found
         if (lastResumableRecord) {
@@ -120,8 +120,8 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
                     <Clickable
                         onClick={handleRun}
                         children={hasRunningRecords
-                            ? <StopIcon className="hover:text-gray-600" />
-                            : <PlayIcon className="hover:text-red-400" />}
+                            ? <StopIcon className="hover:bg-white hover:text-red-400" />
+                            : <PlayIcon className="hover:bg-red-400" />}
                     />
                 </div>
             </div>

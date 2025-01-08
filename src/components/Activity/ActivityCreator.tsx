@@ -4,6 +4,7 @@ import Activity from "./Activity";
 import { generateId } from "../../utils/generateId";
 import clsx from "clsx";
 import Record from "./Record";
+import { toDate } from "../../utils/TimeUtils";
 
 interface Props {
     onActivityCreated: (newActivity: ActivityType) => void;
@@ -11,8 +12,9 @@ interface Props {
 
 const activityMock: ActivityType = {
     id: "activityMock",
-    records: [{ id: "recordMock", running: false }],
-    title: "Crear actividad"
+    title: "Nueva actividad",
+    records: []
+    //records: [{ id: "recordMock", running: false }],
 };
 
 export default function ActivityCreator({ onActivityCreated }: Props) {
@@ -25,7 +27,7 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
         if (newActivity.title.includes(activityMock.title))
             return;
 
-        const now = new Date().getTime();
+        const now = toDate().getTime();
 
         // crear nuevo activity
         const newActivityRecord = newActivity.records[0];
@@ -34,9 +36,9 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
             title: newActivity.title,
             records: [{
                 id: generateId(),
-                startTime: newActivityRecord.startTime || now,
-                endTime: newActivityRecord.endTime || now,
-                running: !newActivityRecord.endTime,
+                startTime: newActivityRecord?.startTime || now,
+                endTime: newActivityRecord?.endTime || now,
+                running: !newActivityRecord?.endTime,
             }]
         };
 

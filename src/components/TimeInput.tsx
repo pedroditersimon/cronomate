@@ -18,7 +18,7 @@ export function TimeInput({ time, onTimeChange, running }: Props) {
     }, [time]);
 
     useTimer(() => {
-        if (onTimeChange) onTimeChange(new Date().getTime());
+        if (onTimeChange) onTimeChange(toDate().getTime());
         console.log("TimeInput timer");
     }, 5000, running);
 

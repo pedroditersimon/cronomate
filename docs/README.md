@@ -3,12 +3,12 @@
 ## Registro y Gestión de Tareas
 - Registrar cada tarea.
 - Botón que enlace con una tarea en ClickUp (o cualquier link).
-- Timer independiente para cada tarea con funciones de `play`, `pause` y `stop`.
+- Timer independiente para cada tarea con funciones de `play` y `stop`.
 
 ## Gestión del Tiempo de Jornada
 - Timer general para la jornada laboral (ej.: de 9:00 a 13:00).
 - El timer sigue corriendo incluso sin tareas activas, salvo cuando se pausa manualmente (por actividades como almuerzo).
-- Registrar automáticamente las horas adicionales (sin tareas) como "Sin registrar" o "StandBy".
+- Registrar automáticamente las horas adicionales (sin tareas) como "Sin registrar", "StandBy" o "Jornada".
 
 ## Exportación de Datos
 - Generar una tabla simple copiable y poder exportarla a Excel.

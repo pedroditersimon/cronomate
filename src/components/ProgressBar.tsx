@@ -1,21 +1,23 @@
+import clsx, { ClassValue } from "clsx";
 
 interface Props {
     progress: number;
-    background?: string;
-    foreground?: string;
+    background?: ClassValue;
+    foreground?: ClassValue;
 }
 
 export function ProgressBar({ progress, background, foreground }: Props) {
-    const completedPercentage = Math.min(progress, 100); // Ensure the progress does not exceed 100
-    // lo que se exede de 100, ponerlo en color rojo (usnaod bacgkround rojo)
+    const percentage = progress > 100 ? (100 / progress) * 100 : Math.max(0, progress);
+
     return (
-        <div className={"w-full h-full min-h-1  rounded-full " + (background || "bg-gray-200")}>
+        <div
+            className={clsx("w-full h-1 rounded-full bg-gray-200", background,
+                { "bg-red-400": progress > 100, })}
+        >
             <div
-                className={"h-full rounded-full " + (foreground || "bg-blue-400")}
-                style={{
-                    width: `${completedPercentage}%`, // Set width dynamically with inline style
-                }}
+                className={clsx("h-full rounded-full bg-blue-400", foreground)}
+                style={{ width: `${percentage}% ` }}
             />
-        </div >
+        </div>
     );
-};
+}
