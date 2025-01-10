@@ -27,7 +27,7 @@ const unrecordedActivityMock: ActivityType = {
 }
 
 export default function TodayActivities() {
-    const { activities, setActivity, addActivity } = useTodayActivities();
+    const { activities, setActivities, setActivity, addActivity } = useTodayActivities();
 
     // local states
     const [todayRecord, setTodayRecord] = useState<RecordType>({ id: "todayRecord" });
@@ -42,6 +42,7 @@ export default function TodayActivities() {
         }
     }, [activities, todayRecord]);
 
+
     const addRecordToPauseActivity = (record: RecordType) => {
         const pauseActivity = activities.find(act => act.id === pauseActivityMock.id);
 
@@ -55,14 +56,14 @@ export default function TodayActivities() {
         }
 
         // edit existing pauseActivity
-        setActivity({
-            ...pauseActivity,
-            records: [...pauseActivity.records, record]
-        });
+        setActivity(
+            activityService.addRecord(pauseActivity, record)
+        );
     };
 
     const handleToggleTodayTimer = () => {
         const now = toDate().getTime();
+
         // Play timer
         if (!todayRecord.running) {
             // not first time, add a pause
@@ -80,21 +81,29 @@ export default function TodayActivities() {
                 endTime: now,
                 running: true
             });
+            return;// dont continue
         }
+
         // Stop timer
-        else {
-            setTodayRecord({
-                ...todayRecord,
-                endTime: toDate().getTime(),
-                running: false
-            });
-        }
+        setTodayRecord({
+            ...todayRecord,
+            endTime: now,
+            running: false
+        });
+
+        // stop all activities
+        setActivities(activityService.stopAll(activities));
     }
 
     const handleSetActivity = (newActivity: ActivityType) => {
         // pause cannot be modified
-        if (newActivity.id === "pause") return;
+        if (newActivity.id === pauseActivityMock.id) return;
         setActivity(newActivity);
+
+        // play todayTimer if activity is running
+        if (!todayRecord.running && activityService.hasRunningRecords(newActivity)) {
+            handleToggleTodayTimer();
+        }
     }
 
     return (
@@ -127,6 +136,7 @@ export default function TodayActivities() {
                     <Activity key={activity.id}
                         activity={activity}
                         onActivityChange={handleSetActivity}
+                        readOnly={activity.id == pauseActivityMock.id}
                     />
                 ))
             }
@@ -134,6 +144,7 @@ export default function TodayActivities() {
             <Activity key="unrecored"
                 activity={unrecordedActivity}
                 onActivityChange={() => { }}
+                readOnly
             />
         </Container >
     )

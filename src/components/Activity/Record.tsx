@@ -8,9 +8,10 @@ import clsx from "clsx";
 interface Props {
     record: RecordType;
     onRecordChange: (newRecord: RecordType) => void;
+    readOnly?: boolean;
 }
 
-export default function Record({ record, onRecordChange }: Props) {
+export default function Record({ record, onRecordChange, readOnly }: Props) {
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
@@ -36,6 +37,7 @@ export default function Record({ record, onRecordChange }: Props) {
                 <TimeInput
                     time={record.startTime}
                     onTimeChange={newStartTime => onRecordChange({ ...record, startTime: newStartTime })}
+                    readOnly={readOnly}
                 />
                 -
                 <TimeInput
@@ -46,6 +48,7 @@ export default function Record({ record, onRecordChange }: Props) {
                         running: isNow(newEndTime) && record.running // Stop running if time has changed
                     })}
                     running={record.running}
+                    readOnly={readOnly}
                 />
 
                 <span className={`ml-auto content-center ${record.running && "text-red-400"}`}>{elapsedTimeTxt}</span>

@@ -51,11 +51,11 @@ const todayActivitiesSlice = createSlice({
         },
         setActivity: (state, action: PayloadAction<{ newActivity: ActivityType }>) => {
             const { newActivity } = action.payload;
-            return activityService.setActivity(state, newActivity);
+            return activityService.set(state, newActivity);
         },
         addActivity: (state, action: PayloadAction<{ newActivity: ActivityType }>) => {
             const { newActivity } = action.payload;
-            return activityService.addActivity(state, newActivity);
+            return activityService.add(state, newActivity);
         }
     },
 });

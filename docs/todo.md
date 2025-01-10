@@ -7,16 +7,16 @@ Calendario librería react `cally`
 - [x] Renombrar ActivityEntry por Record.
 - [ ] Si se cierra la app, todos los timers se hacen stop y se guarda el estado en local storage.
 - [x] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
+- [ ] Propiedad `readOnly` que evita toda edicion en componentenes
 
 #### Vista jornada
 - [ ] Timer jornada.
-    - [ ] Boton de `play` y `stop`.
+    - [x] Boton de `play` y `stop`.
     - [ ] Barra de progreso con tiempo transcurrido.
     - [ ] Hacerlo clickeable y te desbliegue un rango de inicio a fin.
-    - [ ] La primera vez que haces play 
-    - [ ] Al dar stop al timer jornada, todas las actividad corriendo se hacen stop.
+    - [x] Al dar stop al timer jornada, todas las actividad corriendo se hacen stop.
     - [x] Al darle a play al timer jornada, registrar una pausa desde el endTime a now.
-    - [ ] (!) Al darle play a otra actividad el timer jornada, tambien se da a play.
+    - [x] Al darle play a otra actividad el timer jornada, tambien se da a play.
 - [x] Listado de actividades y records con su timer.
 - [ ] Placeholder de actividad para crear nuevas.
     - [ ] Al hacer focus, desplegar un record vacio configurable
@@ -27,16 +27,20 @@ Calendario librería react `cally`
     - [ ] Se puede asignar a otra Actividad con un menu.
     - [ ] Se puede asignar a otra Actividad con arrastre.
 - [ ] Las actividades se ordenan por startTime
+    - [ ] Animacion al ordenarlas
+
 
 #### Actividad (Activity)
-- [ ] funciones de `play` y `stop`.
+- [x] funciones de `play` y `stop`.
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
-- [ ] Las pausas se registran como nuevas entradas.
+- [x] Las pausas se registran como nuevas entradas.
 - [ ] Eliminar las entradas 
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
-- [ ] Si se da a play, buscar Record con endTime menor a 1-2 minutos de now y continuarla.
+- [x] Si se da a play, buscar Record con endTime menor a 1-2 minutos de now y continuarla.
 - [ ] Ocultar/Contraer el listado de Records.
-- [ ] Las entradas se ordenan por startTime
+- [x] Las entradas se ordenan por startTime
+    - [ ] Animacion al ordenarlas
+- [ ] El `esc` cancela la edicion del titulo y lo devuelve al estado original.
 
 #### Entradas (Record)
 - [x] input de hora inicio y fin, que que acepte cualquier formato (15.30, 5:24pm, 00-48am).

@@ -9,26 +9,27 @@ import clsx from "clsx";
 import HSeparator from "../../layouts/HSeparator";
 import { generateId } from "../../utils/generateId";
 import { findLast } from "lodash";
-import { getRecordsElapsedTime } from "../../services/recordService";
+import recordService from "../../services/recordService";
 import activityService from "../../services/activityService";
 
 interface Props {
     activity: ActivityType;
     onActivityChange: (newActivity: ActivityType) => void;
     onTitleConfirm?: () => void;
+    readOnly?: boolean;
 }
 
-export default function Activity({ activity, onActivityChange, onTitleConfirm }: Props) {
+export default function Activity({ activity, onActivityChange, onTitleConfirm, readOnly }: Props) {
     // local states
     const [focused, setFocused] = useState(false);
 
     // calculated states
     const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {
 
-        const totalElapsedTime = getRecordsElapsedTime(activity.records);
+        const totalElapsedTime = recordService.getAllElapsedTime(activity.records);
         const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
 
-        const hasRunningRecords = activity.records.some(record => record.running);
+        const hasRunningRecords = activityService.hasRunningRecords(activity);
 
         return [hasRunningRecords, totalElapsedTimeTxt];
     }, [activity]);
@@ -91,21 +92,30 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
                     className={clsx("flex flex-row gap-1 w-full box-border rounded-md pl-2", {
                         "bg-red-400": hasRunningRecords,
                         "bg-gray-700": focused,
-                        "hover:bg-gray-700": !hasRunningRecords,
+                        "hover:bg-gray-700": !hasRunningRecords && !readOnly,
                     })}
                 >
                     <input
                         className="bg-transparent outline-none flex-grow"
                         value={activity.title}
-                        onChange={e => handleSetTitle(e.target.value)}
-                        onFocus={() => setFocused(true)}
+                        readOnly={readOnly}
+                        onChange={e => {
+                            if (readOnly) return;
+                            handleSetTitle(e.target.value);
+                        }}
+                        onFocus={() => {
+                            if (readOnly) return;
+                            setFocused(true);
+                        }}
 
                         // on confirm input
                         onBlur={() => {
+                            if (readOnly) return;
                             setFocused(false);
                             if (onTitleConfirm) onTitleConfirm();
                         }}
                         onKeyUp={e => {
+                            if (readOnly) return;
                             if (e.key !== "Enter") return;
                             setFocused(false);
                             e.currentTarget.blur();
@@ -113,12 +123,14 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
                     />
                     <span>{totalElapsedTimeTxt}</span>
 
-                    <Clickable
-                        onClick={handleRun}
-                        children={hasRunningRecords
-                            ? <StopIcon className="hover:bg-white hover:text-red-400" />
-                            : <PlayIcon className="hover:bg-red-400" />}
-                    />
+                    {!readOnly &&
+                        <Clickable
+                            onClick={handleRun}
+                            children={hasRunningRecords
+                                ? <StopIcon className="hover:bg-white hover:text-red-400" />
+                                : <PlayIcon className="hover:bg-red-400" />}
+                        />
+                    }
                 </div>
             </div>
 
@@ -129,6 +141,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
                         key={record.id}
                         record={record}
                         onRecordChange={handleSetRecord}
+                        readOnly={readOnly}
                     />
                     {i < activity.records.length - 1 && <HSeparator />}
                 </>

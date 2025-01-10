@@ -7,9 +7,10 @@ interface Props {
     time?: number;
     onTimeChange?: (newState: number | undefined) => void;
     running?: boolean;
+    readOnly?: boolean;
 }
 
-export function TimeInput({ time, onTimeChange, running }: Props) {
+export function TimeInput({ time, onTimeChange, running, readOnly }: Props) {
     const [focused, setFocused] = useState(false);
     const [inputTime, setInputTime] = useState<string>(time ? to24HourFormat(toDate(time)) : "-");
 
@@ -42,17 +43,23 @@ export function TimeInput({ time, onTimeChange, running }: Props) {
             <input
                 className={clsx(`max-w-12 bg-transparent outline-none text-center`, {
                     "hover:cursor-text": focused,
-                    "hover:cursor-pointer": !focused,
+                    "hover:cursor-pointer": !focused && !readOnly,
                 })}
 
                 value={inputTime}
                 maxLength={5}
-                onChange={(e) => setInputTime(e.target.value)}
-                onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select()} // select all text on click
+                readOnly={readOnly}
+                onChange={e => setInputTime(e.target.value)}
+
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select()}
+                // select all text on click
                 onFocus={() => setFocused(true)}
 
                 // on confirm input
-                onBlur={() => { handleConfirmTime(); setFocused(false); }}
+                onBlur={() => {
+                    handleConfirmTime();
+                    setFocused(false);
+                }}
                 onKeyUp={e => {
                     if (e.key !== "Enter") return;
                     handleConfirmTime();

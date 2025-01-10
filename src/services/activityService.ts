@@ -2,7 +2,7 @@ import { ActivityType, RecordType } from "../types/Activity";
 import recordService from "./recordService";
 
 
-export function addActivity(list: Array<ActivityType>, activity: ActivityType): Array<ActivityType> {
+function add(list: Array<ActivityType>, activity: ActivityType): Array<ActivityType> {
     // already exists!
     if (list.some(item => item.id === activity.id)) {
         throw new Error(`The activity with ID ${activity.id} already exists.`);
@@ -13,7 +13,7 @@ export function addActivity(list: Array<ActivityType>, activity: ActivityType): 
 
 
 
-export function setActivity(list: Array<ActivityType>, activity: ActivityType): Array<ActivityType> {
+function set(list: Array<ActivityType>, activity: ActivityType): Array<ActivityType> {
     let found = false;
 
     const updatedList = list.map(item => {
@@ -31,29 +31,61 @@ export function setActivity(list: Array<ActivityType>, activity: ActivityType): 
     return updatedList;
 }
 
+
+function stop(activity: ActivityType): ActivityType {
+    return {
+        ...activity,
+        records: recordService.stopAll(activity.records)
+    };
+}
+
+function stopAll(list: Array<ActivityType>): Array<ActivityType> {
+    return list.map(activity => stop(activity));
+};
+
+
 //#region Handle records
 
-export function setRecord(activity: ActivityType, record: RecordType): ActivityType {
-    return {
+function setRecord(activity: ActivityType, record: RecordType): ActivityType {
+    const updatedActivity = {
         ...activity,
-        records: recordService.setRecord(activity.records, record)
+        records: recordService.set(activity.records, record)
     };
+
+    // order records when add
+    return orderRecordsByStartTime(updatedActivity);
 }
 
-export function addRecord(activity: ActivityType, record: RecordType): ActivityType {
-    return {
+function addRecord(activity: ActivityType, record: RecordType): ActivityType {
+    const updatedActivity = {
         ...activity,
-        records: recordService.addRecord(activity.records, record)
+        records: recordService.add(activity.records, record)
     };
+    // order records when add
+    return orderRecordsByStartTime(updatedActivity);
 }
 
+function hasRunningRecords(activity: ActivityType): boolean {
+    return recordService.hasRunning(activity.records);
+}
+
+function orderRecordsByStartTime(activity: ActivityType): ActivityType {
+    return {
+        ...activity,
+        records: recordService.orderAllByStartTime(activity.records)
+    };
+}
 
 export default {
     // Handle activities
-    addActivity,
-    setActivity,
+    add,
+    set,
+    stop,
+    stopAll,
 
     // Handle records
     setRecord,
-    addRecord
+    addRecord,
+    hasRunningRecords,
+    orderRecordsByStartTime
 };
