@@ -10,7 +10,7 @@ interface Props {
     onRecordChange: (newRecord: RecordType) => void;
 }
 
-export default function Record({ record, onRecordChange: onRecordChange }: Props) {
+export default function Record({ record, onRecordChange }: Props) {
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {

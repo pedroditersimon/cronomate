@@ -3,7 +3,6 @@ import { ActivityType } from "../../types/Activity";
 import Activity from "./Activity";
 import { generateId } from "../../utils/generateId";
 import clsx from "clsx";
-import Record from "./Record";
 import { toDate } from "../../utils/TimeUtils";
 
 interface Props {

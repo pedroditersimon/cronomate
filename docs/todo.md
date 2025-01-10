@@ -1,12 +1,12 @@
 - agreagr registro de pausas, que no son facturables. pero te muestras las pausas que tuviste, hoy por ejemplo tengo casi 40min de pausa
 
-
+Calendario librería react `cally`
 
 ## Todo
 - [x] Implementar Redux.
 - [x] Renombrar ActivityEntry por Record.
 - [ ] Si se cierra la app, todos los timers se hacen stop y se guarda el estado en local storage.
-- [ ] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
+- [x] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
 
 #### Vista jornada
 - [ ] Timer jornada.

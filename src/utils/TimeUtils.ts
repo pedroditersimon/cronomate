@@ -85,31 +85,20 @@ export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: number
   return time;
 }
 
-
-// Function to check if the time is in the past
-export function isPast(time: number | undefined): boolean {
-  if (time === undefined) return false;
-  const elapsedTime = getElapsedTime(toDate(time), toDate());
-
-  // Check if the time is in the past
-  return elapsedTime < 0;
+function getElapsedTimeFromNow(time: number | undefined): number {
+  if (time === undefined) return 0;
+  return getElapsedTime(toDate(time), toDate());
 }
 
-// Function to check if the time is within 1 second of now
-export function isNow(time: number | undefined, offsetSeconds: number = 1): boolean {
-  if (time === undefined) return false;
-  const elapsedTime = getElapsedTime(toDate(time), toDate());
+export function isPast(time: number | undefined): boolean {
+  return getElapsedTimeFromNow(time) < 0;
+}
 
-  // Check if the time is within the offset in seconds
+export function isNow(time: number | undefined, offsetSeconds: number = 1): boolean {
+  const elapsedTime = getElapsedTimeFromNow(time);
   return elapsedTime >= 0 && elapsedTime < offsetSeconds * 1000;
 }
 
-// Function to check if the time is now or in the future
 export function isNowOrFuture(time: number | undefined): boolean {
-  if (time === undefined) return false;
-  const elapsedTime = getElapsedTime(toDate(time), toDate());
-
-  // Check if the time is now or in the future
-  return elapsedTime >= 0;
+  return getElapsedTimeFromNow(time) >= 0;
 }
-

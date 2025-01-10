@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
-import { getRecordsElapsedTime } from "../../utils/ActivityUtils";
+
 import { isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import Record from "./Record";
 import Clickable from "../Clickable";
@@ -9,6 +9,8 @@ import clsx from "clsx";
 import HSeparator from "../../layouts/HSeparator";
 import { generateId } from "../../utils/generateId";
 import { findLast } from "lodash";
+import { getRecordsElapsedTime } from "../../services/recordService";
+import activityService from "../../services/activityService";
 
 interface Props {
     activity: ActivityType;
@@ -50,32 +52,26 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
 
         // Resume running the last record if found
         if (lastResumableRecord) {
-            handleSetRecord(lastResumableRecord.id, {
+            handleSetRecord({
                 ...lastResumableRecord,
                 running: true
             });
             return; // dont do more
         }
 
-        // If no resumable records, add a new running record
-        const newRecords: typeof activity.records = [
-            ...activity.records,
-            {
-                id: generateId(),
-                startTime: now,
-                endTime: now,
-                running: true
-            }
-        ];
-        onActivityChange({ ...activity, records: newRecords });
+        // add a new running record
+        const newActivity = activityService.addRecord(activity, {
+            id: generateId(),
+            startTime: now,
+            endTime: now,
+            running: true
+        });
+        onActivityChange(newActivity);
     }
 
 
-    const handleSetRecord = (id: string, newRecord: RecordType) => {
-        const newRecords = activity.records.map(record =>
-            record.id === id ? newRecord : record
-        );
-        onActivityChange({ ...activity, records: newRecords });
+    const handleSetRecord = (newRecord: RecordType) => {
+        onActivityChange(activityService.setRecord(activity, newRecord));
     }
 
     const handleSetTitle = (newTitle: string) => {
@@ -132,7 +128,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm }:
                     <Record
                         key={record.id}
                         record={record}
-                        onRecordChange={newRecord => handleSetRecord(record.id, newRecord)}
+                        onRecordChange={handleSetRecord}
                     />
                     {i < activity.records.length - 1 && <HSeparator />}
                 </>

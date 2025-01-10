@@ -1,8 +1,40 @@
 import { orderBy } from "lodash";
 import { RecordType } from "../types/Activity";
-import { getElapsedTime, toDate } from "./TimeUtils";
+import { getElapsedTime, toDate } from "../utils/TimeUtils";
 
-export function getRecordsElapsedTime(records: Array<RecordType>) {
+export function addRecord(list: Array<RecordType>, record: RecordType): Array<RecordType> {
+    // already exists!
+    if (list.some(item => item.id === record.id)) {
+        throw new Error(`The record with ID ${record.id} already exists.`);
+    }
+
+    return [...list, { ...record }];
+}
+
+
+export function setRecord(list: Array<RecordType>, record: RecordType): Array<RecordType> {
+    let found = false;
+
+    const updatedList = list.map(item => {
+        if (item.id === record.id) {
+            found = true;
+            return { ...record };
+        }
+        return item;
+    });
+
+    if (!found) {
+        throw new Error(`The record with ID ${record.id} does not exist.`);
+    }
+
+    return updatedList;
+}
+
+
+
+
+
+export function getRecordsElapsedTime(records: Array<RecordType>): number {
     return records.reduce((acc, record) => {
         const elapsedTime = getElapsedTime(toDate(record.startTime), toDate(record.endTime));
         return elapsedTime > 0
@@ -12,16 +44,16 @@ export function getRecordsElapsedTime(records: Array<RecordType>) {
 }
 
 // Ordenar los registros por startTime sin mutar el array original
-export function orderRecordsByStartTime(records: RecordType[]): RecordType[] {
+export function orderRecordsByStartTime(records: Array<RecordType>): Array<RecordType> {
     return orderBy(records, ['startTime'], ['asc']);
 }
 
 
-export function getUnrecordedPeriods(records: RecordType[], range?: RecordType): RecordType[] {
+export function getUnrecordedPeriods(records: Array<RecordType>, range?: RecordType): Array<RecordType> {
     // Ordenar los registros por startTime
     const orderedRecords = orderRecordsByStartTime(records);
 
-    const unrecordedPeriods: RecordType[] = [];
+    const unrecordedPeriods: Array<RecordType> = [];
     let lastEndTime = range?.startTime || orderedRecords[0]?.endTime || 0; // Usar initialTime si está definido, si no, el primer endTime
 
     for (let i = 0; i < orderedRecords.length; i++) {
@@ -67,3 +99,9 @@ export function getUnrecordedPeriods(records: RecordType[], range?: RecordType):
 
     return unrecordedPeriods;
 }
+
+
+export default {
+    addRecord, setRecord,
+    getRecordsElapsedTime, orderRecordsByStartTime, getUnrecordedPeriods
+};

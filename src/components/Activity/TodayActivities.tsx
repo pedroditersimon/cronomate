@@ -7,10 +7,11 @@ import Clickable from "../Clickable";
 import { PlayIcon, StopIcon } from "../../assets/Icons";
 import Activity from "./Activity";
 import ActivityCreator from "./ActivityCreator";
-import { getUnrecordedPeriods } from "../../utils/ActivityUtils";
 import { ActivityType, RecordType } from "../../types/Activity";
 import { toDate } from "../../utils/TimeUtils";
 import { generateId } from "../../utils/generateId";
+import recordService from "../../services/recordService";
+import activityService from "../../services/activityService";
 
 const pauseActivityMock: ActivityType = {
     id: "pause",
@@ -18,8 +19,15 @@ const pauseActivityMock: ActivityType = {
     records: []
 };
 
+
+const unrecordedActivityMock: ActivityType = {
+    id: "unrecored",
+    title: "Sin registrar",
+    records: []
+}
+
 export default function TodayActivities() {
-    const { activities, setActivity, addNewActivity } = useTodayActivities();
+    const { activities, setActivity, addActivity } = useTodayActivities();
 
     // local states
     const [todayRecord, setTodayRecord] = useState<RecordType>({ id: "todayRecord" });
@@ -27,12 +35,11 @@ export default function TodayActivities() {
 
     const unrecordedActivity = useMemo((): ActivityType => {
         const allRecords = activities.reduce<Array<RecordType>>((acc, activity) => activity.records.concat(acc), []);
-        const unrecordedPeriods = getUnrecordedPeriods(allRecords, todayRecord);
+        const unrecordedPeriods = recordService.getUnrecordedPeriods(allRecords, todayRecord);
         return {
-            id: "unrecored",
-            title: "Sin registrar",
+            ...unrecordedActivityMock,
             records: unrecordedPeriods
-        };
+        }
     }, [activities, todayRecord]);
 
     const addRecordToPauseActivity = (record: RecordType) => {
@@ -40,7 +47,7 @@ export default function TodayActivities() {
 
         // no pauseActivity exists, create new one
         if (!pauseActivity) {
-            addNewActivity({
+            addActivity({
                 ...pauseActivityMock,
                 records: [record]
             });
@@ -113,7 +120,7 @@ export default function TodayActivities() {
                 </div>
             </div>
 
-            <ActivityCreator onActivityCreated={addNewActivity} />
+            <ActivityCreator onActivityCreated={addActivity} />
 
             {
                 activities.map(activity => (

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActivityType } from "../../types/Activity";
-import { generateId } from "../../utils/generateId";
 import { toDate } from "../../utils/TimeUtils";
+import activityService from "../../services/activityService";
 
 // 1. Estado incial
 const initialState: Array<ActivityType> = [
@@ -51,14 +51,11 @@ const todayActivitiesSlice = createSlice({
         },
         setActivity: (state, action: PayloadAction<{ newActivity: ActivityType }>) => {
             const { newActivity } = action.payload;
-            return state.map(activity =>
-                activity.id === newActivity.id ? newActivity : activity
-            );
+            return activityService.setActivity(state, newActivity);
         },
-        addNewActivity: (state, action: PayloadAction<{ newActivity: ActivityType }>) => {
+        addActivity: (state, action: PayloadAction<{ newActivity: ActivityType }>) => {
             const { newActivity } = action.payload;
-            // TODO: check if exists another activity with given id
-            return [...state, newActivity];
+            return activityService.addActivity(state, newActivity);
         }
     },
 });
@@ -67,7 +64,7 @@ const todayActivitiesSlice = createSlice({
 export { todayActivitiesSlice };
 
 // 5. Exportamos las acciones (reducers)
-export const { setActivities, setActivity, addNewActivity } = todayActivitiesSlice.actions;
+export const { setActivities, setActivity, addActivity } = todayActivitiesSlice.actions;
 
 // 6. Exportamos el reducer para configurar la Store
 export const todayActivitiesReducer = todayActivitiesSlice.reducer;
