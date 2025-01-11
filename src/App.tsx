@@ -1,5 +1,5 @@
 import './App.css'
-import TodayActivities from './components/Activity/TodayActivities'
+import TodayActivities from './sections/TodayActivities'
 
 function App() {
   return (

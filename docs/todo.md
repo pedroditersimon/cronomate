@@ -9,6 +9,7 @@ Calendario librería react `cally`
 - [x] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
 - [ ] Propiedad `readOnly` que evita toda edicion en componentenes
 
+
 #### Vista jornada
 - [ ] Timer jornada.
     - [x] Boton de `play` y `stop`.
@@ -28,7 +29,8 @@ Calendario librería react `cally`
     - [ ] Se puede asignar a otra Actividad con arrastre.
 - [ ] Las actividades se ordenan por startTime
     - [ ] Animacion al ordenarlas
-
+- [x] Guardar en el estado today el timer de jornada.
+- [x] Mover todayActivities a una carpeta como "bloques" o "sections"
 
 #### Actividad (Activity)
 - [x] funciones de `play` y `stop`.
