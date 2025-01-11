@@ -2,7 +2,7 @@ import { CircleIcon } from "../../assets/Icons";
 import { TimeInput } from "../TimeInput";
 import { getElapsedTime, isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import type { RecordType } from "../../types/Activity";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import clsx from "clsx";
 
 interface Props {
@@ -15,7 +15,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
-        const elapsedTime = getElapsedTime(toDate(record.startTime), toDate(record.endTime));
+        const elapsedTime = getElapsedTime(toDate(record.startTime, false), toDate(record.endTime, false));
         return toElapsedHourMinutesFormat(elapsedTime);
     }, [record]);
 
@@ -36,7 +36,10 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
             >
                 <TimeInput
                     time={record.startTime}
-                    onTimeChange={newStartTime => onRecordChange({ ...record, startTime: newStartTime })}
+                    onTimeChange={newStartTime => onRecordChange({
+                        ...record,
+                        startTime: newStartTime
+                    })}
                     readOnly={readOnly}
                 />
                 -

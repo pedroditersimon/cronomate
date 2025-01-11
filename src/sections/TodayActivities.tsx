@@ -114,7 +114,7 @@ export default function TodayActivities() {
 
             <ActivityCreator onActivityCreated={addActivity} />
 
-            {
+            { // create activities
                 activities.map(activity => (
                     <Activity key={activity.id}
                         activity={activity}
@@ -124,11 +124,13 @@ export default function TodayActivities() {
                 ))
             }
 
-            <Activity key="unrecored"
-                activity={unrecordedActivity}
-                onActivityChange={() => { }}
-                readOnly
-            />
+            {unrecordedActivity.records.length > 0 && // show only if has records
+                <Activity key="unrecored"
+                    activity={unrecordedActivity}
+                    onActivityChange={() => { }}
+                    readOnly
+                />
+            }
         </Container >
     )
 }

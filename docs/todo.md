@@ -7,7 +7,7 @@ Calendario librería react `cally`
 - [x] Renombrar ActivityEntry por Record.
 - [ ] Si se cierra la app, todos los timers se hacen stop y se guarda el estado en local storage.
 - [x] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
-- [ ] Propiedad `readOnly` que evita toda edicion en componentenes
+- [x] Propiedad `readOnly` que evita toda edicion en componentenes
 
 
 #### Vista jornada
@@ -18,6 +18,7 @@ Calendario librería react `cally`
     - [x] Al dar stop al timer jornada, todas las actividad corriendo se hacen stop.
     - [x] Al darle a play al timer jornada, registrar una pausa desde el endTime a now.
     - [x] Al darle play a otra actividad el timer jornada, tambien se da a play.
+    - [ ] Actualizar el endtime cada segundo si esta corriedno, o almenos al correr una ctividad
 - [x] Listado de actividades y records con su timer.
 - [ ] Placeholder de actividad para crear nuevas.
     - [ ] Al hacer focus, desplegar un record vacio configurable

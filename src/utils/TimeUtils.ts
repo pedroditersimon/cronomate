@@ -1,8 +1,11 @@
 
 export function toDate(timeStamp?: number | undefined, nowOnUndefined: boolean = true) {
-  const newDate = !timeStamp && nowOnUndefined
-    ? new Date()
-    : new Date(timeStamp || 0);
+  if (!timeStamp && !nowOnUndefined)
+    return undefined;
+
+  const newDate = timeStamp
+    ? new Date(timeStamp) // has value
+    : new Date();         // set now on undefined
 
   // erase seconds and ms
   newDate.setSeconds(0, 0);

@@ -53,9 +53,18 @@ function hasRunning(list: Array<RecordType>): boolean {
 }
 
 
+function hasTime(record: RecordType): boolean {
+    return record.startTime !== undefined || record.endTime !== undefined;
+}
+
+function hasAnyTime(list: Array<RecordType>): boolean {
+    return list.some(record => hasTime(record));
+}
+
+
 function getAllElapsedTime(records: Array<RecordType>): number {
     return records.reduce((acc, record) => {
-        const elapsedTime = getElapsedTime(toDate(record.startTime), toDate(record.endTime));
+        const elapsedTime = getElapsedTime(toDate(record.startTime, false), toDate(record.endTime, false));
         return elapsedTime > 0
             ? acc + elapsedTime
             : acc;
@@ -121,6 +130,6 @@ function getUnrecordedPeriods(records: Array<RecordType>, range?: RecordType): A
 
 
 export default {
-    add, set, stop, stopAll, hasRunning,
+    add, set, stop, stopAll, hasRunning, hasTime, hasAnyTime,
     getAllElapsedTime, orderAllByStartTime, getUnrecordedPeriods
 };

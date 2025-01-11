@@ -44,6 +44,11 @@ function stopAll(list: Array<ActivityType>): Array<ActivityType> {
 };
 
 
+function hasChanges(activity: ActivityType, mock: ActivityType) {
+    if (!activity.title.includes(mock.title)) return true; // title has changed
+    return recordService.hasAnyTime(activity.records); // records has changed
+}
+
 //#region Handle records
 
 function setRecord(activity: ActivityType, record: RecordType): ActivityType {
@@ -82,6 +87,7 @@ export default {
     set,
     stop,
     stopAll,
+    hasChanges,
 
     // Handle records
     setRecord,

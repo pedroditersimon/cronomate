@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
 
@@ -15,13 +15,19 @@ import activityService from "../../services/activityService";
 interface Props {
     activity: ActivityType;
     onActivityChange: (newActivity: ActivityType) => void;
-    onTitleConfirm?: () => void;
+    onTitleConfirm?: (newTitle: string) => void;
     readOnly?: boolean;
 }
 
 export default function Activity({ activity, onActivityChange, onTitleConfirm, readOnly }: Props) {
     // local states
     const [focused, setFocused] = useState(false);
+    const [title, setTitle] = useState(activity.title);
+
+    // sync title if activity changes
+    useEffect(() => {
+        setTitle(activity.title);
+    }, [activity]);
 
     // calculated states
     const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {
@@ -97,11 +103,11 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                 >
                     <input
                         className="bg-transparent outline-none flex-grow"
-                        value={activity.title}
+                        value={title}
                         readOnly={readOnly}
                         onChange={e => {
                             if (readOnly) return;
-                            handleSetTitle(e.target.value);
+                            setTitle(e.target.value);
                         }}
                         onFocus={() => {
                             if (readOnly) return;
@@ -112,13 +118,23 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                         onBlur={() => {
                             if (readOnly) return;
                             setFocused(false);
-                            if (onTitleConfirm) onTitleConfirm();
+                            handleSetTitle(title);
                         }}
                         onKeyUp={e => {
                             if (readOnly) return;
-                            if (e.key !== "Enter") return;
-                            setFocused(false);
-                            e.currentTarget.blur();
+                            if (e.key === "Enter") {
+                                if (onTitleConfirm) onTitleConfirm(title);
+                                e.currentTarget.blur();
+                                return;
+                            }
+                            // reset title
+                            if (e.key === "Escape") {
+                                setTitle(activity.title);
+                                // Delay blur to ensure the new state is applied, before calling blur.
+                                // This prevents run blur callback with an outdated state.
+                                const element = e.currentTarget;
+                                setTimeout(() => element.blur, 50); return;
+                            }
                         }}
                     />
                     <span>{totalElapsedTimeTxt}</span>
