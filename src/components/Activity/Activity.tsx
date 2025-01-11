@@ -91,7 +91,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                 <CircleIcon
                     className={clsx({
                         "bg-red-400": hasRunningRecords,
-                        "bg-gray-600": !hasRunningRecords
+                        "bg-gray-700": !hasRunningRecords
                     })}
                 />
                 <div

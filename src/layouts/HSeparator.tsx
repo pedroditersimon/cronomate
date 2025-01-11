@@ -6,6 +6,6 @@ interface Props {
 
 export default function HSeparator({ className }: Props) {
     return (<hr
-        className={clsx("w-fullself-center border-1 border-solid rounded border-gray-600", className)}
+        className={clsx("border border-solid rounded border-gray-700", className)}
     />);
 }

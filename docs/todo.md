@@ -43,7 +43,7 @@
 
 
 #### Sidebar
-- [ ] Panel con botones de cada seccion.
+- [x] Panel con botones de cada seccion.
     - [ ] Es contraible.
 - [ ] Vista jornada.
 - [ ] Resumen Dayli.

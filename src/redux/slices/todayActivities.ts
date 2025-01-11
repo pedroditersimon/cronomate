@@ -8,6 +8,8 @@ import { TodayActivitiesState } from "../types/todayActivitiesState";
 const initialState: TodayActivitiesState = {
     timer: {
         id: "todayRecord",
+        startTime: toDate()?.getTime(),
+        running: true
     },
     activities: [
         {

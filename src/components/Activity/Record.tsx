@@ -28,7 +28,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
             <CircleIcon
                 className={clsx({
                     "bg-red-400": record.running,
-                    "bg-gray-600": !record.running
+                    "bg-gray-700": !record.running
                 })}
             />
             <div
