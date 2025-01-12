@@ -4,7 +4,6 @@ import Activity from "./Activity";
 import { generateId } from "../../utils/generateId";
 import clsx from "clsx";
 import { toDate } from "../../utils/TimeUtils";
-import recordService from "../../services/recordService";
 import activityService from "../../services/activityService";
 
 interface Props {
@@ -33,16 +32,22 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
 
         const now = toDate().getTime();
 
-        // crear nuevo activity
-        const newActivityRecord = newActivity.records[0];
+        // Get first record
+        const firstRecord = newActivity.records[0];
+
+        // create it running if no endTime
+        const mustRun = firstRecord.endTime === undefined;
+        // If mustRun and no startTime, set it to now
+        const setStartTimeToNow = mustRun && !firstRecord.startTime;
+
         const newActivityWithRecord = {
             id: generateId(),
             title: newActivity.title,
             records: [{
                 id: generateId(),
-                startTime: newActivityRecord?.startTime || now,
-                endTime: newActivityRecord?.endTime || now,
-                running: !newActivityRecord?.endTime,
+                startTime: setStartTimeToNow ? now : firstRecord.startTime, // Keep existing if not starting now
+                endTime: mustRun ? now : firstRecord.endTime, // Keep existing if not running
+                running: mustRun
             }]
         };
 
@@ -86,6 +91,7 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
             onBlur={() => setFocused(false)}
         >
             <Activity
+                key={activity.id}
                 activity={activity}
                 onActivityChange={handleSetActivity}
                 onTitleConfirm={handleOnTitleConfirm}

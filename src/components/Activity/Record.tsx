@@ -2,7 +2,7 @@ import { CircleIcon } from "../../assets/Icons";
 import { TimeInput } from "../TimeInput";
 import { getElapsedTime, isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import type { RecordType } from "../../types/Activity";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import clsx from "clsx";
 
 interface Props {

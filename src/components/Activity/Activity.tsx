@@ -123,8 +123,8 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                         onKeyUp={e => {
                             if (readOnly) return;
                             if (e.key === "Enter") {
-                                if (onTitleConfirm) onTitleConfirm(title);
                                 e.currentTarget.blur();
+                                if (onTitleConfirm) setTimeout(() => onTitleConfirm(title), 50);
                                 return;
                             }
                             // reset title

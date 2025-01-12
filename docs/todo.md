@@ -2,7 +2,8 @@
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Guardar el estado de todayActivities en el localstorage
-
+- [ ] Implementar Toast de Sonner para errores y mensajes.
+- [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -15,15 +16,14 @@
     - [ ] Actualizar el endtime cada segundo si esta corriedno, o almenos al correr una ctividad
 - [ ] Placeholder de actividad para crear nuevas.
     - [ ] Al hacer focus, desplegar un record vacio configurable
-    - [x] Si el endTime se confirma vacio, la actividad se crea corriendo.
-    - [ ] Si se presiona el boton de run, inevitablemente la actividad se crea corriendo.
-    - [ ] Si el record tiene valores ingresados, no vuelve a ocultarse.
+    - [x] Si no tiene endTime, la actividad se crea corriendo.
+    - [ ] Si el record tiene valores ingresados, no vuelve a contraerse.
 - [ ] Actividad "Sin registrar"
     - [ ] Se puede asignar a otra Actividad con un menu.
     - [ ] Se puede asignar a otra Actividad con arrastre.
 - [ ] Las actividades se ordenan por startTime
 - [ ] Animacion al ordenar actividades
-
+- [ ] El activity de pausas debe estar siempre a lo ultimo
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).

@@ -1,50 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ActivityType, RecordType } from "../../types/Activity";
-import { toDate } from "../../utils/TimeUtils";
 import activityService from "../../services/activityService";
 import { TodayActivitiesState } from "../types/todayActivitiesState";
+import localSave from "../../services/localSave";
+
 
 // 1. Estado incial
-const initialState: TodayActivitiesState = {
-    timer: {
-        id: "todayRecord",
-        startTime: toDate()?.getTime(),
-        running: true
-    },
-    activities: [
-        {
-            id: "1",
-            title: "Reunión",
-            records: [
-                {
-                    id: "1",
-                    startTime: new Date(toDate().getTime() - 2 * 60 * 60 * 1000).getTime(), // Hace 2 horas
-                    endTime: toDate().getTime(), // Hora actual
-                    running: true
-                }
-            ]
-        },
-        {
-            id: "2",
-            title: "Actividad",
-            records: [
-                {
-                    id: "1",
-                    startTime: new Date(toDate().getTime() - 3 * 60 * 60 * 1000).getTime(), // Hace 3 horas
-                    endTime: new Date(toDate().getTime() - 1 * 60 * 60 * 1000).getTime(),
-                    running: false
-                },
-                {
-                    id: "2",
-                    startTime: new Date(toDate().getTime() - 1 * 60 * 60 * 1000).getTime(), // Hace 3 horas
-                    endTime: toDate().getTime(),
-                    running: false
-                }
-            ]
-        }
-    ]
+const defaultState: TodayActivitiesState = {
+    timer: { id: "todayRecord" },
+    activities: []
 }
 
+const initialState = localSave.load("todayActivities", defaultState);
 
 // 2. Creamos el slice
 const todayActivitiesSlice = createSlice({
@@ -53,6 +20,13 @@ const todayActivitiesSlice = createSlice({
 
     // 3. Creamos las acciones (reducers)
     reducers: {
+        save: (state) => {
+            localSave.save("todayActivities", state);
+        },
+        load: (state) => {
+            return localSave.load("todayActivities", state);
+        },
+
         // Timer
         setTimer: (state, action: PayloadAction<{ newTimer: RecordType }>) => {
             return {

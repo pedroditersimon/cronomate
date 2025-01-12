@@ -1,4 +1,10 @@
 
+export function toDate(): Date;
+export function toDate(timeStamp: number, nowOnUndefined: false): Date;
+export function toDate(timeStamp: number | undefined): Date;
+export function toDate(timeStamp: number | undefined, nowOnUndefined: true): Date;
+export function toDate(timeStamp: number | undefined, nowOnUndefined: false): Date | undefined;
+
 export function toDate(timeStamp?: number | undefined, nowOnUndefined: boolean = true) {
   if (!timeStamp && !nowOnUndefined)
     return undefined;

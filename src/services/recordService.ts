@@ -86,6 +86,7 @@ function getUnrecordedPeriods(records: Array<RecordType>, range?: RecordType): A
 
     for (let i = 0; i < orderedRecords.length; i++) {
         const currentRecord = orderedRecords[i];
+        if (!hasTime(currentRecord)) continue;
 
         // Ajustar startTime y endTime para que queden dentro del rango inicial y final
         const currentStartTime = currentRecord.startTime || 0;

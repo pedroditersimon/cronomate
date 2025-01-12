@@ -1,10 +1,15 @@
 import { ReactNode } from "react";
-import ClickableLink from "../components/ClickableLink";
+import LinkBtn from "../components/LinkBtn";
 import Container from "./Container";
 import clsx from "clsx";
+import { LinkType } from "../types/types";
 
+interface LinkBtnType extends LinkType {
+    text?: string,
+    icon?: ReactNode
+}
 interface Props {
-    links: Array<{ href: string, text?: string, icon?: ReactNode }>
+    links: Array<LinkBtnType>
 }
 
 export default function Sidebar({ links }: Props) {
@@ -14,10 +19,12 @@ export default function Sidebar({ links }: Props) {
         <Container className="w-40 rounded-xl">
             {
                 links.map(link => {
-                    const isSelected = link.href === currentLocation;
+                    const isSelected = link.to === currentLocation;
 
                     return (
-                        <ClickableLink href={link.href}
+                        <LinkBtn
+                            {...link}
+                            key={link.to}
                             className={clsx("w-full justify-center rounded-lg hover:bg-gray-700",
                                 { "bg-gray-700": isSelected }
                             )}
@@ -32,7 +39,7 @@ export default function Sidebar({ links }: Props) {
                                 </div>
                             }
                             {link.text && <span className="mr-auto" >{link.text}</span>}
-                        </ClickableLink>
+                        </LinkBtn>
                     )
                 })
             }

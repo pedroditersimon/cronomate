@@ -1,37 +1,24 @@
+import { ReactNode } from 'react'
 import './App.css'
-import { BriefcaseIcon } from './assets/Icons'
-import Sidebar from './layouts/Sidebar'
-import TodayActivities from './sections/TodayActivities'
+import PageLayout from './layouts/PageLayout'
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { TodayActivities } from './pages/TodayActivities';
+import { NotFound } from './pages/NotFound';
 
 function App() {
+  console.log("app");
+  function pageWith(element: () => ReactNode) {
+    return <PageLayout children={element()} />;
+  }
+
   return (
-    <div className='w-screen h-screen flex flex-row justify-around items-center'>
-
-      <div className='p-5 h-full'>
-        <Sidebar
-          links={[
-            {
-              href: "/",
-              icon: <BriefcaseIcon />,
-              text: "Hoy",
-            },
-            {
-              href: "/1",
-              text: "Sin icono",
-            },
-            {
-              href: "/2",
-              icon: <BriefcaseIcon />,
-            }
-          ]}
-        />
-      </div>
-
-      <div className='p-5 m-auto'>
-        <TodayActivities />
-      </div>
-
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={pageWith(TodayActivities)} />
+        <Route path='*' element={pageWith(NotFound)} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

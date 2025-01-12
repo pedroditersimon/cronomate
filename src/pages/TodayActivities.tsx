@@ -19,7 +19,7 @@ const pauseActivityMock: ActivityType = {
 };
 
 
-export default function TodayActivities() {
+export function TodayActivities() {
     const {
         todayTimer, setTodayTimer, // Timer
         activities, setActivities, setActivity, addActivity, // Activities
@@ -44,11 +44,11 @@ export default function TodayActivities() {
         );
     };
 
-    const handleToggleTodayTimer = () => {
+    const handleSetRunningTodayTimer = (running: boolean) => {
         const now = toDate().getTime();
 
         // Play timer
-        if (!todayTimer.running) {
+        if (running) {
             // not first time, add a pause
             if (todayTimer.startTime) {
                 addRecordToPauseActivity({
@@ -85,7 +85,16 @@ export default function TodayActivities() {
 
         // play todayTimer if activity is running
         if (!todayTimer.running && activityService.hasRunningRecords(newActivity)) {
-            handleToggleTodayTimer();
+            handleSetRunningTodayTimer(true);
+        }
+    }
+
+    const handleCreateNewActivity = (newActivity: ActivityType) => {
+        addActivity(newActivity);
+
+        // play todayTimer if activity is running
+        if (!todayTimer.running && activityService.hasRunningRecords(newActivity)) {
+            handleSetRunningTodayTimer(true);
         }
     }
 
@@ -104,7 +113,7 @@ export default function TodayActivities() {
                         <ProgressBar progress={150} background={{ "bg-yellow-200": todayTimer.running }} />
                     </div>
                     <Clickable
-                        onClick={handleToggleTodayTimer}
+                        onClick={() => handleSetRunningTodayTimer(!todayTimer.running)}
                         children={todayTimer.running
                             ? <StopIcon className="hover:bg-white hover:text-red-400" />
                             : <PlayIcon className="hover:bg-red-400" />}
@@ -112,11 +121,12 @@ export default function TodayActivities() {
                 </div>
             </div>
 
-            <ActivityCreator onActivityCreated={addActivity} />
+            <ActivityCreator onActivityCreated={handleCreateNewActivity} />
 
             { // create activities
                 activities.map(activity => (
-                    <Activity key={activity.id}
+                    <Activity
+                        key={activity.id}
                         activity={activity}
                         onActivityChange={handleSetActivity}
                         readOnly={activity.id == pauseActivityMock.id}
@@ -134,4 +144,6 @@ export default function TodayActivities() {
         </Container >
     )
 }
+
+
 
