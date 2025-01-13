@@ -2,13 +2,9 @@
 
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
-- [x] Guardar el estado de todayActivities en el localstorage
 - [ ] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
-- [x] Actualizar el `useTimer` al instante al retomar el focus de la página.
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
-- [x] Inlcuir la fecha de guardado en el `SaveObjectType`.
-- [x] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
 - [ ] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
 
 #### Vista jornada
@@ -31,7 +27,6 @@
 - [ ] Las actividades se ordenan por startTime
 - [ ] Animacion al ordenar actividades
 - [ ] El activity de pausas debe estar siempre a lo ultimo
-- [x] Las pausas se pueden editar.
 - [ ] Panel detalles de jornada.
     - [ ] Se abre en una ruedita de configuración del container del `todayActivity`.
     - [ ] Listar activities eliminadas.
@@ -107,13 +102,16 @@
 - [x] Renombrar ActivityEntry por Record.
 - [x] Hacer utilidades que centralicen la logica al manejar listas de Records, Actividades, etc.
 - [x] Propiedad `readOnly` que evita toda edicion en componentenes
-
+- [x] Guardar el estado de todayActivities en el localstorage
+- [x] Actualizar el `useTimer` al instante al retomar el focus de la página.
+- [x] Inlcuir la fecha de guardado en el `SaveObjectType`.
+- [x] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
 
 #### Vista jornada
 - [x] Listado de actividades y records con su timer.
 - [x] Guardar en el estado today el timer de jornada.
 - [x] Mover todayActivities a una carpeta como "bloques" o "sections"
-
+- [x] Las pausas se pueden editar.
 
 #### Actividad (Activity)
 - [x] funciones de `play` y `stop`.
