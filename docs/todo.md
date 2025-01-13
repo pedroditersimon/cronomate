@@ -2,13 +2,14 @@
 
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
-- [ ] Guardar el estado de todayActivities en el localstorage
+- [x] Guardar el estado de todayActivities en el localstorage
 - [ ] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
-- [ ] Actualizar el `useTimer` al instante al retomar el focus de la página.
+- [x] Actualizar el `useTimer` al instante al retomar el focus de la página.
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
-- [ ] Inlcuir la fecha de guardado en el `SaveObjectType`.
-- [ ] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
+- [x] Inlcuir la fecha de guardado en el `SaveObjectType`.
+- [x] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
+- [ ] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -18,7 +19,8 @@
     - [x] Al darle a play al timer jornada, registrar una pausa desde el endTime a now.
     - [ ] Barra de progreso con tiempo transcurrido.
     - [ ] Hacerlo clickeable y te desbliegue un rango de inicio a fin.
-    - [ ] Actualizar el endtime cada segundo si esta corriedno, o almenos al correr una ctividad
+    - [x] Actualizar el endtime cada segundo si esta corriedno, o almenos al correr una actividad
+    - [x] Mostrar el tiempo transcurrido total en el timer.
 - [ ] Placeholder de actividad para crear nuevas.
     - [ ] Al hacer focus, desplegar un record vacio configurable
     - [x] Si no tiene endTime, la actividad se crea corriendo.
@@ -30,21 +32,37 @@
 - [ ] Animacion al ordenar actividades
 - [ ] El activity de pausas debe estar siempre a lo ultimo
 - [x] Las pausas se pueden editar.
-
+- [ ] Panel detalles de jornada.
+    - [ ] Se abre en una ruedita de configuración del container del `todayActivity`.
+    - [ ] Listar activities eliminadas.
+    - [ ] Opción de restaurar activities eliminadas.
+- [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
+- [ ] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
-- [ ] Eliminar las entradas.
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
 - [ ] Ocultar/Contraer el listado de Records.
 - [ ] Animacion al ordenar tareas
-- [ ] Las activities no se eliminan realmente, se marcan como eliminadas y luego se listan en un panel con posibilidad de restaurar.
-- [ ] Las activities eliminadas aparecen en una ruedita de configuración del container del `todayActivity`.
+- [ ] Panel de detalles:
+    - [ ] Se abre al cliquear un activity.
+    - [ ] Muestra y deja editar informacion relacionada.
+    - [ ] Listar entradas eliminadas.
+    - [ ] Opción de restaurar entradas eliminadas.
+- [ ] Eliminar activities.
+    - [ ] Crear el botón en la interfaz de usuario.
+    - [ ] Marcar como `eliminadas` en lugar de borrarlas.
+    - [ ] Aparecen dentro de un panel en la jornada.
+- [ ] Oculta las entradas eliminadas luego de la animacion de tachado.
+- [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
+- [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 
 #### Entradas (Record)
-- [ ] Boton para eliminar entrada
-- [ ] Las records no se eliminan, se marcan como eliminadas y luego se listan en otro panel con posibilidad de restaurar.
-- [ ] Los records eliminados aparecen dentro del activity: se cliquean y se abre un panel para ese activity, listando ahí.
+- [ ] Eliminar entradas:
+    - [x] Crear el botón en la interfaz de usuario.
+    - [x] Marcar como `eliminadas` en lugar de borrarlas.
+    - [ ] Aparecen dentro de un panel en el activity.
+
 
 
 #### Input de hora (TimeInput)
@@ -66,7 +84,6 @@
 
 
 #### Recomendaciones
-- [ ] Crear una tarea con el mismo nombre de una existe, agrega una entrada a la existente.
 - [ ] Poder configurar formato de TimeInput si 24 (H:MM am/pm) o 12 (HH:MM) horas.
 
 

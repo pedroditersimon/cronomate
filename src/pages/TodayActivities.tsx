@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { ActivityType, RecordType } from "../types/Activity";
 import useTodayActivities from "../hooks/useTodayActivities";
 import activityService from "../services/activityService";
-import { toDate } from "../utils/TimeUtils";
+import { toDate, toElapsedHourMinutesFormat } from "../utils/TimeUtils";
 import { generateId } from "../utils/generateId";
 import Container from "../layouts/Container";
 import { ProgressBar } from "../components/ProgressBar";
@@ -11,6 +11,8 @@ import { PlayIcon, StopIcon } from "../assets/Icons";
 import ActivityCreator from "../components/Activity/ActivityCreator";
 import Activity from "../components/Activity/Activity";
 import useAutoSaving from "../hooks/useAutoSaving";
+import { useMemo } from "react";
+import useTimer from "../hooks/useTimer";
 
 
 const pauseActivityMock: ActivityType = {
@@ -29,6 +31,25 @@ export function TodayActivities() {
     } = useTodayActivities();
 
     useAutoSaving(save, 5000);
+
+    useTimer(() => {
+        const now = toDate().getTime();
+        setTodayTimer({
+            ...todayTimer,
+            startTime: todayTimer.startTime || now,
+            endTime: now,
+        });
+        console.log("Today timer");
+    }, 5000, todayTimer.running);
+
+    // calculated states
+    const [totalElapsedTimeTxt] = useMemo(() => {
+
+        const totalElapsedTime = activityService.getAllElapsedTime(activities);
+        const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
+
+        return [totalElapsedTimeTxt];
+    }, [activities]);
 
     const addRecordToPauseActivity = (record: RecordType) => {
         const pauseActivity = activities.find(act => act.id === pauseActivityMock.id);
@@ -110,15 +131,24 @@ export function TodayActivities() {
                         { "bg-red-400": todayTimer.running, }
                     )}
                 >
-                    <div className="flex flex-col items-center ">
-                        <span className="mx-2">2h 1m</span>
-                        <ProgressBar progress={150} background={{ "bg-yellow-200": todayTimer.running }} />
-                    </div>
+                    {/* Today elapsed time txt */}
+                    {totalElapsedTimeTxt &&
+                        <div className="flex flex-col items-center ">
+                            <span className="mx-2">{totalElapsedTimeTxt}</span>
+                            <ProgressBar progress={150} background={{ "bg-yellow-200": todayTimer.running }} />
+                        </div>
+                    }
+
+                    {/* toggle timer btn */}
                     <Clickable
+                        className={clsx({
+                            "hover:bg-red-400": !todayTimer.running,
+                            "hover:bg-white hover:text-red-400": todayTimer.running,
+                        })}
                         onClick={() => handleSetRunningTodayTimer(!todayTimer.running)}
                         children={todayTimer.running
-                            ? <StopIcon className="hover:bg-white hover:text-red-400" />
-                            : <PlayIcon className="hover:bg-red-400" />}
+                            ? <StopIcon />
+                            : <PlayIcon />}
                     />
                 </div>
             </div>

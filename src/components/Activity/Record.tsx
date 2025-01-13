@@ -1,9 +1,10 @@
-import { CircleIcon } from "../../assets/Icons";
+import { CircleIcon, TrashIcon } from "../../assets/Icons";
 import { TimeInput } from "../TimeInput";
 import { getElapsedTime, isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import type { RecordType } from "../../types/Activity";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import clsx from "clsx";
+import Clickable from "../Clickable";
 
 interface Props {
     record: RecordType;
@@ -12,6 +13,8 @@ interface Props {
 }
 
 export default function Record({ record, onRecordChange, readOnly }: Props) {
+    const [isHover, setIsHover] = useState(false);
+
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
@@ -23,16 +26,30 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
     if (!record)
         return <div className="text-red-400">Error: Null Record.</div>;
 
+    const handleDelete = () => {
+        onRecordChange({
+            ...record,
+            deleted: true,
+        });
+    }
+
     return (
-        <div className="flex flex-row gap-1">
+        <div
+            className={clsx("flex flex-row gap-1 transition-opacity duration-300",
+                { "strike-div opacity-50": record.deleted }
+            )}
+            onPointerEnter={() => setIsHover(true)}
+            onPointerLeave={() => setIsHover(false)}
+        >
             <CircleIcon
                 className={clsx({
                     "bg-red-400": record.running,
                     "bg-gray-700": !record.running
                 })}
             />
+
             <div
-                className={clsx("flex flex-row gap-1 w-full rounded-lg pr-2")}
+                className={clsx("flex flex-row gap-1 w-full rounded-lg")}
             >
                 <TimeInput
                     time={record.startTime}
@@ -54,7 +71,24 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
                     readOnly={readOnly}
                 />
 
-                <span className={`ml-auto content-center ${record.running && "text-red-400"}`}>{elapsedTimeTxt}</span>
+                {/* Elapsed Time text */}
+                <span
+                    className={clsx("ml-auto content-center",
+                        {
+                            "text-red-400": record.running,
+                            "pr-1": !isHover
+                        }
+                    )}
+                    children={elapsedTimeTxt}
+                />
+
+                {/* Delete record btn */}
+                <Clickable
+                    className={clsx({ "hidden": !isHover, })}
+                    children={<TrashIcon className="hover:bg-red-400" />}
+                    onClick={handleDelete}
+                />
+
             </div>
         </div>
     );

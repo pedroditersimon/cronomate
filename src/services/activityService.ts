@@ -49,6 +49,15 @@ function hasChanges(activity: ActivityType, mock: ActivityType) {
     return recordService.hasAnyTime(activity.records); // records has changed
 }
 
+function getAllElapsedTime(activities: Array<ActivityType>) {
+    return activities.reduce((acc, activity) => {
+        const elapsedTime = recordService.getAllElapsedTime(activity.records);
+        return elapsedTime > 0
+            ? acc + elapsedTime
+            : acc;
+    }, 0);
+}
+
 //#region Handle records
 
 function setRecord(activity: ActivityType, record: RecordType): ActivityType {
@@ -93,5 +102,6 @@ export default {
     setRecord,
     addRecord,
     hasRunningRecords,
-    orderRecordsByStartTime
+    orderRecordsByStartTime,
+    getAllElapsedTime
 };

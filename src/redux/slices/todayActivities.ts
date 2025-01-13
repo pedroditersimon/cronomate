@@ -7,6 +7,7 @@ import localSave from "../../services/localSave";
 
 // 1. Estado incial
 const defaultState: TodayActivitiesState = {
+    createdTimeStamp: new Date().getTime(),
     timer: { id: "todayRecord" },
     activities: []
 }

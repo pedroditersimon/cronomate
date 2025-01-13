@@ -2,6 +2,7 @@ export interface ActivityType {
     id: string;
     title: string;
     records: Array<RecordType>;
+    deleted?: boolean;
 }
 
 export interface RecordType {
@@ -9,4 +10,5 @@ export interface RecordType {
     startTime?: number; // Date
     endTime?: number;   // Date
     running?: boolean;
+    deleted?: boolean;
 }

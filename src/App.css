@@ -12,3 +12,33 @@ body,
     background-color: #161616;
     color: white;
 }
+
+@layer utilities {
+    .strike-div {
+        position: relative;
+    }
+
+    .strike-div::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: #f87171;
+        transform: translateY(-50%);
+        border-radius: 999px;
+        animation: expandWidth 0.3s ease-in-out forwards;
+    }
+
+    @keyframes expandWidth {
+        0% {
+            width: 0;
+        }
+
+        100% {
+            width: 100%;
+        }
+    }
+}

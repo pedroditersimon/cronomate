@@ -152,16 +152,18 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
 
             <HSeparator />
             <div className="flex flex-col gap-1 ml-6">
-                {activity.records.map((record, i) => <>
-                    <Record
-                        key={record.id}
-                        record={record}
-                        onRecordChange={handleSetRecord}
-                        readOnly={readOnly}
-                    />
-                    {i < activity.records.length - 1 && <HSeparator />}
-                </>
-                )}
+                {activity.records.map((record, i) => {
+                    if (record.deleted) return;
+                    return (<>
+                        <Record
+                            key={record.id}
+                            record={record}
+                            onRecordChange={handleSetRecord}
+                            readOnly={readOnly}
+                        />
+                        {i < activity.records.length - 1 && <HSeparator />}
+                    </>)
+                })}
             </div>
         </div>
     );

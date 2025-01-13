@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 
-export default function usePageVisibility() {
+export default function usePageVisibility(onVisibilityChange?: (isVisible: boolean) => void) {
     const [isVisible, setIsVisible] = useState(document.visibilityState === "visible");
 
     useEffect(() => {
         const handleVisibilityChange = () => {
-            setIsVisible(document.visibilityState === "visible");
+            const newState = document.visibilityState === "visible";
+            setIsVisible(newState);
+            if (onVisibilityChange) onVisibilityChange(newState);
         };
 
         // Se suscribe al evento visibilitychange
@@ -15,7 +17,7 @@ export default function usePageVisibility() {
         return () => {
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, []);
+    }, [onVisibilityChange]);
 
     return isVisible; // Retorna si la pestaña está visible o no
 }
