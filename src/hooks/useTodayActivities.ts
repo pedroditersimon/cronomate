@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setTimer, addActivity, setActivities, setActivity, } from "../redux/slices/todayActivities";
+import { setTimer, addActivity, setActivities, setActivity, save, load } from "../redux/slices/todayActivities";
 import { useTypedSelector } from "./useTypedSelector";
 import { ActivityType, RecordType } from "../types/Activity";
 import recordService from "../services/recordService";
@@ -17,6 +17,14 @@ export default function useTodayActivities() {
     const activities = useTypedSelector(state => state.todayActivities.activities);
 
     const dispatch = useDispatch();
+
+    const _save = () => {
+        dispatch(save());
+    }
+
+    const _load = () => {
+        dispatch(load());
+    }
 
     const _setTimer = (newTimer: RecordType) => {
         dispatch(setTimer({ newTimer }));
@@ -44,6 +52,9 @@ export default function useTodayActivities() {
     }, [activities, todayTimer]);
 
     return {
+        save: _save,
+        load: _load,
+
         todayTimer,
         setTodayTimer: _setTimer,
 
@@ -52,6 +63,6 @@ export default function useTodayActivities() {
         setActivity: _setActivity,
         addActivity: _addActivity,
 
-        unrecordedActivity
+        unrecordedActivity,
     };
 }

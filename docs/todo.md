@@ -1,9 +1,14 @@
 
+
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Guardar el estado de todayActivities en el localstorage
 - [ ] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
+- [ ] Actualizar el `useTimer` al instante al retomar el focus de la página.
+- [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
+- [ ] Inlcuir la fecha de guardado en el `SaveObjectType`.
+- [ ] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -24,6 +29,8 @@
 - [ ] Las actividades se ordenan por startTime
 - [ ] Animacion al ordenar actividades
 - [ ] El activity de pausas debe estar siempre a lo ultimo
+- [x] Las pausas se pueden editar.
+
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -31,10 +38,14 @@
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
 - [ ] Ocultar/Contraer el listado de Records.
 - [ ] Animacion al ordenar tareas
-
+- [ ] Las activities no se eliminan realmente, se marcan como eliminadas y luego se listan en un panel con posibilidad de restaurar.
+- [ ] Las activities eliminadas aparecen en una ruedita de configuración del container del `todayActivity`.
 
 #### Entradas (Record)
 - [ ] Boton para eliminar entrada
+- [ ] Las records no se eliminan, se marcan como eliminadas y luego se listan en otro panel con posibilidad de restaurar.
+- [ ] Los records eliminados aparecen dentro del activity: se cliquean y se abre un panel para ese activity, listando ahí.
+
 
 #### Input de hora (TimeInput)
 - [ ] No se actualiza si se esta haciendo focus.

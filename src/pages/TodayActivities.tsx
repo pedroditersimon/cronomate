@@ -10,10 +10,11 @@ import Clickable from "../components/Clickable";
 import { PlayIcon, StopIcon } from "../assets/Icons";
 import ActivityCreator from "../components/Activity/ActivityCreator";
 import Activity from "../components/Activity/Activity";
+import useAutoSaving from "../hooks/useAutoSaving";
 
 
 const pauseActivityMock: ActivityType = {
-    id: "pause",
+    id: "pauses",
     title: "Pausas",
     records: []
 };
@@ -21,10 +22,13 @@ const pauseActivityMock: ActivityType = {
 
 export function TodayActivities() {
     const {
+        save,
         todayTimer, setTodayTimer, // Timer
         activities, setActivities, setActivity, addActivity, // Activities
-        unrecordedActivity
+        unrecordedActivity,
     } = useTodayActivities();
+
+    useAutoSaving(save, 5000);
 
     const addRecordToPauseActivity = (record: RecordType) => {
         const pauseActivity = activities.find(act => act.id === pauseActivityMock.id);
@@ -79,8 +83,6 @@ export function TodayActivities() {
     }
 
     const handleSetActivity = (newActivity: ActivityType) => {
-        // pause cannot be modified
-        if (newActivity.id === pauseActivityMock.id) return;
         setActivity(newActivity);
 
         // play todayTimer if activity is running
@@ -129,7 +131,6 @@ export function TodayActivities() {
                         key={activity.id}
                         activity={activity}
                         onActivityChange={handleSetActivity}
-                        readOnly={activity.id == pauseActivityMock.id}
                     />
                 ))
             }

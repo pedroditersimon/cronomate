@@ -65,13 +65,16 @@ export { todayActivitiesSlice };
 
 // 5. Exportamos las acciones (reducers)
 export const {
+    save, load,
+
     // Timer
     setTimer,
 
     // Activities
     setActivities,
     setActivity,
-    addActivity
+    addActivity,
+
 } = todayActivitiesSlice.actions;
 
 // 6. Exportamos el reducer para configurar la Store
