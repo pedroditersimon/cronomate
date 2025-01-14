@@ -85,8 +85,18 @@ function getUnrecordedPeriods(records: Array<RecordType>, range?: RecordType): A
     const orderedRecords = orderAllByStartTime(records);
 
     const unrecordedPeriods: Array<RecordType> = [];
+
+    let lastEndTime = 0;
     const firstRecord = orderedRecords[0];
-    let lastEndTime = range?.startTime ?? (firstRecord.deleted ? 0 : firstRecord?.endTime ?? 0); // Usar initialTime si está definido, si no, el primer endTime
+
+    // Usar range.startTime si está definido, si no el primer endTime
+    if (range?.startTime) {
+        lastEndTime = range.startTime;
+    } else if (firstRecord?.endTime && !firstRecord.deleted) {
+        lastEndTime = firstRecord.endTime ?? 0;
+    }
+
+
 
     for (let i = 0; i < orderedRecords.length; i++) {
         const currentRecord = orderedRecords[i];

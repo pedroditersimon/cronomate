@@ -6,6 +6,7 @@
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
 - [x] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
+- [ ] Renombrar el objeto de jornada por `workSession` y para today es `todayWorkSession`
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -33,6 +34,7 @@
     - [ ] Opción de restaurar activities eliminadas.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [ ] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
+- [ ] Hacer un componente separado para visualizar un `workSession` y luego utilizrlo por debajo de la vista de jornada.
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -66,11 +68,16 @@
 - [ ] Al hacer focus desplegar un pequeño calendario con el mes, botones para ir al mes anterior y un boton de hoy y ayer para establecer el dia. _(ver librería `cally`)_
 
 
+#### Vista historial de jornadas.
+- [x] Agregar link en el sidebar
+- [ ] Diseñar pagina
+
+
 #### Sidebar
 - [x] Panel con botones de cada seccion.
     - [ ] Es contraible.
 - [ ] Vista jornada.
-- [ ] Historial de jornadas.
+- [ ] Vista Historial de jornadas.
 - [ ] Resumen Dayli.
 - [ ] Resumen semanal/mensual.
 - [ ] Notas personales.
