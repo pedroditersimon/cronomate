@@ -5,7 +5,7 @@
 - [ ] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
-- [ ] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
+- [x] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -70,6 +70,7 @@
 - [x] Panel con botones de cada seccion.
     - [ ] Es contraible.
 - [ ] Vista jornada.
+- [ ] Historial de jornadas.
 - [ ] Resumen Dayli.
 - [ ] Resumen semanal/mensual.
 - [ ] Notas personales.

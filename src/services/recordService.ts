@@ -64,6 +64,9 @@ function hasAnyTime(list: Array<RecordType>): boolean {
 
 function getAllElapsedTime(records: Array<RecordType>): number {
     return records.reduce((acc, record) => {
+        // dont include deleted records
+        if (record.deleted) return acc;
+
         const elapsedTime = getElapsedTime(toDate(record.startTime, false), toDate(record.endTime, false));
         return elapsedTime > 0
             ? acc + elapsedTime
@@ -82,11 +85,12 @@ function getUnrecordedPeriods(records: Array<RecordType>, range?: RecordType): A
     const orderedRecords = orderAllByStartTime(records);
 
     const unrecordedPeriods: Array<RecordType> = [];
-    let lastEndTime = range?.startTime || orderedRecords[0]?.endTime || 0; // Usar initialTime si está definido, si no, el primer endTime
+    const firstRecord = orderedRecords[0];
+    let lastEndTime = range?.startTime ?? (firstRecord.deleted ? 0 : firstRecord?.endTime ?? 0); // Usar initialTime si está definido, si no, el primer endTime
 
     for (let i = 0; i < orderedRecords.length; i++) {
         const currentRecord = orderedRecords[i];
-        if (!hasTime(currentRecord)) continue;
+        if (currentRecord.deleted || !hasTime(currentRecord)) continue;
 
         // Ajustar startTime y endTime para que queden dentro del rango inicial y final
         const currentStartTime = currentRecord.startTime || 0;

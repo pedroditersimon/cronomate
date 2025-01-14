@@ -17,9 +17,10 @@ interface Props {
     onActivityChange: (newActivity: ActivityType) => void;
     onTitleConfirm?: (newTitle: string) => void;
     readOnly?: boolean;
+    selectTitleOnClick?: boolean;
 }
 
-export default function Activity({ activity, onActivityChange, onTitleConfirm, readOnly }: Props) {
+export default function Activity({ activity, onActivityChange, onTitleConfirm, readOnly, selectTitleOnClick }: Props) {
     // local states
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
@@ -103,6 +104,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                 >
                     <input
                         className="bg-transparent outline-none flex-grow"
+                        placeholder={activity.title}
                         value={title}
                         readOnly={readOnly}
                         onChange={e => {
@@ -112,6 +114,10 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                         onFocus={() => {
                             if (readOnly) return;
                             setFocused(true);
+                        }}
+
+                        onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                            if (selectTitleOnClick) e.currentTarget.select();
                         }}
 
                         // on confirm input

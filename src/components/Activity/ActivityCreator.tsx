@@ -95,6 +95,7 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
                 activity={activity}
                 onActivityChange={handleSetActivity}
                 onTitleConfirm={handleOnTitleConfirm}
+                selectTitleOnClick
             />
         </div>
     );
