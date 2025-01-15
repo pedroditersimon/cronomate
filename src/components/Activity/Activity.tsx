@@ -143,7 +143,9 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                             }
                         }}
                     />
-                    <span>{totalElapsedTimeTxt}</span>
+                    <span className={clsx({ "pr-1": readOnly })} >
+                        {totalElapsedTimeTxt}
+                    </span>
 
                     {!readOnly &&
                         <Clickable
@@ -159,7 +161,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
             <HSeparator />
             <div className="flex flex-col gap-1 ml-6">
                 {activity.records.map((record, i) => {
-                    if (record.deleted) return;
+                    if (record.deleted && !readOnly) return;
                     return (<>
                         <Record
                             key={record.id}

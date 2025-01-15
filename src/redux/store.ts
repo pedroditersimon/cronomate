@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 // 1. Importamos nuestros reducers
-import { todayActivitiesReducer } from "./slices/todayActivities";
+import { todaySessionReducer } from "./slices/todaySession";
 
 // 2. Configuramos la Store
 const store = configureStore({
     reducer: {
-        todayActivities: todayActivitiesReducer
+        todaySession: todaySessionReducer
     }
 });
 

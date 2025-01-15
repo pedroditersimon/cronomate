@@ -94,6 +94,31 @@ export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: number
   return time;
 }
 
+export function isToday(date: Date) {
+  const today = new Date();
+  return date.getDate() === today.getDate()
+    && date.getMonth() === today.getMonth()
+    && date.getFullYear() === today.getFullYear();
+}
+
+export function formatDateToText(date: Date, locale: string = navigator.language || 'es-ES') {
+  if (isToday(date)) {
+    return "Hoy";
+  }
+
+  const isPastYear = date.getFullYear() < new Date().getFullYear();
+
+  const options: Intl.DateTimeFormatOptions = isPastYear
+    ? { day: '2-digit', month: 'short', year: 'numeric' }
+    : { weekday: 'long', day: '2-digit', month: 'short' };
+
+
+  const formattedDate = new Intl.DateTimeFormat(locale, options).format(date);
+
+  // capitalize first letter
+  return formattedDate.replace(/^\w/, (char) => char.toUpperCase());
+}
+
 function getElapsedTimeFromNow(time: number | undefined): number {
   if (time === undefined) return 0;
   return getElapsedTime(toDate(time), toDate());

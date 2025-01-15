@@ -76,18 +76,20 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
                     className={clsx("ml-auto content-center",
                         {
                             "text-red-400": record.running,
-                            "pr-1": !isHover
+                            "pr-1": !isHover || readOnly
                         }
                     )}
                     children={elapsedTimeTxt}
                 />
 
                 {/* Delete record btn */}
-                <Clickable
-                    className={clsx({ "hidden": !isHover, })}
-                    children={<TrashIcon className="hover:bg-red-400" />}
-                    onClick={handleDelete}
-                />
+                {!readOnly &&
+                    <Clickable
+                        className={clsx({ "hidden": !isHover, })}
+                        children={<TrashIcon className="hover:bg-red-400" />}
+                        onClick={handleDelete}
+                    />
+                }
 
             </div>
         </div>

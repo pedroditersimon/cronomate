@@ -1,3 +1,10 @@
+export interface WorkSessionType {
+    id: string;
+    timer: RecordType;
+    createdTimeStamp: number; // starting time
+    activities: Array<ActivityType>;
+}
+
 export interface ActivityType {
     id: string;
     title: string;

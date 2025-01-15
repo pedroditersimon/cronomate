@@ -1,31 +1,38 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ActivityType, RecordType } from "../../types/Activity";
+import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity";
 import activityService from "../../services/activityService";
-import { TodayActivitiesState } from "../types/todayActivitiesState";
 import localSave from "../../services/localSave";
+import { generateId } from "../../utils/generateId";
 
 
 // 1. Estado incial
-const defaultState: TodayActivitiesState = {
+const defaultState: WorkSessionType = {
+    id: generateId(),
     createdTimeStamp: new Date().getTime(),
-    timer: { id: "todayRecord" },
+    timer: { id: generateId() },
     activities: []
 }
 
-const initialState = localSave.load("todayActivities", defaultState);
+const initialState = localSave.load("todaySession", defaultState);
 
 // 2. Creamos el slice
-const todayActivitiesSlice = createSlice({
-    name: "todayActivities",
+const todaySessionSlice = createSlice({
+    name: "todaySession",
     initialState,
 
     // 3. Creamos las acciones (reducers)
     reducers: {
         save: (state) => {
-            localSave.save("todayActivities", state);
+            localSave.save("todaySession", state);
         },
         load: (state) => {
-            return localSave.load("todayActivities", state);
+            return localSave.load("todaySession", state);
+        },
+
+
+        setSession: (_state, action: PayloadAction<{ newSession: WorkSessionType }>) => {
+            const { newSession } = action.payload;
+            return newSession;
         },
 
         // Timer
@@ -62,11 +69,13 @@ const todayActivitiesSlice = createSlice({
 });
 
 // 4. Exportamos el slice
-export { todayActivitiesSlice };
+export { todaySessionSlice };
 
 // 5. Exportamos las acciones (reducers)
 export const {
     save, load,
+
+    setSession,
 
     // Timer
     setTimer,
@@ -76,7 +85,7 @@ export const {
     setActivity,
     addActivity,
 
-} = todayActivitiesSlice.actions;
+} = todaySessionSlice.actions;
 
 // 6. Exportamos el reducer para configurar la Store
-export const todayActivitiesReducer = todayActivitiesSlice.reducer;
+export const todaySessionReducer = todaySessionSlice.reducer;

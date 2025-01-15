@@ -6,7 +6,7 @@
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
 - [x] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
-- [ ] Renombrar el objeto de jornada por `workSession` y para today es `todayWorkSession`
+- [x] Renombrar el objeto de jornada por `workSession` y para today es `todayWorkSession`
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -34,7 +34,9 @@
     - [ ] Opción de restaurar activities eliminadas.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [ ] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
-- [ ] Hacer un componente separado para visualizar un `workSession` y luego utilizrlo por debajo de la vista de jornada.
+- [x] Hacer un componente separado para visualizar un `workSession` y luego utilizrlo por debajo de la vista de jornada.
+- [x] El titulo debe ser la fecha de creacion, y si es hoy ponerle como 'hoy'
+
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -70,7 +72,9 @@
 
 #### Vista historial de jornadas.
 - [x] Agregar link en el sidebar
-- [ ] Diseñar pagina
+- [x] Diseñar pagina.
+- [ ] Listar registros.
+- [ ] Si se cliquean mostrar el registro en modo readOnly.
 
 
 #### Sidebar

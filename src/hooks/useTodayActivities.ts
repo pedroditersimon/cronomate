@@ -1,20 +1,10 @@
 import { useDispatch } from "react-redux";
-import { setTimer, addActivity, setActivities, setActivity, save, load } from "../redux/slices/todayActivities";
+import { setTimer, addActivity, setActivities, setActivity, save, load, setSession } from "../redux/slices/todaySession";
 import { useTypedSelector } from "./useTypedSelector";
-import { ActivityType, RecordType } from "../types/Activity";
-import recordService from "../services/recordService";
-import { useMemo } from "react";
+import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
 
-
-const unrecordedActivityMock: ActivityType = {
-    id: "unrecored",
-    title: "Sin registrar",
-    records: []
-}
-
-export default function useTodayActivities() {
-    const todayTimer = useTypedSelector(state => state.todayActivities.timer);
-    const activities = useTypedSelector(state => state.todayActivities.activities);
+export default function useTodaySession() {
+    const todaySession = useTypedSelector(state => state.todaySession);
 
     const dispatch = useDispatch();
 
@@ -24,6 +14,10 @@ export default function useTodayActivities() {
 
     const _load = () => {
         dispatch(load());
+    }
+
+    const _setSession = (newSession: WorkSessionType) => {
+        dispatch(setSession({ newSession }));
     }
 
     const _setTimer = (newTimer: RecordType) => {
@@ -42,27 +36,18 @@ export default function useTodayActivities() {
         dispatch(addActivity({ newActivity }));
     }
 
-    const unrecordedActivity = useMemo((): ActivityType => {
-        const allRecords = activities.reduce<Array<RecordType>>((acc, activity) => activity.records.concat(acc), []);
-        const unrecordedPeriods = recordService.getUnrecordedPeriods(allRecords, todayTimer);
-        return {
-            ...unrecordedActivityMock,
-            records: unrecordedPeriods
-        }
-    }, [activities, todayTimer]);
-
     return {
+        todaySession,
+
         save: _save,
         load: _load,
 
-        todayTimer,
+        setSession: _setSession,
+
         setTodayTimer: _setTimer,
 
-        activities,
         setActivities: _setActivities,
         setActivity: _setActivity,
         addActivity: _addActivity,
-
-        unrecordedActivity,
     };
 }
