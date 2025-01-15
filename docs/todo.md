@@ -1,12 +1,12 @@
 
 
+
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
-- [x] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
-- [x] Renombrar el objeto de jornada por `workSession` y para today es `todayWorkSession`
+
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -34,8 +34,11 @@
     - [ ] Opción de restaurar activities eliminadas.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [ ] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
-- [x] Hacer un componente separado para visualizar un `workSession` y luego utilizrlo por debajo de la vista de jornada.
-- [x] El titulo debe ser la fecha de creacion, y si es hoy ponerle como 'hoy'
+- [ ] Poner en rojo el borde si esta corriendo el timer.
+- [ ] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
+- [ ] Corte automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
+- [ ] Cinco minutos antes, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
+
 
 
 #### Actividad (Activity)
@@ -55,6 +58,8 @@
 - [ ] Oculta las entradas eliminadas luego de la animacion de tachado.
 - [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
 - [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
+- [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.
+
 
 #### Entradas (Record)
 - [ ] Eliminar entradas:
@@ -70,7 +75,7 @@
 - [ ] Al hacer focus desplegar un pequeño calendario con el mes, botones para ir al mes anterior y un boton de hoy y ayer para establecer el dia. _(ver librería `cally`)_
 
 
-#### Vista historial de jornadas.
+#### Vista Historial.
 - [x] Agregar link en el sidebar
 - [x] Diseñar pagina.
 - [ ] Listar registros.
@@ -92,7 +97,7 @@
 
 #### Recomendaciones
 - [ ] Poder configurar formato de TimeInput si 24 (H:MM am/pm) o 12 (HH:MM) horas.
-
+- [ ] Agregar un diccionario de palabras clave de uso diario, como 'daily', 'spike', 'deploy'. se agregan con tab y tiene correccion si escribiste medio mal
 
 #### Bugs
 - [ ] Al crear una nueva actividad con el placeholder, corre pero no se actualiza el timer.
@@ -118,12 +123,16 @@
 - [x] Actualizar el `useTimer` al instante al retomar el focus de la página.
 - [x] Inlcuir la fecha de guardado en el `SaveObjectType`.
 - [x] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
+- [x] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
+- [x] Renombrar el objeto de jornada por `workSession` y para today es `todayWorkSession`
 
 #### Vista jornada
 - [x] Listado de actividades y records con su timer.
 - [x] Guardar en el estado today el timer de jornada.
 - [x] Mover todayActivities a una carpeta como "bloques" o "sections"
 - [x] Las pausas se pueden editar.
+- [x] Hacer un componente separado para visualizar un `workSession` y luego utilizrlo por debajo de la vista de jornada.
+- [x] El titulo debe ser la fecha de creacion, y si es hoy ponerle como 'hoy'
 
 #### Actividad (Activity)
 - [x] funciones de `play` y `stop`.
