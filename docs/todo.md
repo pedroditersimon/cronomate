@@ -33,7 +33,7 @@
     - [ ] Listar activities eliminadas.
     - [ ] Opción de restaurar activities eliminadas.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
-- [ ] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
+- [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 - [ ] Poner en rojo el borde si esta corriendo el timer.
 - [ ] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 - [ ] Corte automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
@@ -78,8 +78,8 @@
 #### Vista Historial.
 - [x] Agregar link en el sidebar
 - [x] Diseñar pagina.
-- [ ] Listar registros.
-- [ ] Si se cliquean mostrar el registro en modo readOnly.
+- [x] Listar registros.
+- [x] Si se cliquean mostrar el registro en modo readOnly.
 
 
 #### Sidebar

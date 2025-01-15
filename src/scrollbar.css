@@ -1,0 +1,29 @@
+/* ------- Scrollbar ------- */
+
+/* width for vertical and horizontal scrollbar */
+::-webkit-scrollbar {
+    width: 0.35rem;
+    height: 0.35rem;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: #161616;
+    margin: 2vh;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: #252525;
+    border-radius: 5px;
+}
+
+/* Handle hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #333333;
+}
+
+/* Ocultar los botones del scrollbar */
+::-webkit-scrollbar-button {
+    display: none;
+}

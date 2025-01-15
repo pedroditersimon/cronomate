@@ -143,7 +143,7 @@ export function WorkSessionPanel({ session, onSessionChange, readOnly }: Props) 
                     {/* Today elapsed time txt */}
                     {totalElapsedTimeTxt &&
                         <div className="flex flex-col items-center ">
-                            <span className="mx-2">{totalElapsedTimeTxt}</span>
+                            <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
                             <ProgressBar progress={150} background={{ "bg-yellow-200": session.timer.running }} />
                         </div>
                     }

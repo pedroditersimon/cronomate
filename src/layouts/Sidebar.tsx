@@ -16,7 +16,7 @@ export default function Sidebar({ links }: Props) {
     const currentLocation = window.location.pathname;
 
     return (
-        <Container className="w-40 rounded-xl">
+        <Container className="h-full">
             {
                 links.map(link => {
                     const isSelected = link.to === currentLocation;

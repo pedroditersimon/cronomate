@@ -1,5 +1,6 @@
 import Container from '../layouts/Container';
 import LinkBtn from '../components/LinkBtn';
+import PageLayout from '../layouts/PageLayout';
 
 export function NotFound() {
     return (
@@ -17,3 +18,10 @@ export function NotFound() {
     );
 };
 
+export function NotFoundPage() {
+    return (
+        <PageLayout>
+            <NotFound />
+        </PageLayout>
+    );
+}
