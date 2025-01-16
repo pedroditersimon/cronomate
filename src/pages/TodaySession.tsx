@@ -3,11 +3,19 @@ import useTodaySession from "../hooks/useTodayActivities";
 import useAutoSaving from "../hooks/useAutoSaving";
 import { WorkSessionPanel } from "../components/WorkSessionPanel";
 import PageLayout from "../layouts/PageLayout";
-import { History } from "./History";
+import { isToday, toDate } from "../utils/TimeUtils";
+import { useEffect } from "react";
 
 
 export function TodaySession() {
-    const { todaySession, save, setSession } = useTodaySession();
+    const { todaySession, save, setSession, saveInHistoryAndReset } = useTodaySession();
+
+    useEffect(() => {
+        const isPastSession = !isToday(toDate(todaySession.createdTimeStamp));
+        if (isPastSession && todaySession.activities.length > 0) {
+            saveInHistoryAndReset();
+        }
+    }, [saveInHistoryAndReset, todaySession]);
 
     useAutoSaving(save, 5000);
 

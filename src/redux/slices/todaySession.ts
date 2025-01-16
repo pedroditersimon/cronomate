@@ -5,13 +5,17 @@ import localSave from "../../services/localSave";
 import { generateId } from "../../utils/generateId";
 
 
-// 1. Estado incial
-const defaultState: WorkSessionType = {
-    id: generateId(),
-    createdTimeStamp: new Date().getTime(),
-    timer: { id: generateId() },
-    activities: []
+const getNewDefaultState = (): WorkSessionType => {
+    return {
+        id: generateId(),
+        createdTimeStamp: new Date().getTime(),
+        timer: { id: generateId() },
+        activities: []
+    };
 }
+
+// 1. Estado incial
+const defaultState = getNewDefaultState();
 
 const initialState = localSave.load("todaySession", defaultState);
 
@@ -29,6 +33,11 @@ const todaySessionSlice = createSlice({
             return localSave.load("todaySession", state);
         },
 
+        resetToDefaultState: () => {
+            const newState = getNewDefaultState();
+            localSave.save("todaySession", newState);
+            return newState;
+        },
 
         setSession: (_state, action: PayloadAction<{ newSession: WorkSessionType }>) => {
             const { newSession } = action.payload;
@@ -76,6 +85,7 @@ export const {
     save, load,
 
     setSession,
+    resetToDefaultState,
 
     // Timer
     setTimer,

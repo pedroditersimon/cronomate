@@ -52,6 +52,7 @@ export function History() {
 };
 
 export function HistoryPage() {
+
     return (
         <PageLayout>
             <History />

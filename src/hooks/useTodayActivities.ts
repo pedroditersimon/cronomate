@@ -1,7 +1,9 @@
 import { useDispatch } from "react-redux";
-import { setTimer, addActivity, setActivities, setActivity, save, load, setSession } from "../redux/slices/todaySession";
+import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "../redux/slices/todaySession";
 import { useTypedSelector } from "./useTypedSelector";
 import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
+import indexedDBSave from "../services/indexedDBSave";
+import { toast } from "sonner";
 
 export default function useTodaySession() {
     const todaySession = useTypedSelector(state => state.todaySession);
@@ -36,6 +38,14 @@ export default function useTodaySession() {
         dispatch(addActivity({ newActivity }));
     }
 
+    const saveInHistoryAndReset = () => {
+        indexedDBSave.saveItems("History", [todaySession]);
+        dispatch(resetToDefaultState());
+        // Ya que se utiliza la variable local 'todaySession',
+        // es posible que esta cambie y al guardar no se este guardando lo ultimo que cambio
+        toast.success("Sesion guardada en history! Ver comentarios");
+    }
+
     return {
         todaySession,
 
@@ -49,5 +59,7 @@ export default function useTodaySession() {
         setActivities: _setActivities,
         setActivity: _setActivity,
         addActivity: _addActivity,
+
+        saveInHistoryAndReset
     };
 }

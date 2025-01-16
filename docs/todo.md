@@ -3,10 +3,9 @@
 
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
-- [ ] Implementar Toast de Sonner para errores y mensajes.
+- [x] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
-
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -36,10 +35,10 @@
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 - [ ] Poner en rojo el borde si esta corriendo el timer.
 - [ ] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
-- [ ] Corte automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
-- [ ] Cinco minutos antes, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
-
-
+- [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
+    - [ ] Cinco minutos antes, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
+- [x] Pasar el today en history cuando se monta el today y el dia no es today.
+- [x] Guardar el todaySession en history y restaurar uno nuevo.
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -55,7 +54,7 @@
     - [ ] Crear el botón en la interfaz de usuario.
     - [ ] Marcar como `eliminadas` en lugar de borrarlas.
     - [ ] Aparecen dentro de un panel en la jornada.
-- [ ] Oculta las entradas eliminadas luego de la animacion de tachado.
+- [ ] Oculta las entradas eliminadas **luego** de la animacion de tachado.
 - [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
 - [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 - [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.
@@ -80,7 +79,7 @@
 - [x] Diseñar pagina.
 - [x] Listar registros.
 - [x] Si se cliquean mostrar el registro en modo readOnly.
-
+- [ ] Ordernar el historial por fecha de creacion
 
 #### Sidebar
 - [x] Panel con botones de cada seccion.
