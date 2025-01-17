@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
-import LinkBtn from "../components/LinkBtn";
 import Container from "./Container";
 import clsx from "clsx";
 import { LinkType } from "../types/types";
+import LinkBtn from "../components/Interactable/LinkBtn";
 
 interface LinkBtnType extends LinkType {
     text?: string,
@@ -19,14 +19,14 @@ export default function Sidebar({ links }: Props) {
         <Container className="h-full">
             {
                 links.map(link => {
-                    const isSelected = link.to === currentLocation;
+                    const isSelected = currentLocation.startsWith(link.to);
 
                     return (
                         <LinkBtn
                             {...link}
                             key={link.to}
-                            className={clsx("w-full justify-center rounded-lg hover:bg-gray-700",
-                                { "bg-gray-700": isSelected }
+                            className={clsx("w-full justify-center rounded-lg hover:bg-gray-700 hover:shadow",
+                                { "bg-gray-700 shadow": isSelected }
                             )}
                         >
                             {link.icon &&

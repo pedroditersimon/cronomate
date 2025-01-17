@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { WorkSessionType } from "../types/Activity";
-import { ProgressBar } from "./ProgressBar";
-import activityService from "../services/activityService";
-import { formatDateToText, toDate, toElapsedHourMinutesFormat } from "../utils/TimeUtils";
-import { CircleIcon } from "../assets/Icons";
-import Clickable from "./Clickable";
+import { WorkSessionType } from "../../types/Activity";
+import { ProgressBar } from "../ProgressBar";
+import activityService from "../../services/activityService";
+import { formatDateToText, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { CircleIcon } from "../../assets/Icons";
+import Clickable from "../Interactable/Clickable";
 
 interface Props {
     session: WorkSessionType;

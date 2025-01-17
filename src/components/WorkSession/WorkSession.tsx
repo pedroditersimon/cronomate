@@ -1,18 +1,19 @@
-import clsx from "clsx";
-import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
-import activityService from "../services/activityService";
-import { formatDateToText, toDate, toElapsedHourMinutesFormat } from "../utils/TimeUtils";
-import { generateId } from "../utils/generateId";
-import Container from "../layouts/Container";
-import { ProgressBar } from "../components/ProgressBar";
-import Clickable from "../components/Clickable";
-import { PlayIcon, StopIcon } from "../assets/Icons";
-import ActivityCreator from "../components/Activity/ActivityCreator";
-import Activity from "../components/Activity/Activity";
-import { useMemo } from "react";
-import useTimer from "../hooks/useTimer";
-import useUnrecordedActivity from "../hooks/useUnrecoredActivity";
-import workSessionService from "../services/workSessionService";
+import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity";
+import activityService from "../../services/activityService";
+import { formatDateToText, toDate } from "../../utils/TimeUtils";
+import { generateId } from "../../utils/generateId";
+import Container from "../../layouts/Container";
+import ActivityCreator from "../Activity/ActivityCreator";
+import Activity from "../Activity/Activity";
+import useTimer from "../../hooks/useTimer";
+import useUnrecordedActivity from "../../hooks/useUnrecoredActivity";
+import workSessionService from "../../services/workSessionService";
+import ContainerTopbar from "../../layouts/ContainerTopbar";
+import WorkSessionTimer from "./WorkSessionTimer";
+import WorkSessionSettings from "./WorkSessionSettings";
+import ContainerOverlay from "../../layouts/ContainerOverlay";
+import { useState } from "react";
+import { SettingsIcon } from "../../assets/Icons";
 
 
 const pauseActivityMock: ActivityType = {
@@ -27,7 +28,9 @@ interface Props {
     readOnly?: boolean;
 }
 
-export function WorkSessionPanel({ session, onSessionChange, readOnly }: Props) {
+export function WorkSession({ session, onSessionChange, readOnly }: Props) {
+
+    const [showSettings, setShowSettings] = useState(false);
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
     const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
@@ -45,14 +48,7 @@ export function WorkSessionPanel({ session, onSessionChange, readOnly }: Props) 
         console.log("Today timer");
     }, 5000, session.timer.running && !readOnly);
 
-    // calculated states
-    const [totalElapsedTimeTxt] = useMemo(() => {
 
-        const totalElapsedTime = activityService.getAllElapsedTime(session.activities);
-        const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
-
-        return [totalElapsedTimeTxt];
-    }, [session]);
 
     const addRecordToPauseActivity = (record: RecordType) => {
         if (readOnly) return; // prevent edit in readOnly
@@ -75,7 +71,7 @@ export function WorkSessionPanel({ session, onSessionChange, readOnly }: Props) 
         onSessionChange(updatedSession);
     };
 
-    const handleSetRunningTodayTimer = (running: boolean) => {
+    const handleToggleTimer = (running: boolean) => {
         if (readOnly) return; // prevent edit in readOnly
 
         const now = toDate().getTime();
@@ -114,7 +110,7 @@ export function WorkSessionPanel({ session, onSessionChange, readOnly }: Props) 
 
         // play todayTimer if activity is running
         if (!session.timer.running && activityService.hasRunningRecords(newActivity)) {
-            handleSetRunningTodayTimer(true);
+            handleToggleTimer(true);
         }
     }
 
@@ -126,42 +122,37 @@ export function WorkSessionPanel({ session, onSessionChange, readOnly }: Props) 
 
         // play todayTimer if activity is running
         if (!session.timer.running && activityService.hasRunningRecords(newActivity)) {
-            handleSetRunningTodayTimer(true);
+            handleToggleTimer(true);
         }
     }
 
     return (
         <Container>
-            {/* Today Timer */}
-            <div className="flex flex-row mb-1 items-center">
-                <h1 className="text-xl font-bold">{title}</h1>
-                <div
-                    className={clsx("flex flex-row ml-auto p-1 pl-2 rounded-md",
-                        { "bg-red-400": session.timer.running, }
-                    )}
-                >
-                    {/* Today elapsed time txt */}
-                    {totalElapsedTimeTxt &&
-                        <div className="flex flex-col items-center ">
-                            <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
-                            <ProgressBar progress={150} background={{ "bg-yellow-200": session.timer.running }} />
-                        </div>
-                    }
 
-                    {!readOnly && /* toggle timer btn */
-                        <Clickable
-                            className={clsx({
-                                "hover:bg-red-400": !session.timer.running,
-                                "hover:bg-white hover:text-red-400": session.timer.running,
-                            })}
-                            onClick={() => handleSetRunningTodayTimer(!session.timer.running)}
-                            children={session.timer.running
-                                ? <StopIcon />
-                                : <PlayIcon />}
-                        />
-                    }
-                </div>
-            </div>
+            {/* Settings panel */}
+            <ContainerOverlay show={showSettings && !readOnly} >
+                <WorkSessionSettings
+                    session={session}
+                    onClose={() => setShowSettings(false)}
+                />
+            </ContainerOverlay>
+
+
+            {/* Topbar */}
+            <ContainerTopbar
+                className="group"
+                title={title}
+                // Timer
+                right={<WorkSessionTimer
+                    session={session}
+                    readOnly={readOnly}
+                    onTimerToggle={handleToggleTimer}
+                />}
+
+                icon={!readOnly && <SettingsIcon />}
+                onIconClick={() => setShowSettings(true)}
+            />
+
 
             {!readOnly &&
                 <ActivityCreator onActivityCreated={handleCreateNewActivity} />

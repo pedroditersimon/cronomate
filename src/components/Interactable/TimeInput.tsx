@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "../utils/TimeUtils";
-import useTimer from "../hooks/useTimer";
+import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "../../utils/TimeUtils";
 import clsx from "clsx";
+import useTimer from "../../hooks/useTimer";
 
 interface Props {
     time?: number;
@@ -36,7 +36,7 @@ export function TimeInput({ time, onTimeChange, running, readOnly }: Props) {
 
     return (
         <div
-            className={clsx(`flex flex-row justify-center rounded-md hover:bg-gray-700`, {
+            className={clsx(`flex flex-row justify-center rounded-md hover:bg-gray-700 hover:shadow`, {
                 "text-red-400 hover:bg-red-400 hover:text-white": running
             })}
         >

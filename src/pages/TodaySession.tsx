@@ -1,7 +1,7 @@
 import { WorkSessionType } from "../types/Activity";
 import useTodaySession from "../hooks/useTodayActivities";
 import useAutoSaving from "../hooks/useAutoSaving";
-import { WorkSessionPanel } from "../components/WorkSessionPanel";
+import { WorkSession } from "../components/WorkSession/WorkSession";
 import PageLayout from "../layouts/PageLayout";
 import { isToday, toDate } from "../utils/TimeUtils";
 import { useEffect } from "react";
@@ -24,7 +24,7 @@ export function TodaySession() {
     }
 
     return (
-        <WorkSessionPanel
+        <WorkSession
             session={todaySession}
             onSessionChange={handleSetSession}
         />

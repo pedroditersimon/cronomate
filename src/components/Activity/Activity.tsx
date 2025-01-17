@@ -1,16 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
-
 import { isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import Record from "./Record";
-import Clickable from "../Clickable";
 import clsx from "clsx";
 import HSeparator from "../../layouts/HSeparator";
 import { generateId } from "../../utils/generateId";
 import { findLast } from "lodash";
 import recordService from "../../services/recordService";
 import activityService from "../../services/activityService";
+import Clickable from "../Interactable/Clickable";
 
 interface Props {
     activity: ActivityType;

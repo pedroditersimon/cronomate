@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { LinkType } from "../types/types";
+import { LinkType } from "../../types/types";
+
 
 interface Props extends LinkType {
     children: ReactNode;

@@ -3,8 +3,8 @@ import indexedDBSave from '../services/indexedDBSave';
 import { WorkSessionType } from '../types/Activity';
 import { useEffect, useState } from 'react';
 import ContainerTopbar from '../layouts/ContainerTopbar';
-import WorkSessionItem from '../components/WorkSessionItem';
-import { WorkSessionPanel } from '../components/WorkSessionPanel';
+import WorkSessionItem from '../components/WorkSession/WorkSessionItem';
+import { WorkSession } from '../components/WorkSession/WorkSession';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../layouts/PageLayout';
 
@@ -23,7 +23,7 @@ export function History() {
 
     if (selectedSession) {
         return (
-            <WorkSessionPanel
+            <WorkSession
                 session={selectedSession}
                 onSessionChange={() => { }}
                 readOnly

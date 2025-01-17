@@ -1,5 +1,5 @@
+import LinkBtn from '../components/Interactable/LinkBtn';
 import Container from '../layouts/Container';
-import LinkBtn from '../components/LinkBtn';
 import PageLayout from '../layouts/PageLayout';
 
 export function NotFound() {

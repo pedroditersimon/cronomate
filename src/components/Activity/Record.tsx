@@ -1,10 +1,12 @@
 import { CircleIcon, TrashIcon } from "../../assets/Icons";
-import { TimeInput } from "../TimeInput";
+
 import { getElapsedTime, isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import type { RecordType } from "../../types/Activity";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import clsx from "clsx";
-import Clickable from "../Clickable";
+import { TimeInput } from "../Interactable/TimeInput";
+import Clickable from "../Interactable/Clickable";
+
 
 interface Props {
     record: RecordType;
@@ -13,8 +15,6 @@ interface Props {
 }
 
 export default function Record({ record, onRecordChange, readOnly }: Props) {
-    const [isHover, setIsHover] = useState(false);
-
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
@@ -35,11 +35,9 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
 
     return (
         <div
-            className={clsx("flex flex-row gap-1 transition-opacity duration-300",
+            className={clsx("flex flex-row gap-1 transition-opacity duration-300 group",
                 { "strike-div opacity-50": record.deleted }
             )}
-            onPointerEnter={() => setIsHover(true)}
-            onPointerLeave={() => setIsHover(false)}
         >
             <CircleIcon
                 className={clsx({
@@ -76,7 +74,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
                     className={clsx("ml-auto content-center",
                         {
                             "text-red-400": record.running,
-                            "pr-1": !isHover || readOnly
+                            "pr-1": readOnly
                         }
                     )}
                     children={elapsedTimeTxt}
@@ -85,7 +83,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
                 {/* Delete record btn */}
                 {!readOnly &&
                     <Clickable
-                        className={clsx({ "hidden": !isHover, })}
+                        className="hidden group-hover:block"
                         children={<TrashIcon className="hover:bg-red-400" />}
                         onClick={handleDelete}
                     />

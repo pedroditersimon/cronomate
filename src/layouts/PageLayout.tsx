@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, GearIcon, InboxStackIcon } from "../assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon } from "../assets/Icons";
 import Sidebar from "./Sidebar";
 
 
@@ -11,7 +11,7 @@ export default function PageLayout({ children }: PropsWithChildren) {
                 <Sidebar
                     links={[
                         {
-                            to: "/",
+                            to: "/#",
                             icon: <BriefcaseIcon />,
                             text: "Hoy",
                         },
@@ -30,14 +30,14 @@ export default function PageLayout({ children }: PropsWithChildren) {
                         },
                         {
                             to: "/settings",
-                            icon: <GearIcon />,
+                            icon: <SettingsIcon />,
                             text: "Ajustes",
                         },
                     ]}
                 />
             </div>
 
-            <div className="flex-grow h-full flex flex-row gap-5 items-center justify-center">
+            <div className="flex-grow flex flex-row h-full gap-5 items-center justify-center">
                 {children}
             </div>
         </div>

@@ -1,16 +1,25 @@
+import clsx from "clsx";
+import { ClassValue } from "clsx";
 import { ReactNode } from "react";
+import Clickable from "../components/Interactable/Clickable";
 
-
+// <- [left]  |  [title]  |  [middle]  |  [right] ->
 interface Props {
-    left?: ReactNode;
-    title?: string;
-    middle?: ReactNode;
-    right?: ReactNode;
+    left?: ReactNode;       // *ooo
+    title?: ReactNode;      // o*oo
+    middle?: ReactNode;     // oo*o
+    right?: ReactNode;      // ooo*
+
+    iconOnHover?: boolean;
+    icon?: ReactNode;
+    onIconClick?: () => void;
+
+    className?: ClassValue;
 }
 
-export default function ContainerTopbar({ left, middle, right, title }: Props) {
+export default function ContainerTopbar({ left, title, middle, right, icon, onIconClick, iconOnHover, className }: Props) {
     return (
-        <div className="flex flex-row mb-1 items-center justify-between">
+        <div className={clsx("flex flex-row pb-1 items-center justify-between", className)}>
             <div className="justify-start flex flex-row gap-1 items-center">
                 {left}
                 {title &&
@@ -24,8 +33,16 @@ export default function ContainerTopbar({ left, middle, right, title }: Props) {
                 {middle}
             </div>
 
-            <div className="justify-end">
+            <div className="justify-end flex flex-row">
                 {right}
+                {icon &&
+                    <Clickable className={clsx("p-0 hover:bg-gray-700", {
+                        "hidden group-hover:block": iconOnHover
+                    })}
+                        children={icon}
+                        onClick={onIconClick}
+                    />
+                }
             </div>
         </div>
     );

@@ -6,6 +6,8 @@
 - [x] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
+- [ ] Guardar automaticamente si se navega a otra pathname
+
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -28,9 +30,11 @@
 - [ ] Animacion al ordenar actividades
 - [ ] El activity de pausas debe estar siempre a lo ultimo
 - [ ] Panel detalles de jornada.
-    - [ ] Se abre en una ruedita de configuración del container del `todayActivity`.
+    - [x] Se abre en una ruedita de configuración del container del `todayActivity`.
     - [ ] Listar activities eliminadas.
     - [ ] Opción de restaurar activities eliminadas.
+    - [ ] Toggle para auto-stop, unicamente para este today.
+    - [ ] TimeInput para inicio y fin de jornada.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 - [ ] Poner en rojo el borde si esta corriendo el timer.
@@ -48,6 +52,7 @@
 - [ ] Panel de detalles:
     - [ ] Se abre al cliquear un activity.
     - [ ] Muestra y deja editar informacion relacionada.
+        - [ ] Titulo
     - [ ] Listar entradas eliminadas.
     - [ ] Opción de restaurar entradas eliminadas.
 - [ ] Eliminar activities.
@@ -99,8 +104,8 @@
 - [ ] Agregar un diccionario de palabras clave de uso diario, como 'daily', 'spike', 'deploy'. se agregan con tab y tiene correccion si escribiste medio mal
 
 #### Bugs
-- [ ] Al crear una nueva actividad con el placeholder, corre pero no se actualiza el timer.
-
+- [ ] Al crear una nueva actividad, corre pero no se actualiza el timer.
+- [ ] Verificar que las nuevas actividades se estén creando correctamente, ya que al crear una actividad no aparece, pero tras crear una segunda, esta sí se muestra.
 
 #### Estilos
 - [ ] Implementar un slice de temas y colores, que tenga diferentes temas como dark, light y variantes. Ademas que este se utilize a traves de un hook que contenga un useEffect para re-renderizar el componente si el tema cambia.
