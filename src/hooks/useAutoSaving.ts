@@ -17,7 +17,11 @@ export default function useAutoSaving(save: () => void, timerMs: number) {
         // Establece un intervalo que actualiza el estado cada segundo
         intervalRef.current = setInterval(save, timerMs);
 
-        // Limpia el intervalo cuando el componente se desmonta
-        return () => clearInterval(intervalRef.current);
+        // Guarda y borra el intervalo cuando el componente se desmonta
+        return () => {
+            save();
+            clearInterval(intervalRef.current);
+        }
     }, [save, timerMs, isPageVisible]);
+
 }

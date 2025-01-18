@@ -143,8 +143,12 @@ function getUnrecordedPeriods(records: Array<RecordType>, range?: RecordType): A
     return unrecordedPeriods;
 }
 
+function getOnlyDeleted(records: Array<RecordType>): Array<RecordType> {
+    return records.filter(r => r.deleted);
+}
+
 
 export default {
     add, set, stop, stopAll, hasRunning, hasTime, hasAnyTime,
-    getAllElapsedTime, orderAllByStartTime, getUnrecordedPeriods
+    getAllElapsedTime, orderAllByStartTime, getUnrecordedPeriods, getOnlyDeleted
 };

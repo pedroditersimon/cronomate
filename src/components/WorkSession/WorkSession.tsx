@@ -14,6 +14,7 @@ import WorkSessionSettings from "./WorkSessionSettings";
 import ContainerOverlay from "../../layouts/ContainerOverlay";
 import { useState } from "react";
 import { SettingsIcon } from "../../assets/Icons";
+import clsx from "clsx";
 
 
 const pauseActivityMock: ActivityType = {
@@ -127,7 +128,9 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     }
 
     return (
-        <Container>
+        <Container
+            className={clsx({ "border-red-400": session.timer.running })}
+        >
 
             {/* Settings panel */}
             <ContainerOverlay show={showSettings && !readOnly} >

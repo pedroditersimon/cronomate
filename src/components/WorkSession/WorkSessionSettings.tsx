@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
 import ContainerTopbar from "../../layouts/ContainerTopbar";
 import { WorkSessionType } from "../../types/Activity";
@@ -7,6 +7,7 @@ import ToggleTabs from "../Interactable/ToggleTabs";
 import { TimeInput } from "../Interactable/TimeInput";
 import HSeparator from "../../layouts/HSeparator";
 import Clickable from "../Interactable/Clickable";
+import Activity from "../Activity/Activity";
 
 interface Props {
     session: WorkSessionType;
@@ -16,6 +17,10 @@ interface Props {
 export default function WorkSessionSettings({ session, onClose }: Props) {
     const [autoStop, setAutoStop] = useState(false);
     const [expandDeletedActivities, setExpandDeletedActivities] = useState(false);
+
+    const deletedActivities = useMemo(() => {
+        return session.activities.filter(act => act.deleted);
+    }, [session]);
 
     return (
         <>
@@ -49,31 +54,22 @@ export default function WorkSessionSettings({ session, onClose }: Props) {
                         onClick={() => setExpandDeletedActivities(prev => !prev)}
                     />
                 </div>
-                <HSeparator />
-                <p className="text-gray-500 text-sm">No hay actividades eliminadas.</p>
+                <HSeparator className="mb-2" />
+
+                <div className="flex flex-col gap-5">
+                    {deletedActivities.length === 0
+                        ? <p className="text-gray-500 text-sm">No hay actividades eliminadas.</p>
+                        : deletedActivities.map(activity => (
+                            <Activity
+                                key={activity.id}
+                                activity={activity}
+                                onActivityChange={() => { }}
+                                readOnly
+                            />
+                        ))
+                    }
+                </div>
             </div>
-
-
-            <FormField title="Detener temporizador">
-                <ToggleTabs falseLabel="Manualmente" trueLabel="Automático" onSelected={setAutoStop} />
-                {autoStop && <p className="text-gray-500 text-sm">Detiene el temporizador automaticamente al finalizar la jornada.</p>}
-            </FormField>
-            <FormField title="Detener temporizador">
-                <ToggleTabs falseLabel="Manualmente" trueLabel="Automático" onSelected={setAutoStop} />
-                {autoStop && <p className="text-gray-500 text-sm">Detiene el temporizador automaticamente al finalizar la jornada.</p>}
-            </FormField>
-            <FormField title="Detener temporizador">
-                <ToggleTabs falseLabel="Manualmente" trueLabel="Automático" onSelected={setAutoStop} />
-                {autoStop && <p className="text-gray-500 text-sm">Detiene el temporizador automaticamente al finalizar la jornada.</p>}
-            </FormField>
-            <FormField title="Detener temporizador">
-                <ToggleTabs falseLabel="Manualmente" trueLabel="Automático" onSelected={setAutoStop} />
-                {autoStop && <p className="text-gray-500 text-sm">Detiene el temporizador automaticamente al finalizar la jornada.</p>}
-            </FormField>
-            <FormField title="Detener temporizador">
-                <ToggleTabs falseLabel="Manualmente" trueLabel="Automático" onSelected={setAutoStop} />
-                {autoStop && <p className="text-gray-500 text-sm">Detiene el temporizador automaticamente al finalizar la jornada.</p>}
-            </FormField>
         </>
     );
 }

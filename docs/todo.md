@@ -5,9 +5,9 @@
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [x] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
-- [ ] Si el container no tiene el mouse adentro, el opacity del border es menor.
-- [ ] Guardar automaticamente si se navega a otra pathname
-
+- [x] Si el container no tiene el mouse adentro, el opacity del border es menor.
+- [x] Guardar automaticamente si se navega a otra pathname
+- [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -31,13 +31,13 @@
 - [ ] El activity de pausas debe estar siempre a lo ultimo
 - [ ] Panel detalles de jornada.
     - [x] Se abre en una ruedita de configuración del container del `todayActivity`.
-    - [ ] Listar activities eliminadas.
+    - [x] Listar activities eliminadas.
     - [ ] Opción de restaurar activities eliminadas.
     - [ ] Toggle para auto-stop, unicamente para este today.
     - [ ] TimeInput para inicio y fin de jornada.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
-- [ ] Poner en rojo el borde si esta corriendo el timer.
+- [x] Poner en rojo el borde si esta corriendo el timer.
 - [ ] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 - [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
     - [ ] Cinco minutos antes, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
@@ -47,7 +47,7 @@
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
-- [ ] Ocultar/Contraer el listado de Records.
+- [x] Ocultar/Contraer el listado de Records.
 - [ ] Animacion al ordenar tareas
 - [ ] Panel de detalles:
     - [ ] Se abre al cliquear un activity.
@@ -55,10 +55,10 @@
         - [ ] Titulo
     - [ ] Listar entradas eliminadas.
     - [ ] Opción de restaurar entradas eliminadas.
-- [ ] Eliminar activities.
-    - [ ] Crear el botón en la interfaz de usuario.
-    - [ ] Marcar como `eliminadas` en lugar de borrarlas.
-    - [ ] Aparecen dentro de un panel en la jornada.
+    - [ ] Eliminar activities.
+        - [ ] Crear el botón en el panel de detalles.
+        - [ ] Marcar como `eliminadas` en lugar de borrarlas.
+        - [ ] Aparecen dentro de un panel en la jornada.
 - [ ] Oculta las entradas eliminadas **luego** de la animacion de tachado.
 - [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
 - [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.

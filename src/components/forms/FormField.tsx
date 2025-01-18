@@ -11,7 +11,7 @@ interface Props extends PropsWithChildren {
 
 export default function FormField({ title, children, className }: Props) {
     return (
-        <div className={clsx("flex flex-col gap-1 mb-1", className)}>
+        <div className={clsx("flex flex-col gap-1 mb-1 w-full", className)}>
 
             {/* Title */}
             <p className="text-gray-400 font-semibold">{title}</p>

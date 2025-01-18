@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { CircleIcon, PlayIcon, StopIcon } from "../../assets/Icons";
+import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon, CircleIcon, PlayIcon, StopIcon, TrashIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
 import { isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
 import Record from "./Record";
@@ -15,14 +15,17 @@ interface Props {
     activity: ActivityType;
     onActivityChange: (newActivity: ActivityType) => void;
     onTitleConfirm?: (newTitle: string) => void;
+
+    showDeletedRecords?: boolean;
     readOnly?: boolean;
     selectTitleOnClick?: boolean;
 }
 
-export default function Activity({ activity, onActivityChange, onTitleConfirm, readOnly, selectTitleOnClick }: Props) {
+export default function Activity({ activity, onActivityChange, onTitleConfirm, showDeletedRecords, readOnly, selectTitleOnClick }: Props) {
     // local states
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
+    const [expandRecords, setExpandRecords] = useState(false);
 
     // sync title if activity changes
     useEffect(() => {
@@ -85,17 +88,25 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
         onActivityChange({ ...activity, title: newTitle });
     }
 
+    const handleDelete = () => {
+        onActivityChange({
+            ...activity,
+            deleted: true,
+        });
+    }
+
     return (
         <div className="flex flex-col gap-1 min-w-80">
             <div className="flex flex-row gap-1">
-                <CircleIcon
-                    className={clsx({
-                        "bg-red-400": hasRunningRecords,
-                        "bg-gray-700": !hasRunningRecords
-                    })}
+                <Clickable
+                    className="hover:bg-gray-700"
+                    onClick={() => setExpandRecords(prev => !prev)}
+                    children={expandRecords
+                        ? <ChevronDownIcon />
+                        : <ChevronRightIcon />}
                 />
                 <div
-                    className={clsx("flex flex-row gap-1 w-full box-border rounded-md pl-2", {
+                    className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2", {
                         "bg-red-400": hasRunningRecords,
                         "bg-gray-700": focused,
                         "hover:bg-gray-700": !hasRunningRecords && !readOnly,
@@ -146,6 +157,21 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                         {totalElapsedTimeTxt}
                     </span>
 
+                    {/* Delete activity btn */}
+                    {!readOnly &&
+                        <Clickable
+                            className="hidden group-hover:block"
+                            children={
+                                <TrashIcon
+                                    className={clsx("hover:bg-red-400",
+                                        { "hover:bg-white hover:text-red-400": hasRunningRecords })}
+                                />
+                            }
+                            onClick={handleDelete}
+                        />
+                    }
+
+                    {/* Play/Stop activity btn */}
                     {!readOnly &&
                         <Clickable
                             onClick={handleRun}
@@ -154,13 +180,15 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                                 : <PlayIcon className="hover:bg-red-400" />}
                         />
                     }
+
                 </div>
             </div>
 
             <HSeparator />
             <div className="flex flex-col gap-1 ml-6">
                 {activity.records.map((record, i) => {
-                    if (record.deleted && !readOnly) return;
+                    if (record.deleted && !showDeletedRecords && !readOnly) return;
+                    if (!record.running && !expandRecords) return;
                     return (<>
                         <Record
                             key={record.id}
@@ -172,6 +200,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, r
                     </>)
                 })}
             </div>
+
         </div>
     );
 }

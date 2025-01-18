@@ -36,10 +36,12 @@ export default function WorkSessionItem({ session, onSelected }: Props) {
                 onClick={handleClick}
             >
                 <span>{title}</span>
-                <div className="flex flex-col items-center">
-                    <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
-                    <ProgressBar progress={150} />
-                </div>
+                {totalElapsedTimeTxt &&
+                    <div className="flex flex-col items-center">
+                        <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
+                        <ProgressBar progress={150} />
+                    </div>
+                }
             </Clickable>
         </div>
     );

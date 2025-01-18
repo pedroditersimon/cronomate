@@ -10,6 +10,7 @@ import { useEffect } from "react";
 export function TodaySession() {
     const { todaySession, save, setSession, saveInHistoryAndReset } = useTodaySession();
 
+    // Save in history if its another day
     useEffect(() => {
         const isPastSession = !isToday(toDate(todaySession.createdTimeStamp));
         if (isPastSession && todaySession.activities.length > 0) {

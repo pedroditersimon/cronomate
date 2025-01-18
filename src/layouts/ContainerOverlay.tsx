@@ -9,7 +9,7 @@ interface Props extends PropsWithChildren {
 export default function ContainerOverlay({ children, show }: Props) {
     return (
         <Container
-            className={clsx("!absolute left-0 top-0 size-full z-[1] border-none",
+            className={clsx("!absolute !pr-0 left-0 top-0 size-full z-[1] border-none",
                 { "hidden": !show }
             )}
         >
