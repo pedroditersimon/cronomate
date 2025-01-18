@@ -3,10 +3,7 @@
 
 ## Generales
 - [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
-- [x] Implementar Toast de Sonner para errores y mensajes.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
-- [x] Si el container no tiene el mouse adentro, el opacity del border es menor.
-- [x] Guardar automaticamente si se navega a otra pathname
 - [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
 
 #### Vista jornada
@@ -34,20 +31,17 @@
     - [x] Listar activities eliminadas.
     - [ ] Opción de restaurar activities eliminadas.
     - [ ] Toggle para auto-stop, unicamente para este today.
-    - [ ] TimeInput para inicio y fin de jornada.
+    - [x] TimeInput para inicio y fin de jornada.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
-- [x] Poner en rojo el borde si esta corriendo el timer.
 - [ ] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 - [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
     - [ ] Cinco minutos antes, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
-- [x] Pasar el today en history cuando se monta el today y el dia no es today.
-- [x] Guardar el todaySession en history y restaurar uno nuevo.
+
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
 - [ ] Como regla, una actividad no puede tener 2 Record corriendo al mismo tiempo.
-- [x] Ocultar/Contraer el listado de Records.
 - [ ] Animacion al ordenar tareas
 - [ ] Panel de detalles:
     - [ ] Se abre al cliquear un activity.
@@ -80,10 +74,6 @@
 
 
 #### Vista Historial.
-- [x] Agregar link en el sidebar
-- [x] Diseñar pagina.
-- [x] Listar registros.
-- [x] Si se cliquean mostrar el registro en modo readOnly.
 - [ ] Ordernar el historial por fecha de creacion
 
 #### Sidebar
@@ -129,6 +119,9 @@
 - [x] Inlcuir la fecha y hora en el objeto `TodayActivitiesState`.
 - [x] No incluir en el calculo de elapsedTime las actividades y los records eliminados.
 - [x] Renombrar el objeto de jornada por `workSession` y para today es `todayWorkSession`
+- [x] Si el container no tiene el mouse adentro, el opacity del border es menor.
+- [x] Guardar automaticamente si se navega a otra pathname
+- [x] Implementar Toast de Sonner para errores y mensajes.
 
 #### Vista jornada
 - [x] Listado de actividades y records con su timer.
@@ -137,6 +130,9 @@
 - [x] Las pausas se pueden editar.
 - [x] Hacer un componente separado para visualizar un `workSession` y luego utilizrlo por debajo de la vista de jornada.
 - [x] El titulo debe ser la fecha de creacion, y si es hoy ponerle como 'hoy'
+- [x] Poner en rojo el borde si esta corriendo el timer.
+- [x] Pasar el today en history cuando se monta el today y el dia no es today.
+- [x] Guardar el todaySession en history y restaurar uno nuevo.
 
 #### Actividad (Activity)
 - [x] funciones de `play` y `stop`.
@@ -144,9 +140,16 @@
 - [x] Si se da a play, buscar Record con endTime menor a 1-2 minutos de now y continuarla.
 - [x] Las entradas se ordenan por startTime
 - [x] El `esc` cancela la edicion del titulo y lo devuelve al estado original.
+- [x] Ocultar/Contraer el listado de Records.
 
 #### Entradas (Record)
 - [x] input de hora inicio y fin, que que acepte cualquier formato (15.30, 5:24pm, 00-48am).
 - [x] El Record deja de correr si se confirma un cambio en TimeInput, excepto que siga siendo now.
+
+#### Vista Historial.
+- [x] Agregar link en el sidebar
+- [x] Diseñar pagina.
+- [x] Listar registros.
+- [x] Si se cliquean mostrar el registro en modo readOnly.
 
 </details>

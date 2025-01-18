@@ -71,7 +71,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
 
                 {/* Elapsed Time text */}
                 <span
-                    className={clsx("ml-auto content-center",
+                    className={clsx("ml-auto content-center box-border",
                         {
                             "text-red-400": record.running,
                             "pr-1": readOnly

@@ -136,6 +136,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
             <ContainerOverlay show={showSettings && !readOnly} >
                 <WorkSessionSettings
                     session={session}
+                    onSessionChange={onSessionChange}
                     onClose={() => setShowSettings(false)}
                 />
             </ContainerOverlay>

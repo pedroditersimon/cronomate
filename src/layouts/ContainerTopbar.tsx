@@ -19,8 +19,8 @@ interface Props {
 
 export default function ContainerTopbar({ left, title, middle, right, icon, onIconClick, iconOnHover, className }: Props) {
     return (
-        <div className={clsx("flex flex-row pb-1 items-center justify-between", className)}>
-            <div className="justify-start flex flex-row gap-1 items-center">
+        <div className={clsx("flex flex-row pb-1 justify-between", className)}>
+            <div className="justify-start flex flex-row gap-1">
                 {left}
                 {title &&
                     <div >

@@ -22,20 +22,20 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
 
         const totalElapsedTime = activityService.getAllElapsedTime(session.activities);
         const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
-
+        console.log(totalElapsedTime);
         return [totalElapsedTimeTxt];
     }, [session]);
 
 
     return (
         <div
-            className={clsx("flex flex-row ml-auto p-1 pl-2 rounded-md",
+            className={clsx("flex flex-row ml-auto p-1 rounded-md",
                 { "bg-red-400": session.timer.running, }
             )}
         >
             {/* Today elapsed time txt */}
             {totalElapsedTimeTxt &&
-                <div className="flex flex-col items-center ">
+                <div className="flex flex-col items-center pl-1">
                     <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
                     <ProgressBar progress={150} background={{ "bg-yellow-200": session.timer.running }} />
                 </div>

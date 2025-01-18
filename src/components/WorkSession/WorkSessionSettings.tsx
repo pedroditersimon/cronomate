@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
 import ContainerTopbar from "../../layouts/ContainerTopbar";
-import { WorkSessionType } from "../../types/Activity";
+import { RecordType, WorkSessionType } from "../../types/Activity";
 import FormField from "../forms/FormField";
 import ToggleTabs from "../Interactable/ToggleTabs";
 import { TimeInput } from "../Interactable/TimeInput";
@@ -11,16 +11,25 @@ import Activity from "../Activity/Activity";
 
 interface Props {
     session: WorkSessionType;
+    onSessionChange: (newSession: WorkSessionType) => void;
+
     onClose: () => void;
 }
 
-export default function WorkSessionSettings({ session, onClose }: Props) {
+export default function WorkSessionSettings({ session, onSessionChange, onClose }: Props) {
     const [autoStop, setAutoStop] = useState(false);
     const [expandDeletedActivities, setExpandDeletedActivities] = useState(false);
 
     const deletedActivities = useMemo(() => {
         return session.activities.filter(act => act.deleted);
     }, [session]);
+
+    const handleChangeTimer = (newTimer: RecordType) => {
+        onSessionChange({
+            ...session,
+            timer: newTimer
+        });
+    }
 
     return (
         <>
@@ -33,11 +42,22 @@ export default function WorkSessionSettings({ session, onClose }: Props) {
                 onIconClick={onClose}
             />
 
-            <FormField title="Inicio y Fin">
+            <FormField title="Inicio y fin">
                 <div className="flex flex-row gap-2">
-                    <TimeInput></TimeInput>
+                    <TimeInput
+                        time={session.timer.startTime}
+                        onTimeChange={newStartTime => handleChangeTimer({
+                            ...session.timer,
+                            startTime: newStartTime
+                        })}
+                    />
                     -
-                    <TimeInput></TimeInput>
+                    <TimeInput
+                        time={session.timer.endTime}
+                        onTimeChange={newEndTime => handleChangeTimer({
+                            ...session.timer,
+                            endTime: newEndTime
+                        })} />
                 </div>
             </FormField>
 

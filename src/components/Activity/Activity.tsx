@@ -113,7 +113,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
                     })}
                 >
                     <input
-                        className="bg-transparent outline-none flex-grow"
+                        className="bg-transparent outline-none mr-auto basis-1/2 "
                         placeholder={activity.title}
                         value={title}
                         readOnly={readOnly}
