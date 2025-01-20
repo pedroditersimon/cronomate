@@ -2,9 +2,10 @@ import { useMemo } from "react";
 import { WorkSessionType } from "../../types/Activity";
 import { ProgressBar } from "../ProgressBar";
 import activityService from "../../services/activityService";
-import { formatDateToText, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { formatDateToText, toDate, convertElapsedTimeToText } from "../../utils/TimeUtils";
 import { CircleIcon } from "../../assets/Icons";
 import Clickable from "../Interactable/Clickable";
+import WorkSessionTimer from "./WorkSessionTimer";
 
 interface Props {
     session: WorkSessionType;
@@ -13,14 +14,6 @@ interface Props {
 
 export default function WorkSessionItem({ session, onSelected }: Props) {
 
-    // calculated states
-    const [totalElapsedTimeTxt] = useMemo(() => {
-
-        const totalElapsedTime = activityService.getAllElapsedTime(session.activities);
-        const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
-
-        return [totalElapsedTimeTxt];
-    }, [session]);
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
 
@@ -36,12 +29,11 @@ export default function WorkSessionItem({ session, onSelected }: Props) {
                 onClick={handleClick}
             >
                 <span>{title}</span>
-                {totalElapsedTimeTxt &&
-                    <div className="flex flex-col items-center">
-                        <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
-                        <ProgressBar progress={150} />
-                    </div>
-                }
+                <WorkSessionTimer
+                    session={session}
+                    onTimerToggle={() => { }}
+                    readOnly
+                />
             </Clickable>
         </div>
     );

@@ -12,9 +12,12 @@ import ContainerTopbar from "../../layouts/ContainerTopbar";
 import WorkSessionTimer from "./WorkSessionTimer";
 import WorkSessionSettings from "./WorkSessionSettings";
 import ContainerOverlay from "../../layouts/ContainerOverlay";
-import { useState } from "react";
-import { SettingsIcon } from "../../assets/Icons";
+import { useEffect, useState } from "react";
+import { DBIcon, SettingsIcon } from "../../assets/Icons";
 import clsx from "clsx";
+import Indicator from "../Indicator";
+import useIndicator from "../../hooks/useIndicator";
+import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
 
 
 const pauseActivityMock: ActivityType = {
@@ -30,8 +33,9 @@ interface Props {
 }
 
 export function WorkSession({ session, onSessionChange, readOnly }: Props) {
-
+    const saveIndicator = useIndicator();
     const [showSettings, setShowSettings] = useState(false);
+    const { workSessionSettings } = useWorkSessionSettigs();
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
     const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
@@ -50,6 +54,19 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     }, 5000, session.timer.running && !readOnly);
 
 
+    // stop timer on window close
+    useEffect(() => {
+        // Feature not enabled
+        if (!workSessionSettings.stopOnClose) return;
+
+        const stopActivitiesAndSave = () => {
+            const updatedSession = workSessionService.stopTimerAndActivities(session);
+            onSessionChange(updatedSession);
+        }
+
+        window.addEventListener("beforeunload", stopActivitiesAndSave);
+        return () => window.removeEventListener("beforeunload", stopActivitiesAndSave);
+    });
 
     const addRecordToPauseActivity = (record: RecordType) => {
         if (readOnly) return; // prevent edit in readOnly
@@ -127,6 +144,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
         }
     }
 
+
     return (
         <Container
             className={clsx({ "border-red-400": session.timer.running })}
@@ -146,6 +164,15 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
             <ContainerTopbar
                 className="group"
                 title={title}
+
+                // Saving indicator
+                middle={<Indicator
+                    className="text-green-400"
+                    text="Guardado"
+                    icon={<DBIcon className="size-5" />}
+                    indicatorState={saveIndicator.state}
+                />}
+
                 // Timer
                 right={<WorkSessionTimer
                     session={session}

@@ -1,6 +1,6 @@
 import { CircleIcon, TrashIcon } from "../../assets/Icons";
 
-import { getElapsedTime, isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { getElapsedTime, isNow, toDate, convertElapsedTimeToText } from "../../utils/TimeUtils";
 import type { RecordType } from "../../types/Activity";
 import { useMemo } from "react";
 import clsx from "clsx";
@@ -19,7 +19,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
         const elapsedTime = getElapsedTime(toDate(record.startTime, false), toDate(record.endTime, false));
-        return toElapsedHourMinutesFormat(elapsedTime);
+        return convertElapsedTimeToText(elapsedTime);
     }, [record]);
 
     // no record

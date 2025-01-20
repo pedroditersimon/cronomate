@@ -3,6 +3,7 @@ export interface WorkSessionType {
     timer: RecordType;
     createdTimeStamp: number; // starting time
     activities: Array<ActivityType>;
+    maxDurationMinutes?: number; // En minutos
 }
 
 export interface ActivityType {
@@ -18,4 +19,10 @@ export interface RecordType {
     endTime?: number;   // Date
     running?: boolean;
     deleted?: boolean;
+}
+
+
+export interface WorkSessionSettingsType {
+    stopOnSessionEnd: boolean;
+    stopOnClose: boolean;
 }

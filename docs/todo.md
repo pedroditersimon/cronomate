@@ -1,8 +1,10 @@
-
+La pausa no se agrega, no funciona.
+A crear una tarea con el timer sin correr no se crea y el timer corre, solo si el timer corre se puede crear
+Lo mismo al correr tareas.
 
 
 ## Generales
-- [ ] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
+- [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
 
@@ -26,17 +28,19 @@
 - [ ] Las actividades se ordenan por startTime
 - [ ] Animacion al ordenar actividades
 - [ ] El activity de pausas debe estar siempre a lo ultimo
-- [ ] Panel detalles de jornada.
+- [ ] Panel ajustes de jornada.
     - [x] Se abre en una ruedita de configuración del container del `todayActivity`.
     - [x] Listar activities eliminadas.
     - [ ] Opción de restaurar activities eliminadas.
-    - [ ] Toggle para auto-stop, unicamente para este today.
+    - [x] Toggle para auto-stop, unicamente para este today.
     - [x] TimeInput para inicio y fin de jornada.
+    - [x] Guardar los ajustes en localStorage, y cargar siempre esos.
+    - [ ] Aplicar configuracion en el workSession.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
-- [ ] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
+- [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 - [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
-    - [ ] Cinco minutos antes, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
+- [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
 
 
 #### Actividad (Activity)

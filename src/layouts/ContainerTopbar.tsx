@@ -23,17 +23,15 @@ export default function ContainerTopbar({ left, title, middle, right, icon, onIc
             <div className="justify-start flex flex-row gap-1">
                 {left}
                 {title &&
-                    <div >
-                        <h1 className="text-xl font-bold">{title}</h1>
-                    </div>
+                    <h1 className="text-xl font-bold">{title}</h1>
                 }
             </div>
 
-            <div className="justify-center">
+            <div >
                 {middle}
             </div>
 
-            <div className="justify-end flex flex-row gap-1">
+            <div className="flex flex-row gap-1">
                 {right}
                 {icon &&
                     <Clickable className={clsx("p-0 hover:bg-gray-700", {

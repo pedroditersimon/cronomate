@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "../redux/slices/todaySession";
+import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "../redux/slices/todaySessionSlice";
 import { useTypedSelector } from "./useTypedSelector";
 import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
 import indexedDBSave from "../services/indexedDBSave";

@@ -1,13 +1,16 @@
 import { useMemo, useState } from "react";
 import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
 import ContainerTopbar from "../../layouts/ContainerTopbar";
-import { RecordType, WorkSessionType } from "../../types/Activity";
+import { RecordType, WorkSessionSettingsType, WorkSessionType } from "../../types/Activity";
 import FormField from "../forms/FormField";
 import ToggleTabs from "../Interactable/ToggleTabs";
 import { TimeInput } from "../Interactable/TimeInput";
 import HSeparator from "../../layouts/HSeparator";
 import Clickable from "../Interactable/Clickable";
 import Activity from "../Activity/Activity";
+import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
+import { TimeInputMinutes } from "../Interactable/TimeInputMinutes";
+
 
 interface Props {
     session: WorkSessionType;
@@ -17,11 +20,12 @@ interface Props {
 }
 
 export default function WorkSessionSettings({ session, onSessionChange, onClose }: Props) {
-    const [autoStop, setAutoStop] = useState(false);
+    const { workSessionSettings, setSettings, save } = useWorkSessionSettigs();
     const [expandDeletedActivities, setExpandDeletedActivities] = useState(false);
 
-    const deletedActivities = useMemo(() => {
-        return session.activities.filter(act => act.deleted);
+    const [deletedActivities] = useMemo(() => {
+        const deletedActivities = session.activities.filter(act => act.deleted);
+        return [deletedActivities];
     }, [session]);
 
     const handleChangeTimer = (newTimer: RecordType) => {
@@ -29,6 +33,11 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
             ...session,
             timer: newTimer
         });
+    }
+
+    const handleSetSettings = (newSettings: WorkSessionSettingsType) => {
+        setSettings(newSettings);
+        save(); // save on edit
     }
 
     return (
@@ -42,29 +51,62 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                 onIconClick={onClose}
             />
 
-            <FormField title="Inicio y fin">
-                <div className="flex flex-row gap-2">
-                    <TimeInput
-                        time={session.timer.startTime}
-                        onTimeChange={newStartTime => handleChangeTimer({
-                            ...session.timer,
-                            startTime: newStartTime
+            <div className="flex flex-row gap-5">
+                <FormField title="Inicio y fin">
+                    <div className="flex flex-row gap-2">
+                        <TimeInput
+                            className="max-w-full"
+                            time={session.timer.startTime}
+                            onTimeChange={newStartTime => handleChangeTimer({
+                                ...session.timer,
+                                startTime: newStartTime
+                            })}
+                        />
+                        -
+                        <TimeInput
+                            className="max-w-full"
+                            time={session.timer.endTime}
+                            onTimeChange={newEndTime => handleChangeTimer({
+                                ...session.timer,
+                                endTime: newEndTime
+                            })} />
+                    </div>
+                </FormField>
+
+                <FormField title="Duración">
+                    <TimeInputMinutes
+                        className="max-w-full"
+                        minutes={session.maxDurationMinutes}
+                        onMinutesChange={minutes => onSessionChange({
+                            ...session,
+                            maxDurationMinutes: minutes
                         })}
                     />
-                    -
-                    <TimeInput
-                        time={session.timer.endTime}
-                        onTimeChange={newEndTime => handleChangeTimer({
-                            ...session.timer,
-                            endTime: newEndTime
-                        })} />
-                </div>
+                </FormField>
+            </div>
+
+            <FormField title="Detener temporizador al finalizar la jornada">
+                <ToggleTabs falseLabel="Desactivado" trueLabel="Al finalizar"
+                    value={workSessionSettings.stopOnSessionEnd}
+                    onSelected={(value) => handleSetSettings({
+                        ...workSessionSettings,
+                        stopOnSessionEnd: value
+                    })}
+                />
+                {workSessionSettings.stopOnSessionEnd && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al finalizar la jornada.</p>}
             </FormField>
 
-            <FormField title="Detener temporizador">
-                <ToggleTabs falseLabel="Manualmente" trueLabel="Automático" onSelected={setAutoStop} />
-                {autoStop && <p className="text-gray-500 text-sm">Detiene el temporizador automaticamente al finalizar la jornada.</p>}
+            <FormField title="Detener temporizador al cerrar la pagina">
+                <ToggleTabs falseLabel="Desactivado" trueLabel="Al cerrar página"
+                    value={workSessionSettings.stopOnClose}
+                    onSelected={(value) => handleSetSettings({
+                        ...workSessionSettings,
+                        stopOnClose: value
+                    })}
+                />
+                {workSessionSettings.stopOnClose && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al cerrar la página.</p>}
             </FormField>
+
 
             <div className="flex flex-col gap-1">
                 <div className="flex gap-1 justify-between">

@@ -1,16 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "../../utils/TimeUtils";
-import clsx from "clsx";
+import clsx, { ClassValue } from "clsx";
 import useTimer from "../../hooks/useTimer";
 
 interface Props {
     time?: number;
     onTimeChange?: (newState: number | undefined) => void;
+
     running?: boolean;
     readOnly?: boolean;
+    className?: ClassValue;
 }
 
-export function TimeInput({ time, onTimeChange, running, readOnly }: Props) {
+// TimeInput based in Date
+export function TimeInput({ time, onTimeChange, running, readOnly, className }: Props) {
     const [focused, setFocused] = useState(false);
     const [inputTime, setInputTime] = useState<string>(time ? to24HourFormat(toDate(time)) : "-");
 
@@ -36,12 +39,12 @@ export function TimeInput({ time, onTimeChange, running, readOnly }: Props) {
 
     return (
         <div
-            className={clsx(`flex flex-row justify-center rounded-md hover:bg-gray-700 hover:shadow`, {
+            className={clsx(`max-w-12 rounded-md hover:bg-gray-700 hover:shadow`, className, {
                 "text-red-400 hover:bg-red-400 hover:text-white": running
             })}
         >
             <input
-                className={clsx(`max-w-12 bg-transparent outline-none text-center`, {
+                className={clsx(`w-full bg-transparent outline-none text-center`, {
                     "hover:cursor-text": focused,
                     "hover:cursor-pointer": !focused && !readOnly,
                 })}

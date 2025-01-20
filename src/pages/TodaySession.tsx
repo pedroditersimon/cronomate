@@ -1,6 +1,4 @@
-import { WorkSessionType } from "../types/Activity";
 import useTodaySession from "../hooks/useTodayActivities";
-import useAutoSaving from "../hooks/useAutoSaving";
 import { WorkSession } from "../components/WorkSession/WorkSession";
 import PageLayout from "../layouts/PageLayout";
 import { isToday, toDate } from "../utils/TimeUtils";
@@ -16,18 +14,25 @@ export function TodaySession() {
         if (isPastSession && todaySession.activities.length > 0) {
             saveInHistoryAndReset();
         }
-    }, [saveInHistoryAndReset, todaySession]);
 
-    useAutoSaving(save, 5000);
+        // save in every change
+        save();
 
-    const handleSetSession = async (newSession: WorkSessionType) => {
-        setSession(newSession);
-    }
+    }, [save, saveInHistoryAndReset, todaySession]);
+
+    // save on window close
+    useEffect(() => {
+        window.addEventListener("beforeunload", save);
+        return () => window.removeEventListener("beforeunload", save);
+    });
+
+    // replaced with: save in every change
+    // useAutoSaving(save, 5000);
 
     return (
         <WorkSession
             session={todaySession}
-            onSessionChange={handleSetSession}
+            onSessionChange={setSession}
         />
     )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon, CircleIcon, PlayIcon, StopIcon, TrashIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
-import { isNow, toDate, toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { isNow, toDate, convertElapsedTimeToText } from "../../utils/TimeUtils";
 import Record from "./Record";
 import clsx from "clsx";
 import HSeparator from "../../layouts/HSeparator";
@@ -36,7 +36,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
     const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {
 
         const totalElapsedTime = recordService.getAllElapsedTime(activity.records);
-        const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
+        const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
 
         const hasRunningRecords = activityService.hasRunningRecords(activity);
 

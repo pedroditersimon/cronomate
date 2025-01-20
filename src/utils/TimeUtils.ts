@@ -47,10 +47,10 @@ export function getElapsedTime(start: Date | undefined, end: Date | undefined) {
   return endTime.getTime() - startTime.getTime();
 }
 
-export function toElapsedHourMinutesFormat(elapsedTime: number) {
-  if (elapsedTime <= 0) return undefined;
+export function convertElapsedTimeToText(elapsedMs: number) {
+  if (elapsedMs <= 0) return undefined;
 
-  const totalMinutes = Math.floor(elapsedTime / (1000 * 60));
+  const totalMinutes = Math.floor(elapsedMs / (1000 * 60));
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
 
@@ -135,4 +135,10 @@ export function isNow(time: number | undefined, offsetSeconds: number = 1): bool
 
 export function isNowOrFuture(time: number | undefined): boolean {
   return getElapsedTimeFromNow(time) >= 0;
+}
+
+
+export function convertMinutesToText(minutes: number) {
+  const milliseconds = minutes / 60 / 60;
+  return convertElapsedTimeToText(milliseconds);
 }

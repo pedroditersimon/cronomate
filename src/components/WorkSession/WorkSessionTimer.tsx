@@ -5,7 +5,7 @@ import { PlayIcon, StopIcon } from "../../assets/Icons";
 import { WorkSessionType } from "../../types/Activity";
 import activityService from "../../services/activityService";
 import { useMemo } from "react";
-import { toElapsedHourMinutesFormat } from "../../utils/TimeUtils";
+import { convertElapsedTimeToText } from "../../utils/TimeUtils";
 import Clickable from "../Interactable/Clickable";
 
 interface Props {
@@ -18,26 +18,40 @@ interface Props {
 export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: Props) {
 
     // calculated states
-    const [totalElapsedTimeTxt] = useMemo(() => {
+    const [totalElapsedTimeTxt, sessionProgress] = useMemo(() => {
 
         const totalElapsedTime = activityService.getAllElapsedTime(session.activities);
-        const totalElapsedTimeTxt = toElapsedHourMinutesFormat(totalElapsedTime);
-        console.log(totalElapsedTime);
-        return [totalElapsedTimeTxt];
+        const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
+
+        // -1 means has not progress
+        const sessionProgress = session.maxDurationMinutes
+            ? (totalElapsedTime / (session.maxDurationMinutes * 60000)) * 100
+            : -1;
+        console.log(sessionProgress);
+        return [totalElapsedTimeTxt, sessionProgress];
     }, [session]);
 
 
     return (
         <div
             className={clsx("flex flex-row ml-auto p-1 rounded-md",
-                { "bg-red-400": session.timer.running, }
+                { "bg-red-400": !readOnly && session.timer.running, }
             )}
         >
             {/* Today elapsed time txt */}
             {totalElapsedTimeTxt &&
-                <div className="flex flex-col items-center pl-1">
-                    <span className="mx-2 text-sm">{totalElapsedTimeTxt}</span>
-                    <ProgressBar progress={150} background={{ "bg-yellow-200": session.timer.running }} />
+                <div
+                    className={clsx("flex flex-col items-center pl-1",
+                        { "min-w-20": sessionProgress >= 0 }
+                    )}
+                >
+                    <span className="text-sm mx-1">{totalElapsedTimeTxt}</span>
+                    {sessionProgress >= 0 &&
+                        <ProgressBar
+                            progress={sessionProgress}
+                            background={{ "bg-yellow-200": session.timer.running }}
+                        />
+                    }
                 </div>
             }
 

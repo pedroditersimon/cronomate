@@ -7,6 +7,7 @@ import WorkSessionItem from '../components/WorkSession/WorkSessionItem';
 import { WorkSession } from '../components/WorkSession/WorkSession';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../layouts/PageLayout';
+import HSeparator from '../layouts/HSeparator';
 
 
 export function History() {
@@ -39,11 +40,14 @@ export function History() {
 
             <div className='flex flex-col gap-2'>
                 {history.map(session =>
-                    <WorkSessionItem
-                        key={session.id}
-                        session={session}
-                        onSelected={_selectedSession => navigate(`/history/${_selectedSession.id}`)}
-                    />
+                    <>
+                        <WorkSessionItem
+                            key={session.id}
+                            session={session}
+                            onSelected={_selectedSession => navigate(`/history/${_selectedSession.id}`)}
+                        />
+                        <HSeparator />
+                    </>
                 )}
             </div>
 

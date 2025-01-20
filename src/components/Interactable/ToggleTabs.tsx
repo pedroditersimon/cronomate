@@ -2,13 +2,14 @@ import { useState } from 'react';
 import clsx from 'clsx';
 
 interface Props {
+    value?: boolean;
     falseLabel: string;
     trueLabel: string;
     onSelected?: (value: boolean) => void;
 }
 
-export default function ToggleTabs({ falseLabel, trueLabel, onSelected }: Props) {
-    const [selected, setSelected] = useState(falseLabel);
+export default function ToggleTabs({ value, falseLabel, trueLabel, onSelected }: Props) {
+    const [selected, setSelected] = useState(value ? trueLabel : falseLabel);
 
     const handleSetSelected = (option: string) => {
         const value = option === trueLabel;
