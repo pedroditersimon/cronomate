@@ -3,13 +3,14 @@ import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
 import ContainerTopbar from "../../layouts/ContainerTopbar";
 import { RecordType, WorkSessionSettingsType, WorkSessionType } from "../../types/Activity";
 import FormField from "../forms/FormField";
-import ToggleTabs from "../Interactable/ToggleTabs";
-import { TimeInput } from "../Interactable/TimeInput";
+import ToggleTabs from "../interactable/ToggleTabs";
+import { TimeInput } from "../interactable/TimeInput";
 import HSeparator from "../../layouts/HSeparator";
-import Clickable from "../Interactable/Clickable";
+import Clickable from "../interactable/Clickable";
 import Activity from "../Activity/Activity";
 import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
-import { TimeInputMinutes } from "../Interactable/TimeInputMinutes";
+import { TimeInputMinutes } from "../interactable/TimeInputMinutes";
+import Button from "../interactable/Button";
 
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
 
     onClose: () => void;
 }
+
 
 export default function WorkSessionSettings({ session, onSessionChange, onClose }: Props) {
     const { workSessionSettings, setSettings, save } = useWorkSessionSettigs();
@@ -73,7 +75,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                     </div>
                 </FormField>
 
-                <FormField title="Duración">
+                <FormField title="Limite de duración">
                     <TimeInputMinutes
                         className="max-w-full"
                         minutes={session.maxDurationMinutes}
@@ -105,6 +107,13 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                     })}
                 />
                 {workSessionSettings.stopOnClose && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al cerrar la página.</p>}
+            </FormField>
+
+
+            <FormField title="Visualizar actividades en forma de tabla">
+                <Button onClick={() => { }}>
+                    Generar tabla
+                </Button>
             </FormField>
 
 

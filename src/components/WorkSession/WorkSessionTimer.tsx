@@ -1,12 +1,12 @@
 import clsx from "clsx";
 import { ProgressBar } from "../ProgressBar";
-
 import { PlayIcon, StopIcon } from "../../assets/Icons";
 import { WorkSessionType } from "../../types/Activity";
 import activityService from "../../services/activityService";
 import { useMemo } from "react";
 import { convertElapsedTimeToText } from "../../utils/TimeUtils";
-import Clickable from "../Interactable/Clickable";
+import Clickable from "../interactable/Clickable";
+
 
 interface Props {
     session: WorkSessionType;
@@ -27,7 +27,7 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
         const sessionProgress = session.maxDurationMinutes
             ? (totalElapsedTime / (session.maxDurationMinutes * 60000)) * 100
             : -1;
-        console.log(sessionProgress);
+
         return [totalElapsedTimeTxt, sessionProgress];
     }, [session]);
 

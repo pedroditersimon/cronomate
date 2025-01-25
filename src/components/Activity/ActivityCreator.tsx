@@ -21,9 +21,11 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
     const [activity, setActivity] = useState<ActivityType>(activityMock);
     const [focused, setFocused] = useState(false);
 
+
     const hasChanges = useMemo(() => {
         return activityService.hasChanges(activity, activityMock)
     }, [activity])
+
 
     const handleCreateActivity = (newActivity: ActivityType) => {
         // newActivity has no changes
@@ -55,6 +57,8 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
         setActivity(activityMock);                  // reset el placeholder
     }
 
+
+    // update local activity
     const handleSetActivity = (newActivity: ActivityType) => {
         // Reset to mock on empty title
         if (newActivity.title.trim().length === 0) {
@@ -76,10 +80,12 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
         setActivity(newActivity);
     }
 
+
     const handleOnTitleConfirm = (newTitle: string) => {
         // crear nuevo activity
         handleCreateActivity({ ...activity, title: newTitle });
     }
+
 
     return (
         <div

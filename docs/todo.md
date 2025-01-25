@@ -1,12 +1,16 @@
-La pausa no se agrega, no funciona.
-A crear una tarea con el timer sin correr no se crea y el timer corre, solo si el timer corre se puede crear
-Lo mismo al correr tareas.
 
+
+
+El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio
+
+Mover las fucinoes fuera del componetne workSession, moverlo a el servicio
+el sin registrar debe funcionar con el endDate del session timer unicamente con el tiempo pasado o now
 
 ## Generales
 - [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
+- [ ] Implementar imports absolutos.
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -41,7 +45,16 @@ Lo mismo al correr tareas.
 - [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 - [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
 - [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
+- [ ] Al crear una nueva session tomar el maxDuration guardado en localStorage.
 
+#### Vista excel
+- [x] Agregar opcion para visualizar la vista en los WorkSessionSettings
+- [ ] Abrir un modal absolute.
+- [ ] Boton para copiar al portapales.
+- [ ] Se puede seleccionar a mano y hacer ctrl+c y funciona igual.
+- [ ] Se lista las actividades
+- [ ] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
+- [ ] Boton para cerrar la vista.
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -79,6 +92,8 @@ Lo mismo al correr tareas.
 
 #### Vista Historial.
 - [ ] Ordernar el historial por fecha de creacion
+- [ ] Se podria implementar una vista calendario, alternativa a la listada
+
 
 #### Sidebar
 - [x] Panel con botones de cada seccion.

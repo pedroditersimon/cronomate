@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { PropsWithChildren } from "react";
-import HSeparator from "../../layouts/HSeparator";
+
 
 interface Props extends PropsWithChildren {
     title: string;

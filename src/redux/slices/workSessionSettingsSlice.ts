@@ -24,7 +24,7 @@ const workSessionSettingsSlice = createSlice({
     reducers: {
         save: (state) => {
             localSave.save("workSessionSettings", state);
-            console.log("settings");
+            console.log("saved: workSessionSettings");
         },
         load: (state) => {
             return localSave.load("workSessionSettings", state);

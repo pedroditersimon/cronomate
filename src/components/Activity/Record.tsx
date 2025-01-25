@@ -4,8 +4,8 @@ import { getElapsedTime, isNow, toDate, convertElapsedTimeToText } from "../../u
 import type { RecordType } from "../../types/Activity";
 import { useMemo } from "react";
 import clsx from "clsx";
-import { TimeInput } from "../Interactable/TimeInput";
-import Clickable from "../Interactable/Clickable";
+import { TimeInput } from "../interactable/TimeInput";
+import Clickable from "../interactable/Clickable";
 
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
     onRecordChange: (newRecord: RecordType) => void;
     readOnly?: boolean;
 }
+
 
 export default function Record({ record, onRecordChange, readOnly }: Props) {
 
@@ -22,9 +23,11 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
         return convertElapsedTimeToText(elapsedTime);
     }, [record]);
 
+
     // no record
     if (!record)
         return <div className="text-red-400">Error: Null Record.</div>;
+
 
     const handleDelete = () => {
         onRecordChange({
@@ -32,6 +35,7 @@ export default function Record({ record, onRecordChange, readOnly }: Props) {
             deleted: true,
         });
     }
+
 
     return (
         <div

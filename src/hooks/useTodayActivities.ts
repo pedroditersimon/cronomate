@@ -10,8 +10,8 @@ export default function useTodaySession() {
 
     const dispatch = useDispatch();
 
-    const _save = () => {
-        dispatch(save());
+    const _save = (session?: WorkSessionType) => {
+        dispatch(save({ session }));
     }
 
     const _load = () => {

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 export function TodaySession() {
     const { todaySession, save, setSession, saveInHistoryAndReset } = useTodaySession();
 
+
     // Save in history if its another day
     useEffect(() => {
         const isPastSession = !isToday(toDate(todaySession.createdTimeStamp));
@@ -17,13 +18,15 @@ export function TodaySession() {
 
         // save in every change
         save();
-
+        console.log(todaySession);
     }, [save, saveInHistoryAndReset, todaySession]);
+
 
     // save on window close
     useEffect(() => {
-        window.addEventListener("beforeunload", save);
-        return () => window.removeEventListener("beforeunload", save);
+        const _save = () => save();
+        window.addEventListener("beforeunload", _save);
+        return () => window.removeEventListener("beforeunload", _save);
     });
 
     // replaced with: save in every change

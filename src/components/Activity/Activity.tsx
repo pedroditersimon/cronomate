@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon, CircleIcon, PlayIcon, StopIcon, TrashIcon } from "../../assets/Icons";
+import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon } from "../../assets/Icons";
 import { RecordType, ActivityType } from "../../types/Activity";
 import { isNow, toDate, convertElapsedTimeToText } from "../../utils/TimeUtils";
 import Record from "./Record";
@@ -9,7 +9,8 @@ import { generateId } from "../../utils/generateId";
 import { findLast } from "lodash";
 import recordService from "../../services/recordService";
 import activityService from "../../services/activityService";
-import Clickable from "../Interactable/Clickable";
+import Clickable from "../interactable/Clickable";
+
 
 interface Props {
     activity: ActivityType;
@@ -21,16 +22,19 @@ interface Props {
     selectTitleOnClick?: boolean;
 }
 
+
 export default function Activity({ activity, onActivityChange, onTitleConfirm, showDeletedRecords, readOnly, selectTitleOnClick }: Props) {
     // local states
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
     const [expandRecords, setExpandRecords] = useState(false);
 
+
     // sync title if activity changes
     useEffect(() => {
         setTitle(activity.title);
     }, [activity]);
+
 
     // calculated states
     const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {

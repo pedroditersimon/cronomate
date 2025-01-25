@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { ReactNode } from "react";
-import Clickable from "../components/Interactable/Clickable";
+import Clickable from "../components/interactable/Clickable";
 
 // <- [left]  |  [title]  |  [middle]  |  [right] ->
 interface Props {

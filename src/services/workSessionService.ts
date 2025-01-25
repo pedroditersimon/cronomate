@@ -32,6 +32,9 @@ function setActivities(session: WorkSessionType, newActivities: Array<ActivityTy
 };
 
 function stopTimerAndActivities(session: WorkSessionType) {
+    // not running
+    if (!session.timer.running) return;
+
     const now = toDate().getTime();
 
     // 1. Stop timer

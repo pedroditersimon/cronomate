@@ -1,4 +1,7 @@
 # Cronomate
+"Cronomate" combina "crono", refiriendose a el tiempo, y "mate", tanto a la tradicional bebida de yerba mate, como al concepto de compañero en inglés.  
+Es una aplicación de gestión del tiempo, diseñada para asistir en actividades y jornadas cronometradas, como estudiar o trabajar.
+
 
 ## Registro y Gestión de Tareas
 - Registrar cada tarea.

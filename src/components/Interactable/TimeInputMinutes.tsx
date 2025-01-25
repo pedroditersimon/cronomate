@@ -3,6 +3,7 @@ import { toDate } from "../../utils/TimeUtils";
 import { ClassValue } from "clsx";
 import { TimeInput } from "./TimeInput";
 
+
 interface Props {
     minutes?: number;
     onMinutesChange?: (newMinutes: number | undefined) => void;
@@ -11,9 +12,11 @@ interface Props {
     className?: ClassValue;
 }
 
-// TimeInput based in Minutes
+
+// TimeInput based in Minutes (120min, 90min)
 export function TimeInputMinutes({ minutes, onMinutesChange, readOnly, className }: Props) {
 
+    // transform minutes to time (today)
     const time = useMemo(() => {
         if (!minutes) return undefined;
 
@@ -28,6 +31,10 @@ export function TimeInputMinutes({ minutes, onMinutesChange, readOnly, className
     }, [minutes]);
 
 
+    // transform time (today) to minutes
+    // 4am -> 240mins
+    // 13pm -> 780mins
+    // 1:30am -> 90mins
     const handleTimeChange = (newTime: number | undefined) => {
         // no update callback
         if (!onMinutesChange) return;

@@ -26,11 +26,13 @@ const pauseActivityMock: ActivityType = {
     records: []
 };
 
+
 interface Props {
     session: WorkSessionType;
     onSessionChange: (newSession: WorkSessionType) => void;
     readOnly?: boolean;
 }
+
 
 export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     const saveIndicator = useIndicator();
@@ -40,6 +42,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     const title = formatDateToText(toDate(session.createdTimeStamp));
     const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
 
+    // constantly update session timer
     useTimer(() => {
         const now = toDate().getTime();
 
@@ -58,90 +61,128 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     useEffect(() => {
         // Feature not enabled
         if (!workSessionSettings.stopOnClose) return;
-
-        const stopActivitiesAndSave = () => {
+        console.log("stop timer on window close");
+        const stopActivities = () => {
             const updatedSession = workSessionService.stopTimerAndActivities(session);
             onSessionChange(updatedSession);
         }
 
-        window.addEventListener("beforeunload", stopActivitiesAndSave);
-        return () => window.removeEventListener("beforeunload", stopActivitiesAndSave);
-    });
+        window.addEventListener("beforeunload", stopActivities);
+        return () => window.removeEventListener("beforeunload", stopActivities);
+    }, [onSessionChange, session, workSessionSettings]);
 
-    const addRecordToPauseActivity = (record: RecordType) => {
-        if (readOnly) return; // prevent edit in readOnly
 
-        const pauseActivity = session.activities.find(act => act.id === pauseActivityMock.id);
+    function addRecordToPauseActivity(currentSession: WorkSessionType, record: RecordType): WorkSessionType {
+        // get a copy of current
+        let _session = currentSession;
+
+        const pauseActivity = _session.activities.find(act => act.id === pauseActivityMock.id);
 
         // no pauseActivity exists, create new one
         if (!pauseActivity) {
-            const updatedSession = workSessionService.addActivity(session, {
+            _session = workSessionService.addActivity(_session, {
                 ...pauseActivityMock,
                 records: [record]
             });
-            onSessionChange(updatedSession);
-            return; // dont continue
+            return _session; // dont continue
         }
 
         // edit existing pauseActivity
         const newPauseActivity = activityService.addRecord(pauseActivity, record);
-        const updatedSession = workSessionService.setActivity(session, newPauseActivity);
-        onSessionChange(updatedSession);
+        _session = workSessionService.setActivity(_session, newPauseActivity);
+        return _session;
     };
 
-    const handleToggleTimer = (running: boolean) => {
-        if (readOnly) return; // prevent edit in readOnly
 
+    function handleToggleTimer(currentSession: WorkSessionType, running: boolean): WorkSessionType {
+        // get a copy of current
+        let _session = currentSession;
         const now = toDate().getTime();
 
+        // Stop timer and Stop all activities
+        if (!running) {
+            _session = workSessionService.stopTimerAndActivities(_session);
+            return _session;
+        }
+
         // Play timer
-        if (running) {
-            // not first time, add a pause
-            if (session.timer.startTime) {
-                addRecordToPauseActivity({
+
+        // not first time, add a pause
+        if (_session.timer.startTime) {
+            _session = addRecordToPauseActivity(_session,
+                {
                     id: generateId(),
-                    startTime: session.timer.endTime,
+                    startTime: _session.timer.endTime,
                     endTime: now,
-                });
-            }
-
-            const updatedSession = workSessionService.setTimer(session, {
-                ...session.timer,
-                startTime: session.timer.startTime || now,
-                endTime: now,
-                running: true
-            });
-            onSessionChange(updatedSession);
-            return;// dont continue
+                }
+            );
         }
 
-        // 1. Stop timer and Stop all activities
-        const updatedSession = workSessionService.stopTimerAndActivities(session);
+        _session = workSessionService.setTimer(_session, {
+            ..._session.timer,
+            startTime: _session.timer.startTime || now,
+            endTime: now,
+            running: true
+        });
+        return _session; // dont continue
+    }
+
+
+    function handleToggleTimerWithState(running: boolean) {
+        // prevent edit in readOnly
+        if (readOnly) return;
+
+        const updatedSession = handleToggleTimer(session, running);
         onSessionChange(updatedSession);
     }
 
-    const handleSetActivity = (newActivity: ActivityType) => {
-        if (readOnly) return; // prevent edit in readOnly
 
-        const updatedSession = workSessionService.setActivity(session, newActivity);
-        onSessionChange(updatedSession);
+    function handleSetActivity(currentSession: WorkSessionType, newActivity: ActivityType): WorkSessionType {
+        // get a copy of current
+        let _session = currentSession;
+
+        // set the given activity
+        _session = workSessionService.setActivity(_session, newActivity);
 
         // play todayTimer if activity is running
-        if (!session.timer.running && activityService.hasRunningRecords(newActivity)) {
-            handleToggleTimer(true);
+        if (!_session.timer.running && activityService.hasRunningRecords(newActivity)) {
+            _session = handleToggleTimer(_session, true);
         }
+
+        return _session;
     }
 
-    const handleCreateNewActivity = (newActivity: ActivityType) => {
-        if (readOnly) return; // prevent edit in readOnly
 
-        const updatedSession = workSessionService.addActivity(session, newActivity);
+    function handleSetActivityWithState(newActivity: ActivityType) {
+        // prevent edit in readOnly
+        if (readOnly) return;
+
+        const updatedSession = handleSetActivity(session, newActivity);
         onSessionChange(updatedSession);
+    }
 
-        // play todayTimer if activity is running
-        if (!session.timer.running && activityService.hasRunningRecords(newActivity)) {
-            handleToggleTimer(true);
+
+    function handleCreateNewActivity(currentSession: WorkSessionType, newActivity: ActivityType): WorkSessionType {
+        // get a copy of current
+        let _session = currentSession;
+
+        _session = workSessionService.addActivity(_session, newActivity);
+
+        // play session timer if the newActivity is running
+        if (!_session.timer.running && activityService.hasRunningRecords(newActivity)) {
+            _session = handleToggleTimer(_session, true);
         }
+
+        return _session;
+    }
+
+
+    function handleCreateNewActivityWithState(newActivity: ActivityType) {
+        // prevent edit in readOnly
+        if (readOnly) return;
+
+        const updatedSession = handleCreateNewActivity(session, newActivity);
+        onSessionChange(updatedSession);
     }
 
 
@@ -177,7 +218,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
                 right={<WorkSessionTimer
                     session={session}
                     readOnly={readOnly}
-                    onTimerToggle={handleToggleTimer}
+                    onTimerToggle={handleToggleTimerWithState}
                 />}
 
                 icon={!readOnly && <SettingsIcon />}
@@ -186,7 +227,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
 
 
             {!readOnly &&
-                <ActivityCreator onActivityCreated={handleCreateNewActivity} />
+                <ActivityCreator onActivityCreated={handleCreateNewActivityWithState} />
             }
 
             { // create activities
@@ -194,14 +235,15 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
                     <Activity
                         key={activity.id}
                         activity={activity}
-                        onActivityChange={handleSetActivity}
+                        onActivityChange={handleSetActivityWithState}
                         readOnly={readOnly}
                     />
                 ))
             }
 
             {unrecordedActivity.records.length > 0 && // show only if has records
-                <Activity key="unrecored"
+                <Activity
+                    key="unrecored"
                     activity={unrecordedActivity}
                     onActivityChange={() => { }}
                     readOnly

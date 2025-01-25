@@ -1,4 +1,4 @@
-import LinkBtn from '../components/Interactable/LinkBtn';
+import LinkBtn from '../components/interactable/LinkBtn';
 import Container from '../layouts/Container';
 import PageLayout from '../layouts/PageLayout';
 
