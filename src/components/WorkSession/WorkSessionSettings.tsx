@@ -11,6 +11,7 @@ import Activity from "../Activity/Activity";
 import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
 import { TimeInputMinutes } from "../interactable/TimeInputMinutes";
 import Button from "../interactable/Button";
+import { Modal, showModal } from "../Modal";
 
 
 interface Props {
@@ -111,11 +112,23 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
 
 
             <FormField title="Visualizar actividades en forma de tabla">
-                <Button onClick={() => { }}>
+                <Button onClick={() => showModal("table")}>
                     Generar tabla
                 </Button>
             </FormField>
 
+            <Modal
+                id="table"
+                title="Tabla"
+                className="w-96"
+                closeOnClickOut
+            >
+                <div className="flex gap-1 justify-center">
+                    <p className="text-gray-400 font-semibold">*contenido*</p>
+
+                </div>
+                <Button className="ml-auto" onClick={() => { }}>Copiar</Button>
+            </Modal>
 
             <div className="flex flex-col gap-1">
                 <div className="flex gap-1 justify-between">

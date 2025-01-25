@@ -49,12 +49,12 @@ el sin registrar debe funcionar con el endDate del session timer unicamente con 
 
 #### Vista excel
 - [x] Agregar opcion para visualizar la vista en los WorkSessionSettings
-- [ ] Abrir un modal absolute.
+- [x] Abrir un modal.
 - [ ] Boton para copiar al portapales.
 - [ ] Se puede seleccionar a mano y hacer ctrl+c y funciona igual.
 - [ ] Se lista las actividades
 - [ ] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
-- [ ] Boton para cerrar la vista.
+- [x] Boton para cerrar la vista.
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).

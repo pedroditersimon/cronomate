@@ -1,19 +1,26 @@
-import clsx from "clsx";
+import clsx, { ClassValue } from "clsx";
 import { PropsWithChildren } from "react";
 
 interface Props extends PropsWithChildren {
     onClick: () => void;
+    className?: ClassValue;
 }
 
-export default function Button({ children, onClick }: Props) {
+export default function Button({ onClick, className, children }: Props) {
     return (
-        <button
-            className={clsx("flex-1 rounded-lg py-1 px-2 text-center border-2 border-gray-700",
-                "bg-transparent font-semibold text-gray-500  ",  // not hover
-                "hover:bg-gray-700 hover:text-blue-300"                         // hover
+        <div
+            className={clsx("flex-1 rounded-lg text-center border-2 border-gray-700",
+                "bg-transparent font-semibold text-gray-500",  // not hover
+                "hover:bg-gray-700 hover:text-blue-300",     // hover
+                className,
             )}
-            onClick={onClick}
-            children={children}
-        />
+        >
+            <button
+                className="size-full py-1 px-2"
+                onClick={onClick}
+                children={children}
+            />
+        </div>
+
     );
 }

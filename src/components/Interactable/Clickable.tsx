@@ -1,18 +1,17 @@
-import { ReactNode } from "react";
+import { ButtonHTMLAttributes, PropsWithChildren } from "react";
 
-interface Props {
-    children: ReactNode;
+interface Props extends ButtonHTMLAttributes<HTMLButtonElement>, PropsWithChildren {
     onClick?: () => void;
-    className?: string;
 }
 
-export default function Clickable({ children, onClick, className }: Props) {
+export default function Clickable({ onClick, children, ...props }: Props) {
     return (
-        <div
-            className={`self-center rounded-full size-5 hover:cursor-pointer ${className}`}
+        <button
+            {...props}
+            className={`self-center rounded-full size-5 hover:cursor-pointer ${props.className}`}
             onClick={onClick}
         >
             {children}
-        </div>
+        </button>
     );
 }
