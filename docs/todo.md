@@ -6,11 +6,15 @@ El inicio de la primer tarea que creas de un session sera el inicio de la jorand
 Mover las fucinoes fuera del componetne workSession, moverlo a el servicio
 el sin registrar debe funcionar con el endDate del session timer unicamente con el tiempo pasado o now
 
+ver si se puede poner el containerTopbar como sticky. y que quede en el tope del container
+
+
 ## Generales
 - [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
 - [ ] Implementar imports absolutos.
+- [ ] El toaster se ve por debajo del modal dialog
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -47,14 +51,17 @@ el sin registrar debe funcionar con el endDate del session timer unicamente con 
 - [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
 - [ ] Al crear una nueva session tomar el maxDuration guardado en localStorage.
 
-#### Vista excel
+
+#### Vista tabla
 - [x] Agregar opcion para visualizar la vista en los WorkSessionSettings
 - [x] Abrir un modal.
-- [ ] Boton para copiar al portapales.
-- [ ] Se puede seleccionar a mano y hacer ctrl+c y funciona igual.
-- [ ] Se lista las actividades
+- [x] Boton para copiar al portapales.
+- [x] Se puede seleccionar a mano y hacer ctrl+c y funciona igual.
+- [x] Se lista las actividades
 - [ ] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
 - [x] Boton para cerrar la vista.
+- [ ] Redondear el tiempo para arriba a 2 digitos despues del cero
+
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -81,7 +88,6 @@ el sin registrar debe funcionar con el endDate del session timer unicamente con 
     - [x] Crear el botón en la interfaz de usuario.
     - [x] Marcar como `eliminadas` en lugar de borrarlas.
     - [ ] Aparecen dentro de un panel en el activity.
-
 
 
 #### Input de hora (TimeInput)
@@ -112,13 +118,15 @@ el sin registrar debe funcionar con el endDate del session timer unicamente con 
 - [ ] Poder configurar formato de TimeInput si 24 (H:MM am/pm) o 12 (HH:MM) horas.
 - [ ] Agregar un diccionario de palabras clave de uso diario, como 'daily', 'spike', 'deploy'. se agregan con tab y tiene correccion si escribiste medio mal
 
+
 #### Bugs
 - [ ] Al crear una nueva actividad, corre pero no se actualiza el timer.
 - [ ] Verificar que las nuevas actividades se estén creando correctamente, ya que al crear una actividad no aparece, pero tras crear una segunda, esta sí se muestra.
 
+
 #### Estilos
 - [ ] Implementar un slice de temas y colores, que tenga diferentes temas como dark, light y variantes. Ademas que este se utilize a traves de un hook que contenga un useEffect para re-renderizar el componente si el tema cambia.
-
+- [ ] Ajustar todos los colores de texto, bg border, etc. A colores primario, secundario, etc.
 
 
 

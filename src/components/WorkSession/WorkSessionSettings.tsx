@@ -12,6 +12,7 @@ import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
 import { TimeInputMinutes } from "../interactable/TimeInputMinutes";
 import Button from "../interactable/Button";
 import { Modal, showModal } from "../Modal";
+import WorkSessionTableModal from "./WorkSessionTableModal";
 
 
 interface Props {
@@ -117,18 +118,8 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                 </Button>
             </FormField>
 
-            <Modal
-                id="table"
-                title="Tabla"
-                className="w-96"
-                closeOnClickOut
-            >
-                <div className="flex gap-1 justify-center">
-                    <p className="text-gray-400 font-semibold">*contenido*</p>
+            <WorkSessionTableModal id="table" session={session} />
 
-                </div>
-                <Button className="ml-auto" onClick={() => { }}>Copiar</Button>
-            </Modal>
 
             <div className="flex flex-col gap-1">
                 <div className="flex gap-1 justify-between">

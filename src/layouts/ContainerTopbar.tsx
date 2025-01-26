@@ -23,7 +23,7 @@ export default function ContainerTopbar({ left, title, middle, right, icon, onIc
             <div className="justify-start flex flex-row gap-1">
                 {left}
                 {title &&
-                    <h1 className="text-xl font-bold">{title}</h1>
+                    <h1 className="text-xl font-bold text-neutral-200">{title}</h1>
                 }
             </div>
 
