@@ -13,6 +13,7 @@ body,
     color: white;
 }
 
+
 @layer utilities {
     .strike-div {
         position: relative;

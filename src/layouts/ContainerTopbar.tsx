@@ -34,7 +34,7 @@ export default function ContainerTopbar({ left, title, middle, right, icon, onIc
             <div className="flex flex-row gap-1">
                 {right}
                 {icon &&
-                    <Clickable className={clsx("p-0 hover:bg-gray-700", {
+                    <Clickable className={clsx("p-0 text-neutral-200 hover:bg-gray-700", {
                         "hidden group-hover:block": iconOnHover
                     })}
                         children={icon}

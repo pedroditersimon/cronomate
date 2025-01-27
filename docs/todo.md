@@ -60,7 +60,7 @@ ver si se puede poner el containerTopbar como sticky. y que quede en el tope del
 - [x] Se lista las actividades
 - [ ] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
 - [x] Boton para cerrar la vista.
-- [ ] Redondear el tiempo para arriba a 2 digitos despues del cero
+- [x] Redondear el tiempo para arriba a 2 digitos despues del cero
 
 
 #### Actividad (Activity)

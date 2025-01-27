@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import recordService from "../../services/recordService";
 import { WorkSessionType } from "../../types/Activity";
 import Button from "../interactable/Button";
@@ -6,7 +6,9 @@ import { Modal } from "../Modal";
 import { toDate } from "../../utils/TimeUtils";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { ClipboardDocumentIcon, ClipboardIcon, FolderIcon } from "../../assets/Icons";
+import { ClipboardDocumentIcon } from "../../assets/Icons";
+import Dropdown from "../interactable/Dropdown";
+import { TimeUnitsEnum, TimeUnitType } from "../../types/types.d.ts";
 
 interface Props {
     id: string;
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export default function WorkSessionTableModal({ id, session }: Props) {
+    const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnitType>("Horas");
 
     const rows = useMemo(() => {
         // date -> today
@@ -22,7 +25,11 @@ export default function WorkSessionTableModal({ id, session }: Props) {
 
         return session.activities.map(activity => {
             const elapsedTimeMs = recordService.getAllElapsedTime(activity.records);
-            const elapsedTimeTxt = Math.ceil((elapsedTimeMs / 1000 / 60 / 60) * 100) / 100;
+            const elapsedTime = elapsedTimeUnit === "Horas"
+                ? elapsedTimeMs / 3.6e+6
+                : elapsedTimeMs / 60000;
+            // Ceil
+            const elapsedTimeTxt = Math.ceil(elapsedTime * 100) / 100;
 
 
             // this is a row
@@ -34,7 +41,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             };
         });
 
-    }, [session]);
+    }, [session, elapsedTimeUnit]);
 
 
     const handleCopyTable = () => {
@@ -63,7 +70,13 @@ export default function WorkSessionTableModal({ id, session }: Props) {
                     <th className="px-2 py-1">Fecha</th>
                     <th className="px-2 py-1 min-w-40">Titulo</th>
                     <th className="px-2 py-1 min-w-40">Descripción</th>
-                    <th className="px-2 py-1">Tiempo</th>
+                    <th className="py-1">
+                        <Dropdown
+                            className="text-neutral-300 border-none"
+                            options={Object.values(TimeUnitsEnum)}
+                            onOption={(opt) => setElapsedTimeUnit(opt as TimeUnitType)}
+                        />
+                    </th>
                 </tr>
 
                 {rows.map((row, index) => (

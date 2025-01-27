@@ -4,5 +4,13 @@ export default {
   plugins: [
 
   ],
+
+  theme: {
+    extend: {
+      colors: {
+        'bg-primary': '#161616',
+      }
+    }
+  }
 }
 
