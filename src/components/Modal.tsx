@@ -1,8 +1,9 @@
-import { PropsWithChildren, useEffect, useState } from "react";
+import { PropsWithChildren } from "react";
 import { CrossIcon } from "../assets/Icons";
 import clsx, { ClassValue } from "clsx";
 import Container from "../layouts/Container";
 import ContainerTopbar from "../layouts/ContainerTopbar";
+import useClickOut from "../hooks/useClickOut";
 
 export function showModal(id: string, show: boolean = true) {
     const dialog = document.getElementById(id);
@@ -22,29 +23,16 @@ interface Props extends PropsWithChildren {
 }
 
 export function Modal({ id, title, closeOnClickOut, hideCloseBtn, className, children }: Props) {
-    const [isMouseOut, setIsMouseOut] = useState(false);
-
-    // close on click out
-    useEffect(() => {
-        // feature not enabled
-        if (!closeOnClickOut) return;
-
-        const onMouseDown = () => {
-            if (isMouseOut)
-                showModal(id, false);
-        }
-
-        addEventListener("mousedown", onMouseDown);
-
-        return () => removeEventListener("mousedown", onMouseDown); // clean up
-    }, [closeOnClickOut, id, isMouseOut]);
+    const { handleMouseEnter, handleMouseLeave } = useClickOut(
+        () => showModal(id, false), closeOnClickOut
+    );
 
     return (
         <dialog id={id} className="bg-transparent backdrop:bg-black backdrop:bg-opacity-75">
             <Container
                 className={clsx("max-w-full max-h-full size-fit", className)}
-                onMouseEnter={() => setIsMouseOut(false)}
-                onMouseLeave={() => setIsMouseOut(true)}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
             >
 
                 {/* Topbar */}

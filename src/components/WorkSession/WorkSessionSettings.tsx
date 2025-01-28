@@ -11,7 +11,7 @@ import Activity from "../Activity/Activity";
 import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
 import { TimeInputMinutes } from "../interactable/TimeInputMinutes";
 import Button from "../interactable/Button";
-import { Modal, showModal } from "../Modal";
+import { showModal } from "../Modal";
 import WorkSessionTableModal from "./WorkSessionTableModal";
 
 
@@ -44,6 +44,11 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
         save(); // save on edit
     }
 
+    const handleSetMaxDurationMinutes = (maxDurationMinutes: number | undefined) => {
+        handleSetSettings({ ...workSessionSettings, maxDurationMinutes });
+        onSessionChange({ ...session, maxDurationMinutes });
+    }
+
     return (
         <>
             {/* Topbar */}
@@ -54,6 +59,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                 icon={<CrossIcon />}
                 onIconClick={onClose}
             />
+
 
             <div className="flex flex-row gap-5">
                 <FormField title="Inicio y fin">
@@ -81,38 +87,13 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                     <TimeInputMinutes
                         className="max-w-full"
                         minutes={session.maxDurationMinutes}
-                        onMinutesChange={minutes => onSessionChange({
-                            ...session,
-                            maxDurationMinutes: minutes
-                        })}
+                        onMinutesChange={handleSetMaxDurationMinutes}
                     />
                 </FormField>
             </div>
 
-            <FormField title="Detener temporizador al finalizar la jornada">
-                <ToggleTabs falseLabel="Desactivado" trueLabel="Al finalizar"
-                    value={workSessionSettings.stopOnSessionEnd}
-                    onSelected={(value) => handleSetSettings({
-                        ...workSessionSettings,
-                        stopOnSessionEnd: value
-                    })}
-                />
-                {workSessionSettings.stopOnSessionEnd && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al finalizar la jornada.</p>}
-            </FormField>
 
-            <FormField title="Detener temporizador al cerrar la pagina">
-                <ToggleTabs falseLabel="Desactivado" trueLabel="Al cerrar página"
-                    value={workSessionSettings.stopOnClose}
-                    onSelected={(value) => handleSetSettings({
-                        ...workSessionSettings,
-                        stopOnClose: value
-                    })}
-                />
-                {workSessionSettings.stopOnClose && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al cerrar la página.</p>}
-            </FormField>
-
-
-            <FormField title="Visualizar actividades en forma de tabla">
+            <FormField title="Tabla de actividades">
                 <Button onClick={() => showModal("table")}>
                     Generar tabla
                 </Button>
@@ -121,6 +102,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
             <WorkSessionTableModal id="table" session={session} />
 
 
+            {/* Actividades eliminadas */}
             <div className="flex flex-col gap-1">
                 <div className="flex gap-1 justify-between">
                     <p className="text-gray-400 font-semibold">Actividades eliminadas</p>
@@ -145,6 +127,31 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                     }
                 </div>
             </div>
+
+
+            <FormField title="Detener temporizador al finalizar la jornada">
+                <ToggleTabs falseLabel="Desactivado" trueLabel="Al finalizar"
+                    value={workSessionSettings.stopOnSessionEnd}
+                    onSelected={(value) => handleSetSettings({
+                        ...workSessionSettings,
+                        stopOnSessionEnd: value
+                    })}
+                />
+                {workSessionSettings.stopOnSessionEnd && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al finalizar la jornada.</p>}
+            </FormField>
+
+
+            <FormField title="Detener temporizador al cerrar la pagina">
+                <ToggleTabs falseLabel="Desactivado" trueLabel="Al cerrar página"
+                    value={workSessionSettings.stopOnClose}
+                    onSelected={(value) => handleSetSettings({
+                        ...workSessionSettings,
+                        stopOnClose: value
+                    })}
+                />
+                {workSessionSettings.stopOnClose && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al cerrar la página.</p>}
+            </FormField>
+
         </>
     );
 }

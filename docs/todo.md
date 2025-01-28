@@ -1,12 +1,9 @@
 
+ver la organzacion por github proejcts, quiza pueda tener un kanban o algo parecido en el repo
 
-
-El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio
-
-Mover las fucinoes fuera del componetne workSession, moverlo a el servicio
-el sin registrar debe funcionar con el endDate del session timer unicamente con el tiempo pasado o now
-
-ver si se puede poner el containerTopbar como sticky. y que quede en el tope del container
+Formato 9am/pm para los TimeInput. Se configura en los ajustes de la app (no jornada)
+El formato se puede pasar como prop opcionalmente, sinó lo toma de la config.
+Así podría seguir funcionando el TimeInputMinutes
 
 
 ## Generales
@@ -14,7 +11,9 @@ ver si se puede poner el containerTopbar como sticky. y que quede en el tope del
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
 - [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
 - [ ] Implementar imports absolutos.
-- [ ] El toaster se ve por debajo del modal dialog
+- [-] El toaster se ve por debajo del modal dialog
+- [ ] Mover las funciones fuera del componente workSession, moverlo a el servicio.
+
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -50,6 +49,8 @@ ver si se puede poner el containerTopbar como sticky. y que quede en el tope del
 - [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
 - [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
 - [ ] Al crear una nueva session tomar el maxDuration guardado en localStorage.
+- [ ] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
+- [x] Opciones de today settings en orden de frecuencia de uso
 
 
 #### Vista tabla
@@ -81,6 +82,8 @@ ver si se puede poner el containerTopbar como sticky. y que quede en el tope del
 - [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
 - [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 - [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.
+- [ ] En actividad "sin registrar, debe funcionar con el endDate del session timer unicamente con el tiempo pasado o now.
+- [ ] En actividad "sin registrar", poner descripción "actividades sin una tarea específica"
 
 
 #### Entradas (Record)
@@ -127,7 +130,7 @@ ver si se puede poner el containerTopbar como sticky. y que quede en el tope del
 #### Estilos
 - [ ] Implementar un slice de temas y colores, que tenga diferentes temas como dark, light y variantes. Ademas que este se utilize a traves de un hook que contenga un useEffect para re-renderizar el componente si el tema cambia.
 - [ ] Ajustar todos los colores de texto, bg border, etc. A colores primario, secundario, etc.
-
+- [ ] Ver de poner el ContainerTopbar como sticky, que quede en el top del container.
 
 
 ## Tareas Completadas

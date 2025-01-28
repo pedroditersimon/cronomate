@@ -110,7 +110,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
                         : <ChevronRightIcon />}
                 />
                 <div
-                    className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2", {
+                    className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-colors", {
                         "bg-red-400": hasRunningRecords,
                         "bg-gray-700": focused,
                         "hover:bg-gray-700": !hasRunningRecords && !readOnly,

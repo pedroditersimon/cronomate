@@ -25,4 +25,5 @@ export interface RecordType {
 export interface WorkSessionSettingsType {
     stopOnSessionEnd: boolean;
     stopOnClose: boolean;
+    maxDurationMinutes?: number; // En minutos
 }

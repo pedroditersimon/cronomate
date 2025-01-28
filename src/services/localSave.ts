@@ -16,13 +16,25 @@ function save<T>(keyName: string, value: T) {
     } as SaveObjectType));
 };
 
-// save from local storage
-function load<T>(keyName: string, defaultValue: T) {
+// load SaveObjectType from local storage
+function getSaveObject(keyName: string): SaveObjectType | null {
     const savedValue = localStorage.getItem(keyName);
-    if (!savedValue) return defaultValue;
+    if (!savedValue) return null;
     try {
-        const parsedValue = JSON.parse(savedValue) as SaveObjectType;
-        return parsedValue.value as T;
+        return JSON.parse(savedValue) as SaveObjectType;
+    }
+    catch (error) {
+        console.error("Error loading from localStorage:", error);
+        return null;
+    }
+};
+
+// load SaveObjectType.value from local storage
+function load<T>(keyName: string, defaultValue: T) {
+    const savedObj = getSaveObject(keyName);
+    if (!savedObj) return defaultValue;
+    try {
+        return savedObj.value as T;
     }
     catch (error) {
         console.error("Error loading from localStorage:", error);
@@ -30,4 +42,4 @@ function load<T>(keyName: string, defaultValue: T) {
     }
 };
 
-export default { save, load };
+export default { save, load, getSaveObject };

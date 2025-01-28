@@ -13,6 +13,14 @@ body,
     color: white;
 }
 
+[aria-live="polite"] {
+    z-index: 99999 !important;
+    /* Ajusta el valor según sea necesario */
+    position: fixed !important;
+    /* Asegúrate de que sea fijo */
+}
+
+
 
 @layer utilities {
     .strike-div {

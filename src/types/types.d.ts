@@ -9,3 +9,4 @@ export enum TimeUnitsEnum {
     Minutos = "Minutos",
 }
 export type TimeUnitType = keyof typeof TimeUnitsEnum;
+

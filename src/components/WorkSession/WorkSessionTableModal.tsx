@@ -60,7 +60,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
     return (
         <Modal
             id={id}
-            title="Tabla"
+            title="Tabla de actividades"
             closeOnClickOut
         >
 
@@ -73,6 +73,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
                     <th className="py-1">
                         <Dropdown
                             className="text-neutral-300 border-none"
+                            value={elapsedTimeUnit}
                             options={Object.values(TimeUnitsEnum)}
                             onOption={(opt) => setElapsedTimeUnit(opt as TimeUnitType)}
                         />
