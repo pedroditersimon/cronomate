@@ -1,10 +1,17 @@
 
+SI CAMBIASTE LAS INTERFACES: Incrementar la version de la app y luego hacer una conversion de propiedades a la hora de cargar los objetos que tenian la interfaz que cambiaste. Osea si cambiaste "enabled" por "isEnabled", convierte este campo detectando la version del guardado y la actual.
+
 ver la organzacion por github proejcts, quiza pueda tener un kanban o algo parecido en el repo
 
 Formato 9am/pm para los TimeInput. Se configura en los ajustes de la app (no jornada)
 El formato se puede pasar como prop opcionalmente, sinó lo toma de la config.
 Así podría seguir funcionando el TimeInputMinutes
 
+Unificar los update de los running activities con un unico tick en el worksession.
+hacer dos funciones, una para actualizar el timer (ya esta) y otra para update de los running.
+despues se puede, o llamar a las dos por separado o hacer una "and" que contenga las dos 
+
+El startTime y end de configuracion, no cambia si se la borra muchas veces.
 
 ## Generales
 - [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
@@ -21,14 +28,14 @@ Así podría seguir funcionando el TimeInputMinutes
     - [x] Al dar stop al Timer de jornada, todas las actividad corriendo se hacen stop.
     - [x] Al darle play a otra actividad el timer jornada, tambien se da a play.
     - [x] Al darle a play al timer jornada, registrar una pausa desde el endTime a now.
-    - [ ] Barra de progreso con tiempo transcurrido.
+    - [x] Barra de progreso con tiempo transcurrido.
     - [ ] Hacerlo clickeable y te desbliegue un rango de inicio a fin.
     - [x] Actualizar el endtime cada segundo si esta corriedno, o almenos al correr una actividad
     - [x] Mostrar el tiempo transcurrido total en el timer.
-- [ ] Placeholder de actividad para crear nuevas.
-    - [ ] Al hacer focus, desplegar un record vacio configurable
+- [x] Placeholder de actividad para crear nuevas.
+    - [x] Al hacer focus, desplegar un record vacio configurable
     - [x] Si no tiene endTime, la actividad se crea corriendo.
-    - [ ] Si el record tiene valores ingresados, no vuelve a contraerse.
+    - [x] Si el record tiene valores ingresados, no vuelve a contraerse.
 - [ ] Actividad "Sin registrar"
     - [ ] Se puede asignar a otra Actividad con un menu.
     - [ ] Se puede asignar a otra Actividad con arrastre.
@@ -46,7 +53,7 @@ Así podría seguir funcionando el TimeInputMinutes
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 - [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
-- [ ] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
+- [P] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
 - [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
 - [ ] Al crear una nueva session tomar el maxDuration guardado en localStorage.
 - [ ] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
@@ -59,10 +66,11 @@ Así podría seguir funcionando el TimeInputMinutes
 - [x] Boton para copiar al portapales.
 - [x] Se puede seleccionar a mano y hacer ctrl+c y funciona igual.
 - [x] Se lista las actividades
-- [ ] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
+- [P] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
 - [x] Boton para cerrar la vista.
 - [x] Redondear el tiempo para arriba a 2 digitos despues del cero
-
+- [P] toggle para incluir "Pausas".
+- [x] toggle para incluir "Sin actividad".
 
 #### Actividad (Activity)
 - [ ] Botón que enlace con una tarea en ClickUp (o cualquier link).
@@ -83,8 +91,8 @@ Así podría seguir funcionando el TimeInputMinutes
 - [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 - [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.
 - [ ] En actividad "sin registrar, debe funcionar con el endDate del session timer unicamente con el tiempo pasado o now.
-- [ ] En actividad "sin registrar", poner descripción "actividades sin una tarea específica"
-
+- [x] Cambiar titulo y descripcion de "unrecordedActivity" a una mas adecuada.
+- [x] Agregar propiedad "isCollapsed" en el objeto de Activity, asi este estado se puede guardar y controlar desde los padres del componente.
 
 #### Entradas (Record)
 - [ ] Eliminar entradas:
@@ -102,6 +110,7 @@ Así podría seguir funcionando el TimeInputMinutes
 #### Vista Historial.
 - [ ] Ordernar el historial por fecha de creacion
 - [ ] Se podria implementar una vista calendario, alternativa a la listada
+- [x] Habilitar Settings en modo readonly
 
 
 #### Sidebar

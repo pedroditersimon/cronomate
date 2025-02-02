@@ -42,6 +42,7 @@ export function TodaySession() {
 
 
 export function TodaySessionPage() {
+
     return (
         <PageLayout>
             <TodaySession />

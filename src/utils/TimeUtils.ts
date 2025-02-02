@@ -121,7 +121,7 @@ export function formatDateToText(date: Date, locale: string = navigator.language
 
 function getElapsedTimeFromNow(time: number | undefined): number {
   if (time === undefined) return 0;
-  return getElapsedTime(toDate(time), toDate());
+  return getElapsedTime(toDate(), toDate(time));
 }
 
 export function isPast(time: number | undefined): boolean {

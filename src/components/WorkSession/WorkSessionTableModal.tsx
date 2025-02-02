@@ -6,9 +6,12 @@ import { Modal } from "../Modal";
 import { toDate } from "../../utils/TimeUtils";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { ClipboardDocumentIcon } from "../../assets/Icons";
+import { CheckIcon, ClipboardDocumentIcon } from "../../assets/Icons";
 import Dropdown from "../interactable/Dropdown";
 import { TimeUnitsEnum, TimeUnitType } from "../../types/types.d.ts";
+import useUnrecordedActivity from "../../hooks/useUnrecoredActivity.ts";
+import workSessionService from "../../services/workSessionService.ts";
+import Checkbox from "../interactable/Checkbox.tsx";
 
 interface Props {
     id: string;
@@ -17,13 +20,26 @@ interface Props {
 
 export default function WorkSessionTableModal({ id, session }: Props) {
     const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnitType>("Horas");
+    const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
+
+    // Unrecorded Activity
+    const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
+    const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
+    const hasUnrecoredActivity = unrecordedActivity.records.length > 0;
+
+    // Pauses Activity
+    const [includePausesActivity, setIncludePausesActivity] = useState(true);
+    const hasPausesActivity = session.activities.some(act => act.id === "pauses");
+
 
     const rows = useMemo(() => {
-        // date -> today
-        // title -> activity.title
-        // time -> activity elapsed time in text (several formats)
+        // row is -> | date | title | description | time |
 
-        return session.activities.map(activity => {
+        const _session = includeUnrecordedActivity && hasUnrecoredActivity
+            ? workSessionService.addActivity(session, unrecordedActivity)
+            : session; // otherwise, keep the same
+
+        return _session.activities.map(activity => {
             const elapsedTimeMs = recordService.getAllElapsedTime(activity.records);
             const elapsedTime = elapsedTimeUnit === "Horas"
                 ? elapsedTimeMs / 3.6e+6
@@ -36,15 +52,21 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             return {
                 date: toDate(session.createdTimeStamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
                 title: activity.title,
-                description: "...",
+                description: activity.description,
                 elapsedTime: elapsedTimeTxt,
             };
         });
 
-    }, [session, elapsedTimeUnit]);
+    }, [session, elapsedTimeUnit, includeUnrecordedActivity]);
 
 
     const handleCopyTable = () => {
+
+        setTableCopiedEffect(true);
+        // come back to normal icon
+        setTimeout(() => setTableCopiedEffect(false), 1000);
+
+
         // Convertir la tabla en texto
         const tableText = rows
             .map(row => `${row.date}\t${row.title}\t${row.description}\t${row.elapsedTime}`)
@@ -94,12 +116,37 @@ export default function WorkSessionTableModal({ id, session }: Props) {
                 ))}
             </table>
 
-            <Button
-                className="ml-auto"
-                onClick={handleCopyTable}
-                icon={<ClipboardDocumentIcon className="size-5" />}
-                children="Copiar"
-            />
+
+            {/* bottom */}
+            <div className="flex flex-row gap-3 items-center">
+
+                {hasUnrecoredActivity &&
+                    <Checkbox
+                        value={includeUnrecordedActivity}
+                        onChange={setIncludeUnrecordedActivity}
+                    >
+                        Incluir No categorizadas
+                    </Checkbox>
+                }
+
+                {hasPausesActivity &&
+                    <Checkbox
+                        value={includePausesActivity}
+                        onChange={setIncludePausesActivity}
+                    >
+                        Incluir Pausas
+                    </Checkbox>
+                }
+
+                <Button
+                    className="ml-auto"
+                    onClick={handleCopyTable}
+                    icon={tableCopiedEffect
+                        ? <CheckIcon className="size-5" />
+                        : <ClipboardDocumentIcon className="size-5" />}
+                    children="Copiar"
+                />
+            </div>
 
         </Modal>
     );

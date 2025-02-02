@@ -27,7 +27,6 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
     // local states
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
-    const [expandRecords, setExpandRecords] = useState(false);
 
 
     // sync title if activity changes
@@ -95,19 +94,28 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
     const handleDelete = () => {
         onActivityChange({
             ...activity,
-            deleted: true,
+            isDeleted: true,
         });
     }
+
+
+    const handleSetCollapsed = (isCollapsed: boolean) => {
+        onActivityChange({
+            ...activity,
+            isCollapsed: isCollapsed,
+        });
+    }
+
 
     return (
         <div className="flex flex-col gap-1 min-w-80">
             <div className="flex flex-row gap-1">
                 <Clickable
                     className="hover:bg-gray-700"
-                    onClick={() => setExpandRecords(prev => !prev)}
-                    children={expandRecords
-                        ? <ChevronDownIcon />
-                        : <ChevronRightIcon />}
+                    onClick={() => handleSetCollapsed(!activity.isCollapsed)}
+                    children={activity.isCollapsed
+                        ? <ChevronRightIcon />
+                        : <ChevronDownIcon />}
                 />
                 <div
                     className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-colors", {
@@ -192,7 +200,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
             <div className="flex flex-col gap-1 ml-6">
                 {activity.records.map((record, i) => {
                     if (record.deleted && !showDeletedRecords && !readOnly) return;
-                    if (!record.running && !expandRecords) return;
+                    if (!record.running && activity.isCollapsed) return;
                     return (<>
                         <Record
                             key={record.id}

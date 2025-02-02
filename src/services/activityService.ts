@@ -52,7 +52,7 @@ function hasChanges(activity: ActivityType, mock: ActivityType) {
 function getAllElapsedTime(activities: Array<ActivityType>) {
     return activities.reduce((acc, activity) => {
         // dont include deleted activity
-        if (activity.deleted) return acc;
+        if (activity.isDeleted) return acc;
 
         const elapsedTime = recordService.getAllElapsedTime(activity.records);
         return elapsedTime > 0

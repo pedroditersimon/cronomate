@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
 import ContainerTopbar from "../../layouts/ContainerTopbar";
-import { RecordType, WorkSessionSettingsType, WorkSessionType } from "../../types/Activity";
+import { RecordType, WorkSessionSettingsType, WorkSessionTimerType, WorkSessionType } from "../../types/Activity";
 import FormField from "../forms/FormField";
 import ToggleTabs from "../interactable/ToggleTabs";
 import { TimeInput } from "../interactable/TimeInput";
@@ -13,6 +13,7 @@ import { TimeInputMinutes } from "../interactable/TimeInputMinutes";
 import Button from "../interactable/Button";
 import { showModal } from "../Modal";
 import WorkSessionTableModal from "./WorkSessionTableModal";
+import clsx from "clsx";
 
 
 interface Props {
@@ -20,19 +21,23 @@ interface Props {
     onSessionChange: (newSession: WorkSessionType) => void;
 
     onClose: () => void;
+
+    readOnly?: boolean;
 }
 
 
-export default function WorkSessionSettings({ session, onSessionChange, onClose }: Props) {
+export default function WorkSessionSettings({ session, onSessionChange, onClose, readOnly }: Props) {
     const { workSessionSettings, setSettings, save } = useWorkSessionSettigs();
     const [expandDeletedActivities, setExpandDeletedActivities] = useState(false);
 
+    const sessionHasActivities = session.activities.length > 0;
+
     const [deletedActivities] = useMemo(() => {
-        const deletedActivities = session.activities.filter(act => act.deleted);
+        const deletedActivities = session.activities.filter(act => act.isDeleted);
         return [deletedActivities];
     }, [session]);
 
-    const handleChangeTimer = (newTimer: RecordType) => {
+    const handleChangeTimer = (newTimer: WorkSessionTimerType) => {
         onSessionChange({
             ...session,
             timer: newTimer
@@ -46,7 +51,13 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
 
     const handleSetMaxDurationMinutes = (maxDurationMinutes: number | undefined) => {
         handleSetSettings({ ...workSessionSettings, maxDurationMinutes });
-        onSessionChange({ ...session, maxDurationMinutes });
+        onSessionChange({
+            ...session,
+            timer: {
+                ...session.timer,
+                maxDurationMinutes
+            }
+        });
     }
 
     return (
@@ -66,35 +77,45 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
                     <div className="flex flex-row gap-2">
                         <TimeInput
                             className="max-w-full"
-                            time={session.timer.startTime}
+                            time={session.timer.startTimeOverride || (session.timer.startTime ? session.timer.startTime + 1 : undefined)}
+                            // si es undefined tambien el override lo es
                             onTimeChange={newStartTime => handleChangeTimer({
                                 ...session.timer,
-                                startTime: newStartTime
+                                startTimeOverride: newStartTime
                             })}
+                            readOnly={readOnly}
                         />
                         -
                         <TimeInput
-                            className="max-w-full"
-                            time={session.timer.endTime}
+                            className={clsx("max-w-full",
+                                { "text-red-400": session.timer.running && !session.timer.endTimeOverride }
+                            )}
+                            time={session.timer.endTimeOverride || session.timer.endTime}
                             onTimeChange={newEndTime => handleChangeTimer({
                                 ...session.timer,
-                                endTime: newEndTime
-                            })} />
+                                endTimeOverride: newEndTime
+                            })}
+                            readOnly={readOnly}
+                        />
                     </div>
                 </FormField>
 
                 <FormField title="Limite de duración">
                     <TimeInputMinutes
                         className="max-w-full"
-                        minutes={session.maxDurationMinutes}
+                        minutes={session.timer.maxDurationMinutes}
                         onMinutesChange={handleSetMaxDurationMinutes}
+                        readOnly={readOnly}
                     />
                 </FormField>
             </div>
 
 
             <FormField title="Tabla de actividades">
-                <Button onClick={() => showModal("table")}>
+                <Button
+                    onClick={() => showModal("table")}
+                    disabled={!sessionHasActivities}
+                >
                     Generar tabla
                 </Button>
             </FormField>
@@ -129,7 +150,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
             </div>
 
 
-            <FormField title="Detener temporizador al finalizar la jornada">
+            <FormField title="Detener temporizador al finalizar la jornada" show={!readOnly}>
                 <ToggleTabs falseLabel="Desactivado" trueLabel="Al finalizar"
                     value={workSessionSettings.stopOnSessionEnd}
                     onSelected={(value) => handleSetSettings({
@@ -141,7 +162,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose 
             </FormField>
 
 
-            <FormField title="Detener temporizador al cerrar la pagina">
+            <FormField title="Detener temporizador al cerrar la pagina" show={!readOnly}>
                 <ToggleTabs falseLabel="Desactivado" trueLabel="Al cerrar página"
                     value={workSessionSettings.stopOnClose}
                     onSelected={(value) => handleSetSettings({

@@ -5,8 +5,10 @@ import { ActivityType, RecordType } from "../types/Activity";
 
 const unrecordedActivityMock: ActivityType = {
     id: "unrecored",
-    title: "Sin registrar",
-    records: []
+    title: "No categorizadas",
+    description: "Actividades varias, como organización, comunicación y espera por dependencias.",
+    records: [],
+    isCollapsed: true
 }
 
 export default function useUnrecordedActivity(activities: Array<ActivityType>, range?: RecordType) {

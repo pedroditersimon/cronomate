@@ -1,16 +1,31 @@
+
 export interface WorkSessionType {
     id: string;
-    timer: RecordType;
     createdTimeStamp: number; // starting time
     activities: Array<ActivityType>;
+    timer: WorkSessionTimerType;
+}
+
+export interface WorkSessionTimerType extends RecordType {
+    startTimeOverride?: number; // timer override
+    endTimeOverride?: number; // timer override
     maxDurationMinutes?: number; // En minutos
 }
+
+export interface WorkSessionSettingsType {
+    stopOnSessionEnd: boolean;
+    stopOnClose: boolean;
+    maxDurationMinutes?: number; // En minutos
+}
+
 
 export interface ActivityType {
     id: string;
     title: string;
+    description?: string;
     records: Array<RecordType>;
-    deleted?: boolean;
+    isDeleted?: boolean;
+    isCollapsed?: boolean;
 }
 
 export interface RecordType {
@@ -22,8 +37,3 @@ export interface RecordType {
 }
 
 
-export interface WorkSessionSettingsType {
-    stopOnSessionEnd: boolean;
-    stopOnClose: boolean;
-    maxDurationMinutes?: number; // En minutos
-}

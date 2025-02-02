@@ -14,6 +14,7 @@ const activityMock: ActivityType = {
     id: "activityMock",
     title: "Nueva actividad",
     records: [{ id: "recordMock" }],
+    isCollapsed: true,
 };
 
 export default function ActivityCreator({ onActivityCreated }: Props) {
@@ -87,14 +88,25 @@ export default function ActivityCreator({ onActivityCreated }: Props) {
     }
 
 
+    const handleFocus = (focus: boolean) => {
+        setFocused(focus);
+
+        // Colapsar segun el focus
+        setActivity({
+            ...activity,
+            isCollapsed: !focus
+        });
+    }
+
+
     return (
         <div
             className={clsx("transition-opacity", {
                 "opacity-25": !focused && !hasChanges,
                 "opacity-100": focused || hasChanges
             })}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
+            onFocus={() => handleFocus(true)}
+            onBlur={() => handleFocus(false)}
         >
             <Activity
                 key={activity.id}

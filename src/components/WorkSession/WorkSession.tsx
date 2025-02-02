@@ -1,6 +1,6 @@
 import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity";
 import activityService from "../../services/activityService";
-import { formatDateToText, toDate } from "../../utils/TimeUtils";
+import { formatDateToText, isNow, isNowOrFuture, isPast, toDate } from "../../utils/TimeUtils";
 import { generateId } from "../../utils/generateId";
 import Container from "../../layouts/Container";
 import ActivityCreator from "../Activity/ActivityCreator";
@@ -40,18 +40,32 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     const { workSessionSettings } = useWorkSessionSettigs();
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
+
+    // Unrecorded Activity
     const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
+    const [unrecordedIsCollapsed, setUnrecordedIsCollapsed] = useState(unrecordedActivity.isCollapsed);
+    unrecordedActivity.isCollapsed = unrecordedIsCollapsed;
+
 
     // constantly update session timer
     useTimer(() => {
         const now = toDate().getTime();
+        let _session = session;
 
-        const updatedSession = workSessionService.setTimer(session, {
+        _session = workSessionService.setTimer(_session, {
             ...session.timer,
             startTime: session.timer.startTime || now,
             endTime: now,
         });
-        onSessionChange(updatedSession);
+
+        // stopOnSessionEnd
+        if (workSessionSettings.stopOnSessionEnd) {
+            const sessionShouldEnd = isPast(session.timer.endTimeOverride);
+            if (sessionShouldEnd)
+                _session = workSessionService.stopTimerAndActivities(_session);
+        }
+
+        onSessionChange(_session);
 
         console.log("Today timer");
     }, 5000, session.timer.running && !readOnly);
@@ -192,11 +206,12 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
         >
 
             {/* Settings panel */}
-            <ContainerOverlay show={showSettings && !readOnly} >
+            <ContainerOverlay show={showSettings} >
                 <WorkSessionSettings
                     session={session}
                     onSessionChange={onSessionChange}
                     onClose={() => setShowSettings(false)}
+                    readOnly={readOnly}
                 />
             </ContainerOverlay>
 
@@ -221,7 +236,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
                     onTimerToggle={handleToggleTimerWithState}
                 />}
 
-                icon={!readOnly && <SettingsIcon />}
+                icon={<SettingsIcon />}
                 onIconClick={() => setShowSettings(true)}
             />
 
@@ -245,7 +260,7 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
                 <Activity
                     key="unrecored"
                     activity={unrecordedActivity}
-                    onActivityChange={() => { }}
+                    onActivityChange={newActivity => setUnrecordedIsCollapsed(newActivity.isCollapsed ?? false)}
                     readOnly
                 />
             }

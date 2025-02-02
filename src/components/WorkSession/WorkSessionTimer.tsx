@@ -24,8 +24,8 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
         const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
 
         // -1 means has not progress
-        const sessionProgress = session.maxDurationMinutes
-            ? (totalElapsedTime / (session.maxDurationMinutes * 60000)) * 100
+        const sessionProgress = session.timer.maxDurationMinutes
+            ? (totalElapsedTime / (session.timer.maxDurationMinutes * 60000)) * 100
             : -1;
 
         return [totalElapsedTimeTxt, sessionProgress];
@@ -49,7 +49,7 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
                     {sessionProgress >= 0 &&
                         <ProgressBar
                             progress={sessionProgress}
-                            background={{ "bg-yellow-200": session.timer.running }}
+                            backgroundOnExcess={session.timer.running ? "bg-yellow-300" : undefined}
                         />
                     }
                 </div>
