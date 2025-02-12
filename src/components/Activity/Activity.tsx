@@ -9,7 +9,7 @@ import { generateId } from "../../utils/generateId";
 import { findLast } from "lodash";
 import recordService from "../../services/recordService";
 import activityService from "../../services/activityService";
-import Clickable from "../interactable/Clickable";
+import Clickable from "../interactable/Clickable.tsx";
 
 
 interface Props {
