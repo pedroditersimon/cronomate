@@ -12,9 +12,11 @@ const getNewDefaultState = (): WorkSessionType => {
     return {
         id: generateId(),
         createdTimeStamp: new Date().getTime(),
-        timer: { id: generateId() },
+        timer: {
+            id: generateId(),
+            maxDurationMinutes: workSessionSettings.maxDurationMinutes
+        },
         activities: [],
-        maxDurationMinutes: workSessionSettings.maxDurationMinutes
     };
 }
 

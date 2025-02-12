@@ -1,6 +1,6 @@
 import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity";
 import activityService from "../../services/activityService";
-import { formatDateToText, isNow, isNowOrFuture, isPast, toDate } from "../../utils/TimeUtils";
+import { formatDateToText, isPast, toDate } from "../../utils/TimeUtils";
 import { generateId } from "../../utils/generateId";
 import Container from "../../layouts/Container";
 import ActivityCreator from "../Activity/ActivityCreator";

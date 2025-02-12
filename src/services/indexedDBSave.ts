@@ -1,5 +1,5 @@
 
-type IdType = IDBValidKey | undefined;
+export type IdType = IDBValidKey | undefined;
 
 
 // Función para abrir o crear la base de datos
@@ -8,7 +8,7 @@ async function openDatabase(storeName: string, version: number): Promise<IDBData
         const request = indexedDB.open("cronomateDB", version);
 
         // Cuando se necesita actualizar la base de datos
-        request.onupgradeneeded = (event: Event) => {
+        request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
             const db = (event.target as IDBRequest<IDBDatabase>).result;
 
             // Si no existe la tienda de objetos, la creamos

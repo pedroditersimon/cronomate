@@ -2,8 +2,8 @@ import { useDispatch } from "react-redux";
 import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "../redux/slices/todaySessionSlice";
 import { useTypedSelector } from "./useTypedSelector";
 import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
-import indexedDBSave from "../services/indexedDBSave";
 import { toast } from "sonner";
+import sessionStorageService from "../services/sessionStorageService";
 
 export default function useTodaySession() {
     const todaySession = useTypedSelector(state => state.todaySession);
@@ -39,7 +39,7 @@ export default function useTodaySession() {
     }
 
     const saveInHistoryAndReset = () => {
-        indexedDBSave.saveItems("History", [todaySession]);
+        sessionStorageService.saveItems("History", [todaySession]);
         dispatch(resetToDefaultState());
         // Ya que se utiliza la variable local 'todaySession',
         // es posible que esta cambie y al guardar no se este guardando lo ultimo que cambio

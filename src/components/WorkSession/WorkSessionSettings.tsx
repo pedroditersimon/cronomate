@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
 import ContainerTopbar from "../../layouts/ContainerTopbar";
-import { RecordType, WorkSessionSettingsType, WorkSessionTimerType, WorkSessionType } from "../../types/Activity";
+import type { WorkSessionSettingsType, WorkSessionTimerType, WorkSessionType } from "../../types/Activity";
 import FormField from "../forms/FormField";
 import ToggleTabs from "../interactable/ToggleTabs";
 import { TimeInput } from "../interactable/TimeInput";

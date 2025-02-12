@@ -200,7 +200,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
             <div className="flex flex-col gap-1 ml-6">
                 {activity.records.map((record, i) => {
                     if (record.deleted && !showDeletedRecords && !readOnly) return;
-                    if (!record.running && activity.isCollapsed) return;
+                    if (!record.running && activity.isCollapsed && !readOnly) return;
                     return (<>
                         <Record
                             key={record.id}

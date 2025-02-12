@@ -1,5 +1,7 @@
 
-SI CAMBIASTE LAS INTERFACES: Incrementar la version de la app y luego hacer una conversion de propiedades a la hora de cargar los objetos que tenian la interfaz que cambiaste. Osea si cambiaste "enabled" por "isEnabled", convierte este campo detectando la version del guardado y la actual.
+SI CAMBIASTE LAS INTERFACES: Incrementa la versión de la app y agrega una función de conversión en sessionStorageVersionConverter para convertir las propiedades al cargar los objetos con la interfaz vieja.  
+Por ejemplo, si cambiaste "enabled" por "isEnabled", detecta la versión del guardado y la actual y haz la conversion.
+
 
 ver la organzacion por github proejcts, quiza pueda tener un kanban o algo parecido en el repo
 
@@ -13,6 +15,11 @@ despues se puede, o llamar a las dos por separado o hacer una "and" que contenga
 
 El startTime y end de configuracion, no cambia si se la borra muchas veces.
 
+Si el endTime de la joranda esta configurado para hacer stop automaticamente.
+No pasará si no estas en la app, ya que los ticks no se actualizan.
+
+Eliminar propiedad maxDuration del timer de jornada. Este se calculará en base a el override del fin de joranda.
+
 ## Generales
 - [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
@@ -20,6 +27,7 @@ El startTime y end de configuracion, no cambia si se la borra muchas veces.
 - [ ] Implementar imports absolutos.
 - [-] El toaster se ve por debajo del modal dialog
 - [ ] Mover las funciones fuera del componente workSession, moverlo a el servicio.
+- [x] Guardar los session en un SavedObjectType.
 
 
 #### Vista jornada

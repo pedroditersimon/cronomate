@@ -1,5 +1,4 @@
 import Container from '../layouts/Container';
-import indexedDBSave from '../services/indexedDBSave';
 import { WorkSessionType } from '../types/Activity';
 import { useEffect, useState } from 'react';
 import ContainerTopbar from '../layouts/ContainerTopbar';
@@ -8,6 +7,7 @@ import { WorkSession } from '../components/WorkSession/WorkSession';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageLayout from '../layouts/PageLayout';
 import HSeparator from '../layouts/HSeparator';
+import sessionStorageService from '../services/sessionStorageService';
 
 
 export function History() {
@@ -16,7 +16,7 @@ export function History() {
     const [history, setHistory] = useState<Array<WorkSessionType>>([]);
 
     useEffect(() => {
-        indexedDBSave.getItems<WorkSessionType>("History")
+        sessionStorageService.getItems<WorkSessionType>("History")
             .then((results) => setHistory(results));
     }, []);
 

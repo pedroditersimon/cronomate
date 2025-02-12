@@ -57,7 +57,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             };
         });
 
-    }, [session, elapsedTimeUnit, includeUnrecordedActivity]);
+    }, [includeUnrecordedActivity, hasUnrecoredActivity, session, unrecordedActivity, elapsedTimeUnit]);
 
 
     const handleCopyTable = () => {
