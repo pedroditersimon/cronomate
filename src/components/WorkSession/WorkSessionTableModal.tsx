@@ -8,7 +8,7 @@ import clsx from "clsx";
 import { toast } from "sonner";
 import { CheckIcon, ClipboardDocumentIcon } from "../../assets/Icons";
 import Dropdown from "../interactable/Dropdown";
-import { TimeUnitsEnum, TimeUnitType } from "../../types/types.d.ts";
+import { TimeUnitsEnum, type TimeUnitType } from "../../types/types.ts";
 import useUnrecordedActivity from "../../hooks/useUnrecoredActivity.ts";
 import workSessionService from "../../services/workSessionService.ts";
 import Checkbox from "../interactable/Checkbox.tsx";

@@ -28,7 +28,8 @@ interface Props {
 
 export default function WorkSessionSettings({ session, onSessionChange, onClose, readOnly }: Props) {
     const { workSessionSettings, setSettings, save } = useWorkSessionSettigs();
-    const [expandDeletedActivities, setExpandDeletedActivities] = useState(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_, setExpandDeletedActivities] = useState(false);
 
     const sessionHasActivities = session.activities.length > 0;
 
