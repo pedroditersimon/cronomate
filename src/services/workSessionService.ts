@@ -1,4 +1,4 @@
-import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
+import { ActivityType, RecordType, WorkSessionTimerType, WorkSessionType } from "../types/Activity";
 import { toDate } from "../utils/TimeUtils";
 import activityService from "./activityService";
 
@@ -9,6 +9,15 @@ function setTimer(session: WorkSessionType, newTimer: RecordType) {
         timer: { ...newTimer }
     };
 };
+
+function getTimerWithOverrides(timer: WorkSessionTimerType): RecordType {
+    return {
+        id: timer.id,
+        startTime: timer.startTimeOverride ?? timer.startTime,
+        endTime: timer.endTimeOverride ?? timer.endTime,
+    }
+}
+
 
 function addActivity(session: WorkSessionType, newActivity: ActivityType) {
     return {
@@ -56,6 +65,7 @@ function stopTimerAndActivities(session: WorkSessionType) {
 
 export default {
     setTimer,
+    getTimerWithOverrides,
 
     addActivity,
     setActivity,

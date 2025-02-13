@@ -24,7 +24,8 @@ export default function WorkSessionTableModal({ id, session }: Props) {
 
     // Unrecorded Activity
     const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
-    const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
+    const sessionTimer = workSessionService.getTimerWithOverrides(session.timer);
+    const unrecordedActivity = useUnrecordedActivity(session.activities, sessionTimer);
     const hasUnrecoredActivity = unrecordedActivity.records.length > 0;
 
     // Pauses Activity

@@ -42,7 +42,8 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     const title = formatDateToText(toDate(session.createdTimeStamp));
 
     // Unrecorded Activity
-    const unrecordedActivity = useUnrecordedActivity(session.activities, session.timer);
+    const sessionTimer = workSessionService.getTimerWithOverrides(session.timer);
+    const unrecordedActivity = useUnrecordedActivity(session.activities, sessionTimer);
     const [unrecordedIsCollapsed, setUnrecordedIsCollapsed] = useState(unrecordedActivity.isCollapsed);
     unrecordedActivity.isCollapsed = unrecordedIsCollapsed;
 
