@@ -1,5 +1,5 @@
 import { ActivityType, RecordType, WorkSessionTimerType, WorkSessionType } from "../types/Activity";
-import { toDate } from "../utils/TimeUtils";
+import { getElapsedTime, toDate } from "../utils/TimeUtils";
 import activityService from "./activityService";
 
 
@@ -16,6 +16,15 @@ function getTimerWithOverrides(timer: WorkSessionTimerType): RecordType {
         startTime: timer.startTimeOverride ?? timer.startTime,
         endTime: timer.endTimeOverride ?? timer.endTime,
     }
+}
+
+function getTimerDurationInMinutes(timer: WorkSessionTimerType): number {
+    const startTime = timer.startTimeOverride || timer.startTime;
+    const endTime = timer.endTimeOverride || timer.endTime;
+
+    if (!startTime || !endTime) return 0;
+
+    return getElapsedTime(toDate(startTime), toDate(endTime)) / 60000;
 }
 
 
@@ -66,6 +75,7 @@ function stopTimerAndActivities(session: WorkSessionType) {
 export default {
     setTimer,
     getTimerWithOverrides,
+    getTimerDurationInMinutes,
 
     addActivity,
     setActivity,

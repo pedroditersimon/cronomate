@@ -18,8 +18,6 @@ El startTime y end de configuracion, no cambia si se la borra muchas veces.
 Si el endTime de la joranda esta configurado para hacer stop automaticamente.
 No pasará si no estas en la app, ya que los ticks no se actualizan.
 
-Eliminar propiedad maxDuration del timer de jornada. Este se calculará en base a el override del fin de joranda.
-
 ## Generales
 - [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
@@ -28,7 +26,7 @@ Eliminar propiedad maxDuration del timer de jornada. Este se calculará en base 
 - [-] El toaster se ve por debajo del modal dialog
 - [ ] Mover las funciones fuera del componente workSession, moverlo a el servicio.
 - [x] Guardar los session en un SavedObjectType.
-
+- [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
@@ -57,13 +55,12 @@ Eliminar propiedad maxDuration del timer de jornada. Este se calculará en base 
     - [x] Toggle para auto-stop, unicamente para este today.
     - [x] TimeInput para inicio y fin de jornada.
     - [x] Guardar los ajustes en localStorage, y cargar siempre esos.
-    - [ ] Aplicar configuracion en el workSession.
+    - [x] Aplicar configuracion en el workSession.
 - [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
 - [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 - [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
-- [P] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
+- [x] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
 - [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
-- [ ] Al crear una nueva session tomar el maxDuration guardado en localStorage.
 - [ ] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
 - [x] Opciones de today settings en orden de frecuencia de uso
 
@@ -77,7 +74,7 @@ Eliminar propiedad maxDuration del timer de jornada. Este se calculará en base 
 - [P] El elapsedTime se puede configurar como unidad hora, minuto o formato hh:mm
 - [x] Boton para cerrar la vista.
 - [x] Redondear el tiempo para arriba a 2 digitos despues del cero
-- [P] toggle para incluir "Pausas".
+- [x] toggle para incluir "Pausas".
 - [x] toggle para incluir "Sin actividad".
 
 #### Actividad (Activity)
@@ -112,7 +109,7 @@ Eliminar propiedad maxDuration del timer de jornada. Este se calculará en base 
 #### Input de hora (TimeInput)
 - [ ] No se actualiza si se esta haciendo focus.
 - [ ] Palabras clave como "ahora", "ya" y "now" que establezcan el tiempo a ahora.
-- [ ] Al hacer focus desplegar un pequeño calendario con el mes, botones para ir al mes anterior y un boton de hoy y ayer para establecer el dia. _(ver librería `cally`)_
+- [ ] Al hacer focus desplegar un pequeño calendario con el mes, botones para ir al mes anterior y un boton de 'hoy' y 'ayer' para establecer el dia. _(ver librería `cally`)_
 
 
 #### Vista Historial.

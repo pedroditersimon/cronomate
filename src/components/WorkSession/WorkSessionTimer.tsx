@@ -6,6 +6,7 @@ import activityService from "../../services/activityService";
 import { useMemo } from "react";
 import { convertElapsedTimeToText } from "../../utils/TimeUtils";
 import Clickable from "../interactable/Clickable";
+import workSessionService from "../../services/workSessionService";
 
 
 interface Props {
@@ -24,8 +25,9 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
         const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
 
         // -1 means has not progress
-        const sessionProgress = session.timer.maxDurationMinutes
-            ? (totalElapsedTime / (session.timer.maxDurationMinutes * 60000)) * 100
+        const timerDuration = workSessionService.getTimerDurationInMinutes(session.timer);
+        const sessionProgress = timerDuration >= 0
+            ? (totalElapsedTime / (timerDuration * 60000)) * 100
             : -1;
 
         return [totalElapsedTimeTxt, sessionProgress];

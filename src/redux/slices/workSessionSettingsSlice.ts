@@ -6,8 +6,7 @@ import localSave from "../../services/localSave";
 const getNewDefaultState = (): WorkSessionSettingsType => {
     return {
         stopOnClose: true,
-        stopOnSessionEnd: true,
-        maxDurationMinutes: undefined
+        stopOnSessionEnd: true
     };
 }
 

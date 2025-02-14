@@ -53,7 +53,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             return {
                 date: toDate(session.createdTimeStamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
                 title: activity.title,
-                description: activity.description,
+                description: activity.description || "",
                 elapsedTime: elapsedTimeTxt,
             };
         });

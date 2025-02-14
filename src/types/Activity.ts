@@ -9,13 +9,11 @@ export interface WorkSessionType {
 export interface WorkSessionTimerType extends RecordType {
     startTimeOverride?: number; // timer override
     endTimeOverride?: number; // timer override
-    maxDurationMinutes?: number; // En minutos
 }
 
 export interface WorkSessionSettingsType {
     stopOnSessionEnd: boolean;
     stopOnClose: boolean;
-    maxDurationMinutes?: number; // En minutos
 }
 
 

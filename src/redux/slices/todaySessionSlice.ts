@@ -3,18 +3,17 @@ import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity"
 import activityService from "../../services/activityService";
 import localSave from "../../services/localSave";
 import { generateId } from "../../utils/generateId";
-import { workSessionSettingsSlice } from "./workSessionSettingsSlice";
+//import { workSessionSettingsSlice } from "./workSessionSettingsSlice";
 
 
-const workSessionSettings = workSessionSettingsSlice.getInitialState();
+//const workSessionSettings = workSessionSettingsSlice.getInitialState();
 
 const getNewDefaultState = (): WorkSessionType => {
     return {
         id: generateId(),
         createdTimeStamp: new Date().getTime(),
         timer: {
-            id: generateId(),
-            maxDurationMinutes: workSessionSettings.maxDurationMinutes
+            id: generateId()
         },
         activities: [],
     };

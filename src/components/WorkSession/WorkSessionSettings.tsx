@@ -14,6 +14,7 @@ import Button from "../interactable/Button";
 import { showModal } from "../Modal";
 import WorkSessionTableModal from "./WorkSessionTableModal";
 import clsx from "clsx";
+import workSessionService from "../../services/workSessionService";
 
 
 interface Props {
@@ -33,9 +34,10 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
 
     const sessionHasActivities = session.activities.length > 0;
 
-    const [deletedActivities] = useMemo(() => {
+    const [deletedActivities, sessionTimerDuration] = useMemo(() => {
+        const sessionTimerDuration = workSessionService.getTimerDurationInMinutes(session.timer);
         const deletedActivities = session.activities.filter(act => act.isDeleted);
-        return [deletedActivities];
+        return [deletedActivities, sessionTimerDuration];
     }, [session]);
 
     const handleChangeTimer = (newTimer: WorkSessionTimerType) => {
@@ -48,17 +50,6 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
     const handleSetSettings = (newSettings: WorkSessionSettingsType) => {
         setSettings(newSettings);
         save(); // save on edit
-    }
-
-    const handleSetMaxDurationMinutes = (maxDurationMinutes: number | undefined) => {
-        handleSetSettings({ ...workSessionSettings, maxDurationMinutes });
-        onSessionChange({
-            ...session,
-            timer: {
-                ...session.timer,
-                maxDurationMinutes
-            }
-        });
     }
 
     return (
@@ -74,39 +65,38 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
 
 
             <div className="flex flex-row gap-5">
-                <FormField title="Inicio y fin">
-                    <div className="flex flex-row gap-2">
-                        <TimeInput
-                            className="max-w-full"
-                            time={session.timer.startTimeOverride || (session.timer.startTime ? session.timer.startTime + 1 : undefined)}
-                            // si es undefined tambien el override lo es
-                            onTimeChange={newStartTime => handleChangeTimer({
-                                ...session.timer,
-                                startTimeOverride: newStartTime
-                            })}
-                            readOnly={readOnly}
-                        />
-                        -
-                        <TimeInput
-                            className={clsx("max-w-full",
-                                { "text-red-400": session.timer.running && !session.timer.endTimeOverride }
-                            )}
-                            time={session.timer.endTimeOverride || session.timer.endTime}
-                            onTimeChange={newEndTime => handleChangeTimer({
-                                ...session.timer,
-                                endTimeOverride: newEndTime
-                            })}
-                            readOnly={readOnly}
-                        />
-                    </div>
+                <FormField title="Inicio" className="text-center">
+                    <TimeInput
+                        className="max-w-full"
+                        time={session.timer.startTimeOverride || (session.timer.startTime ? session.timer.startTime + 1 : undefined)}
+                        // si es undefined tambien el override lo es
+                        onTimeChange={newStartTime => handleChangeTimer({
+                            ...session.timer,
+                            startTimeOverride: newStartTime
+                        })}
+                        readOnly={readOnly}
+                    />
                 </FormField>
 
-                <FormField title="Limite de duración">
+                <FormField title="Fin" className="text-center">
+                    <TimeInput
+                        className={clsx("max-w-full",
+                            { "text-red-400": session.timer.running && !session.timer.endTimeOverride }
+                        )}
+                        time={session.timer.endTimeOverride || session.timer.endTime}
+                        onTimeChange={newEndTime => handleChangeTimer({
+                            ...session.timer,
+                            endTimeOverride: newEndTime
+                        })}
+                        readOnly={readOnly}
+                    />
+                </FormField>
+
+                <FormField title="Duración" className="text-center">
                     <TimeInputMinutes
                         className="max-w-full"
-                        minutes={session.timer.maxDurationMinutes}
-                        onMinutesChange={handleSetMaxDurationMinutes}
-                        readOnly={readOnly}
+                        minutes={sessionTimerDuration}
+                        readOnly
                     />
                 </FormField>
             </div>
