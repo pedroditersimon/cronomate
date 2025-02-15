@@ -1,5 +1,5 @@
-import { ActivityType, RecordType, WorkSessionTimerType, WorkSessionType } from "../types/Activity";
-import { getElapsedTime, toDate } from "../utils/TimeUtils";
+import { ActivityType, RecordType, WorkSessionTimerType, WorkSessionType } from "src/types/Activity";
+import { getElapsedTime, toDate } from "src/utils/TimeUtils";
 import activityService from "./activityService";
 
 

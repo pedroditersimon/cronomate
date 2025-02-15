@@ -1,4 +1,4 @@
-import { WorkSessionType } from "../types/Activity";
+import { WorkSessionType } from "src/types/Activity";
 
 
 function convertSession(session: any, fromVersion: string, toVersion: string) {

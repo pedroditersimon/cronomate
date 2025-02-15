@@ -1,9 +1,9 @@
 import { useDispatch } from "react-redux";
-import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "../redux/slices/todaySessionSlice";
+import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "src/redux/slices/todaySessionSlice";
 import { useTypedSelector } from "./useTypedSelector";
-import { ActivityType, RecordType, WorkSessionType } from "../types/Activity";
+import { ActivityType, RecordType, WorkSessionType } from "src/types/Activity";
 import { toast } from "sonner";
-import sessionStorageService from "../services/sessionStorageService";
+import sessionStorageService from "src/services/sessionStorageService";
 
 export default function useTodaySession() {
     const todaySession = useTypedSelector(state => state.todaySession);

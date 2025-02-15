@@ -1,6 +1,6 @@
 import clsx, { ClassValue } from "clsx";
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
-import { ForbiddenIcon } from "../../assets/Icons";
+import { ForbiddenIcon } from "src/assets/Icons";
 
 interface Props extends PropsWithChildren {
     icon?: ReactNode;

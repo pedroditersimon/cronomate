@@ -1,20 +1,20 @@
 import { useMemo, useState } from "react";
-import { ChevronVerticalIcon, CrossIcon } from "../../assets/Icons";
-import ContainerTopbar from "../../layouts/ContainerTopbar";
-import type { WorkSessionSettingsType, WorkSessionTimerType, WorkSessionType } from "../../types/Activity";
+import { ChevronVerticalIcon, CrossIcon } from "src/assets/Icons";
+import ContainerTopbar from "src/layouts/ContainerTopbar";
+import type { WorkSessionSettingsType, WorkSessionTimerType, WorkSessionType } from "src/types/Activity";
 import FormField from "../forms/FormField";
-import ToggleTabs from "../interactable/ToggleTabs";
-import { TimeInput } from "../interactable/TimeInput";
-import HSeparator from "../../layouts/HSeparator";
-import Clickable from "../interactable/Clickable";
-import Activity from "../Activity/Activity";
-import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
-import { TimeInputMinutes } from "../interactable/TimeInputMinutes";
-import Button from "../interactable/Button";
+import ToggleTabs from "src/components/interactable/ToggleTabs";
+import { TimeInput } from "src/components/interactable/TimeInput";
+import HSeparator from "src/layouts/HSeparator";
+import Clickable from "src/components/interactable/Clickable";
+import Activity from "src/components/Activity/Activity";
+import useWorkSessionSettigs from "src/hooks/useWorkSessionSettigs";
+import { TimeInputMinutes } from "src/components/interactable/TimeInputMinutes";
+import Button from "src/components/interactable/Button";
 import { showModal } from "../Modal";
 import WorkSessionTableModal from "./WorkSessionTableModal";
 import clsx from "clsx";
-import workSessionService from "../../services/workSessionService";
+import workSessionService from "src/services/workSessionService";
 
 
 interface Props {

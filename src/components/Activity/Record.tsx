@@ -1,11 +1,11 @@
-import { CircleIcon, TrashIcon } from "../../assets/Icons";
+import { CircleIcon, TrashIcon } from "src/assets/Icons";
 
-import { getElapsedTime, isNow, toDate, convertElapsedTimeToText } from "../../utils/TimeUtils";
-import type { RecordType } from "../../types/Activity";
+import { getElapsedTime, isNow, toDate, convertElapsedTimeToText } from "src/utils/TimeUtils";
+import type { RecordType } from "src/types/Activity";
 import { useMemo } from "react";
 import clsx from "clsx";
-import { TimeInput } from "../interactable/TimeInput";
-import Clickable from "../interactable/Clickable";
+import { TimeInput } from "src/components/interactable/TimeInput";
+import Clickable from "src/components/interactable/Clickable";
 
 
 interface Props {

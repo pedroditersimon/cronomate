@@ -2,7 +2,7 @@ import { version } from '../../package.json';
 const appVersion = version;
 
 import indexedDBSave from './indexedDBSave';
-import { ISavedObjectWithId } from '../types/types';
+import { ISavedObjectWithId } from 'src/types/types';
 import { IdType } from './indexedDBSave';
 import sessionStorageVersionConverter from './sessionStorageVersionConverter';
 

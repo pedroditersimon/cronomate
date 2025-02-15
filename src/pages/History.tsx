@@ -1,13 +1,13 @@
-import Container from '../layouts/Container';
-import { WorkSessionType } from '../types/Activity';
+import Container from 'src/layouts/Container';
+import { WorkSessionType } from 'src/types/Activity';
 import { useEffect, useState } from 'react';
-import ContainerTopbar from '../layouts/ContainerTopbar';
-import WorkSessionItem from '../components/WorkSession/WorkSessionItem';
-import { WorkSession } from '../components/WorkSession/WorkSession';
+import ContainerTopbar from 'src/layouts/ContainerTopbar';
+import WorkSessionItem from 'src/components/WorkSession/WorkSessionItem';
+import { WorkSession } from 'src/components/WorkSession/WorkSession';
 import { useNavigate, useParams } from 'react-router-dom';
-import PageLayout from '../layouts/PageLayout';
-import HSeparator from '../layouts/HSeparator';
-import sessionStorageService from '../services/sessionStorageService';
+import PageLayout from 'src/layouts/PageLayout';
+import HSeparator from 'src/layouts/HSeparator';
+import sessionStorageService from 'src/services/sessionStorageService';
 
 
 export function History() {

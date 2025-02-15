@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon } from "../../assets/Icons";
-import { RecordType, ActivityType } from "../../types/Activity";
-import { isNow, toDate, convertElapsedTimeToText } from "../../utils/TimeUtils";
+import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon } from "src/assets/Icons";
+import { RecordType, ActivityType } from "src/types/Activity";
+import { isNow, toDate, convertElapsedTimeToText } from "src/utils/TimeUtils";
 import Record from "./Record";
 import clsx from "clsx";
-import HSeparator from "../../layouts/HSeparator";
-import { generateId } from "../../utils/generateId";
+import HSeparator from "src/layouts/HSeparator";
+import { generateId } from "src/utils/generateId";
 import { findLast } from "lodash";
-import recordService from "../../services/recordService";
-import activityService from "../../services/activityService";
-import Clickable from "../interactable/Clickable";
+import recordService from "src/services/recordService";
+import activityService from "src/services/activityService";
+import Clickable from "src/components/interactable/Clickable";
 
 
 interface Props {

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import recordService from "../services/recordService";
-import { ActivityType, RecordType } from "../types/Activity";
+import recordService from "src/services/recordService";
+import { ActivityType, RecordType } from "src/types/Activity";
 
 
 const unrecordedActivityMock: ActivityType = {

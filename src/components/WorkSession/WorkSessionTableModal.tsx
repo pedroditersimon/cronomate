@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
-import recordService from "../../services/recordService";
-import { WorkSessionType } from "../../types/Activity";
-import Button from "../interactable/Button";
+import recordService from "src/services/recordService";
+import { WorkSessionType } from "src/types/Activity";
+import Button from "src/components/interactable/Button";
 import { Modal } from "../Modal";
-import { toDate } from "../../utils/TimeUtils";
+import { toDate } from "src/utils/TimeUtils";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { CheckIcon, ClipboardDocumentIcon } from "../../assets/Icons";
-import Dropdown from "../interactable/Dropdown";
-import { TimeUnitsEnum, type TimeUnitType } from "../../types/types.ts";
-import useUnrecordedActivity from "../../hooks/useUnrecoredActivity.ts";
-import workSessionService from "../../services/workSessionService.ts";
-import Checkbox from "../interactable/Checkbox.tsx";
+import { CheckIcon, ClipboardDocumentIcon } from "src/assets/Icons";
+import Dropdown from "src/components/interactable/Dropdown";
+import { TimeUnitsEnum, type TimeUnitType } from "src/types/types";
+import useUnrecordedActivity from "src/hooks/useUnrecoredActivity";
+import workSessionService from "src/services/workSessionService";
+import Checkbox from "src/components/interactable/Checkbox";
 
 interface Props {
     id: string;

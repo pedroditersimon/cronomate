@@ -2,7 +2,7 @@ import { ReactNode, useState } from "react";
 import Button from "./Button";
 import { ClassValue } from "clsx";
 import clsx from "clsx";
-import useClickOut from "../../hooks/useClickOut";
+import useClickOut from "src/hooks/useClickOut";
 
 
 interface Props {

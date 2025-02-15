@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
-import { save, load, setSettings, resetToDefaultState } from "../redux/slices/workSessionSettingsSlice";
+import { save, load, setSettings, resetToDefaultState } from "src/redux/slices/workSessionSettingsSlice";
 import { useTypedSelector } from "./useTypedSelector";
-import { WorkSessionSettingsType } from "../types/Activity";
+import { WorkSessionSettingsType } from "src/types/Activity";
 
 
 export default function useWorkSessionSettigs() {

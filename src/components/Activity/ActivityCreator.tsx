@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import { ActivityType } from "../../types/Activity";
+import { ActivityType } from "src/types/Activity";
 import Activity from "./Activity";
-import { generateId } from "../../utils/generateId";
+import { generateId } from "src/utils/generateId";
 import clsx from "clsx";
-import { toDate } from "../../utils/TimeUtils";
-import activityService from "../../services/activityService";
+import { toDate } from "src/utils/TimeUtils";
+import activityService from "src/services/activityService";
 
 interface Props {
     onActivityCreated: (newActivity: ActivityType) => void;

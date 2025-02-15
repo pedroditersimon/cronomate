@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 // Importamos el tipo RootState del store. 
 // Este tipo define la estructura global del estado en nuestra aplicación Redux.
-import { RootState } from "../redux/store.ts";
+import { RootState } from "src/redux/store";
 
 // Creamos un hook personalizado llamado useTypedSelector que envuelve useSelector.
 // Le indicamos que use RootState como el tipo del estado global.

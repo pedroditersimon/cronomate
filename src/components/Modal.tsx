@@ -1,9 +1,9 @@
 import { PropsWithChildren } from "react";
-import { CrossIcon } from "../assets/Icons";
+import { CrossIcon } from "src/assets/Icons";
 import clsx, { ClassValue } from "clsx";
-import Container from "../layouts/Container";
-import ContainerTopbar from "../layouts/ContainerTopbar";
-import useClickOut from "../hooks/useClickOut";
+import Container from "src/layouts/Container";
+import ContainerTopbar from "src/layouts/ContainerTopbar";
+import useClickOut from "src/hooks/useClickOut";
 
 export function showModal(id: string, show: boolean = true) {
     const dialog = document.getElementById(id);

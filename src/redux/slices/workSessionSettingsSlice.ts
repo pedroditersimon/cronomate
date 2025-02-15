@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { WorkSessionSettingsType } from "../../types/Activity";
-import localSave from "../../services/localSave";
+import { WorkSessionSettingsType } from "src/types/Activity";
+import localSave from "src/services/localSave";
 
 
 const getNewDefaultState = (): WorkSessionSettingsType => {

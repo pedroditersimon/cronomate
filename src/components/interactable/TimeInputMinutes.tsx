@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { toDate } from "../../utils/TimeUtils";
+import { toDate } from "src/utils/TimeUtils";
 import { ClassValue } from "clsx";
 import { TimeInput } from "./TimeInput";
 

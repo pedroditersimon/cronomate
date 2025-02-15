@@ -1,0 +1,22 @@
+import { useEffect, useRef } from "react";
+import usePageVisibility from "./usePageVisibility";
+export default function useAutoSaving(save, timerMs) {
+    const intervalRef = useRef();
+    const isPageVisible = usePageVisibility();
+    useEffect(() => {
+        // page is not more visible
+        if (!isPageVisible) {
+            console.log("page is not more visible");
+            save();
+            clearInterval(intervalRef.current);
+            return;
+        }
+        // Establece un intervalo que actualiza el estado cada segundo
+        intervalRef.current = setInterval(save, timerMs);
+        // Guarda y borra el intervalo cuando el componente se desmonta
+        return () => {
+            save();
+            clearInterval(intervalRef.current);
+        };
+    }, [save, timerMs, isPageVisible]);
+}

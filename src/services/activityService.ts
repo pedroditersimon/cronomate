@@ -1,4 +1,4 @@
-import { ActivityType, RecordType } from "../types/Activity";
+import { ActivityType, RecordType } from "src/types/Activity";
 import recordService from "./recordService";
 
 

@@ -1,7 +1,7 @@
-import { WorkSessionType } from "../../types/Activity";
-import { formatDateToText, toDate } from "../../utils/TimeUtils";
-import { CircleIcon } from "../../assets/Icons";
-import Clickable from "../interactable/Clickable";
+import { WorkSessionType } from "src/types/Activity";
+import { formatDateToText, toDate } from "src/utils/TimeUtils";
+import { CircleIcon } from "src/assets/Icons";
+import Clickable from "src/components/interactable/Clickable";
 import WorkSessionTimer from "./WorkSessionTimer";
 
 

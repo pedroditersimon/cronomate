@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "../../utils/TimeUtils";
+import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "src/utils/TimeUtils";
 import clsx, { ClassValue } from "clsx";
-import useTimer from "../../hooks/useTimer";
+import useTimer from "src/hooks/useTimer";
 
 
 interface Props {

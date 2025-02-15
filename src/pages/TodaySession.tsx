@@ -1,7 +1,7 @@
-import useTodaySession from "../hooks/useTodayActivities";
-import { WorkSession } from "../components/WorkSession/WorkSession";
-import PageLayout from "../layouts/PageLayout";
-import { isToday, toDate } from "../utils/TimeUtils";
+import useTodaySession from "src/hooks/useTodayActivities";
+import { WorkSession } from "src/components/WorkSession/WorkSession";
+import PageLayout from "src/layouts/PageLayout";
+import { isToday, toDate } from "src/utils/TimeUtils";
 import { useEffect } from "react";
 
 

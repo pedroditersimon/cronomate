@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity";
-import activityService from "../../services/activityService";
-import localSave from "../../services/localSave";
-import { generateId } from "../../utils/generateId";
+import { ActivityType, RecordType, WorkSessionType } from "src/types/Activity";
+import activityService from "src/services/activityService";
+import localSave from "src/services/localSave";
+import { generateId } from "src/utils/generateId";
 //import { workSessionSettingsSlice } from "./workSessionSettingsSlice";
 
 

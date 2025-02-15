@@ -1,6 +1,6 @@
 import { version } from '../../package.json';
 const appVersion = version;
-import { ISavedObject } from '../types/types';
+import { ISavedObject } from 'src/types/types';
 
 // save in local storage
 function save<T>(keyName: string, value: T) {

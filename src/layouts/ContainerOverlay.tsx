@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Container from "../layouts/Container";
+import Container from "src/layouts/Container";
 import { PropsWithChildren } from "react";
 
 interface Props extends PropsWithChildren {

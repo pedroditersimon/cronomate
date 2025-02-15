@@ -1,23 +1,23 @@
-import { ActivityType, RecordType, WorkSessionType } from "../../types/Activity";
-import activityService from "../../services/activityService";
-import { formatDateToText, isPast, toDate } from "../../utils/TimeUtils";
-import { generateId } from "../../utils/generateId";
-import Container from "../../layouts/Container";
-import ActivityCreator from "../Activity/ActivityCreator";
-import Activity from "../Activity/Activity";
-import useTimer from "../../hooks/useTimer";
-import useUnrecordedActivity from "../../hooks/useUnrecoredActivity";
-import workSessionService from "../../services/workSessionService";
-import ContainerTopbar from "../../layouts/ContainerTopbar";
+import { ActivityType, RecordType, WorkSessionType } from "src/types/Activity";
+import activityService from "src/services/activityService";
+import { formatDateToText, isPast, toDate } from "src/utils/TimeUtils";
+import { generateId } from "src/utils/generateId";
+import Container from "src/layouts/Container";
+import ActivityCreator from "src/components/Activity/ActivityCreator";
+import Activity from "src/components/Activity/Activity";
+import useTimer from "src/hooks/useTimer";
+import useUnrecordedActivity from "src/hooks/useUnrecoredActivity";
+import workSessionService from "src/services/workSessionService";
+import ContainerTopbar from "src/layouts/ContainerTopbar";
 import WorkSessionTimer from "./WorkSessionTimer";
 import WorkSessionSettings from "./WorkSessionSettings";
-import ContainerOverlay from "../../layouts/ContainerOverlay";
+import ContainerOverlay from "src/layouts/ContainerOverlay";
 import { useEffect, useState } from "react";
-import { DBIcon, SettingsIcon } from "../../assets/Icons";
+import { DBIcon, SettingsIcon } from "src/assets/Icons";
 import clsx from "clsx";
-import Indicator from "../Indicator";
-import useIndicator from "../../hooks/useIndicator";
-import useWorkSessionSettigs from "../../hooks/useWorkSessionSettigs";
+import Indicator from "src/components/Indicator";
+import useIndicator from "src/hooks/useIndicator";
+import useWorkSessionSettigs from "src/hooks/useWorkSessionSettigs";
 
 
 const pauseActivityMock: ActivityType = {

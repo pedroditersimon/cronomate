@@ -1,6 +1,6 @@
 import { orderBy } from "lodash";
-import { RecordType } from "../types/Activity";
-import { getElapsedTime, toDate } from "../utils/TimeUtils";
+import { RecordType } from "src/types/Activity";
+import { getElapsedTime, toDate } from "src/utils/TimeUtils";
 
 function add(list: Array<RecordType>, record: RecordType): Array<RecordType> {
     // already exists!

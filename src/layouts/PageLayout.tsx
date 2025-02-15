@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, SettingsIcon, InboxStackIcon } from "../assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon } from "src/assets/Icons";
 import Sidebar from "./Sidebar";
 
 

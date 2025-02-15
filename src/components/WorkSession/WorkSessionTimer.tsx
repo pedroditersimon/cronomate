@@ -1,12 +1,12 @@
 import clsx from "clsx";
-import { ProgressBar } from "../ProgressBar";
-import { PlayIcon, StopIcon } from "../../assets/Icons";
-import { WorkSessionType } from "../../types/Activity";
-import activityService from "../../services/activityService";
+import { ProgressBar } from "src/components/ProgressBar";
+import { PlayIcon, StopIcon } from "src/assets/Icons";
+import { WorkSessionType } from "src/types/Activity";
+import activityService from "src/services/activityService";
 import { useMemo } from "react";
-import { convertElapsedTimeToText } from "../../utils/TimeUtils";
-import Clickable from "../interactable/Clickable";
-import workSessionService from "../../services/workSessionService";
+import { convertElapsedTimeToText } from "src/utils/TimeUtils";
+import Clickable from "src/components/interactable/Clickable";
+import workSessionService from "src/services/workSessionService";
 
 
 interface Props {
