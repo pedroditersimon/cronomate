@@ -18,6 +18,8 @@ El startTime y end de configuracion, no cambia si se la borra muchas veces.
 Si el endTime de la joranda esta configurado para hacer stop automaticamente.
 No pasará si no estas en la app, ya que los ticks no se actualizan.
 
+Renombrar worksession por simplemente session
+
 ## Generales
 - [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
 - [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese. 
@@ -27,6 +29,8 @@ No pasará si no estas en la app, ya que los ticks no se actualizan.
 - [ ] Mover las funciones fuera del componente workSession, moverlo a el servicio.
 - [x] Guardar los session en un SavedObjectType.
 - [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
+- [ ] Que se pueda transferir los datos entre aplicaciones en diferentes dominios
+
 
 #### Vista jornada
 - [ ] Timer de jornada (todayTimer).
