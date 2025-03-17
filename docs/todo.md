@@ -30,6 +30,11 @@ Para el activiyCreator, hacer un componente desde cero, ya que tiene cosas que n
 
 las rows de la tabla de actividaes se pueden arrastrar y organizar
 
+columna de nombre de proyecto.
+
+Hacer una vista de recuento del mes, con graficos y recuento de horas.
+como para comparar en la hoja del laburo
+
 Al establecer que se termine la joranada al llegar a la hora de fin,
 si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo el tiempo
 

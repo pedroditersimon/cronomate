@@ -1,0 +1,1 @@
+export type TimeUnit = "hour" | "minute" | "second";

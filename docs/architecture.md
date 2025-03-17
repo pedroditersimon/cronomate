@@ -1,6 +1,6 @@
 # Arquitectura LFD
 
-Esta aplicación utiliza una adaptación práctica de estructura que combina:
+Esta aplicación utiliza una adaptación práctica de una estructura que combina:
 
 -   **Clean Architecture**: Separación clara de capas y responsabilidades.
 -   **Screaming Architecture**: Estructura que "grita" las funcionalidades del negocio.
@@ -54,8 +54,7 @@ Ejemplo de una estructura de carpetas con este enfoque.
 │   │   ├── /redux      # Store, providers...
 │   │   └── /context    # Contextos de React
 │   ├── /routing
-│   ├── App.tsx
-│   └── main.tsx
+│   └── App.tsx
 │
 ├── /pages
 │   ├── /example
