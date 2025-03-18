@@ -1,1 +1,5 @@
-export type TimeUnit = "hour" | "minute" | "second";
+export enum TimeUnit {
+    HOUR = "Hour",
+    MINUTE = "Minute",
+    SECOND = "Second"
+};

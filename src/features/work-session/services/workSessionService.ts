@@ -6,7 +6,7 @@ import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTim
 import { getElapsedTime, toDate } from "src/shared/utils/TimeUtils";
 
 
-function setTimer(session: WorkSession, newTimer: TimeTrack) {
+function setTimer(session: WorkSession, newTimer: WorkSessionTimer): WorkSession {
     return {
         ...session,
         timer: { ...newTimer }

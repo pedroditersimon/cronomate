@@ -11,7 +11,7 @@ interface Props {
     onSelected?: (session: WorkSession) => void;
 }
 
-
+// Representation of a WorkSession as an item list (clickable/selectable)
 export default function WorkSessionItem({ session, onSelected }: Props) {
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
@@ -19,7 +19,6 @@ export default function WorkSessionItem({ session, onSelected }: Props) {
     const handleClick = () => {
         if (onSelected) onSelected(session);
     }
-
 
     return (
         <div className="flex flex-row gap-1">

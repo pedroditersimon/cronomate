@@ -1,8 +1,7 @@
-import { useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { ChevronVerticalIcon, CrossIcon } from "src/shared/assets/Icons";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import FormField from "src/shared/components/forms/FormField";
-import ToggleTabs from "src/shared/components/interactable/ToggleTabs";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";
 import HSeparator from "src/shared/layouts/HSeparator";
 import Clickable from "src/shared/components/interactable/Clickable";
@@ -25,11 +24,14 @@ interface Props {
     onClose: () => void;
 
     readOnly?: boolean;
+
+    // Content projection
+    inAboveContent?: ReactNode;
+    inBelowContent?: ReactNode;
 }
 
 
-export default function WorkSessionSettings({ session, onSessionChange, onClose, readOnly }: Props) {
-    const { workSessionSettings, setSettings, save } = useWorkSessionSettigs();
+export default function WorkSessionSettings({ session, onSessionChange, onClose, readOnly, inAboveContent, inBelowContent }: Props) {
     const [, setExpandDeletedActivities] = useState(false);
 
     const sessionHasActivities = session.activities.length > 0;
@@ -47,11 +49,6 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
         });
     }
 
-    const handleSetSettings = (newSettings: WorkSessionSettings) => {
-        setSettings(newSettings);
-        save(); // save on edit
-    }
-
     return (
         <>
             {/* Topbar */}
@@ -63,6 +60,8 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                 onIconClick={onClose}
             />
 
+
+            {inAboveContent}
 
             <div className="flex flex-row gap-5">
                 <FormField title="Inicio" className="text-center">
@@ -141,28 +140,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
             </div>
 
 
-            <FormField title="Detener temporizador al finalizar la jornada" show={!readOnly}>
-                <ToggleTabs falseLabel="Desactivado" trueLabel="Al finalizar"
-                    value={workSessionSettings.stopOnSessionEnd}
-                    onSelected={(value) => handleSetSettings({
-                        ...workSessionSettings,
-                        stopOnSessionEnd: value
-                    })}
-                />
-                {workSessionSettings.stopOnSessionEnd && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al finalizar la jornada.</p>}
-            </FormField>
-
-
-            <FormField title="Detener temporizador al cerrar la pagina" show={!readOnly}>
-                <ToggleTabs falseLabel="Desactivado" trueLabel="Al cerrar página"
-                    value={workSessionSettings.stopOnClose}
-                    onSelected={(value) => handleSetSettings({
-                        ...workSessionSettings,
-                        stopOnClose: value
-                    })}
-                />
-                {workSessionSettings.stopOnClose && <p className="text-gray-500 text-sm">El temporizador se detendrá automáticamente al cerrar la página.</p>}
-            </FormField>
+            {inBelowContent}
 
         </>
     );

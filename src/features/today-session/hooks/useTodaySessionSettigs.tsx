@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
-import { save, load, setSettings, resetToDefaultState } from "src/redux/slices/workSessionSettingsSlice";
+import { save, load, setSettings, resetToDefaultState } from "src/features/today-session/states/todaySessionSettingsSlice";
 import { useTypedSelector } from "src/shared/hooks/useTypedSelector";
-import { WorkSessionSettingsType } from "src/types/Activity";
+import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
 
 
-export default function useWorkSessionSettigs() {
-    const workSessionSettings = useTypedSelector(state => state.workSessionSettings);
+export default function useTodaySessionSettigs() {
+    const todaySessionSettings = useTypedSelector(state => state.todaySessionSettings);
 
     const dispatch = useDispatch();
 
@@ -17,7 +17,7 @@ export default function useWorkSessionSettigs() {
         dispatch(load());
     }
 
-    const _setSettings = (newSettings: WorkSessionSettingsType) => {
+    const _setSettings = (newSettings: TodaySessionSettings) => {
         dispatch(setSettings({ newSettings }));
     }
 
@@ -26,7 +26,7 @@ export default function useWorkSessionSettigs() {
     }
 
     return {
-        workSessionSettings,
+        todaySessionSettings,
 
         save: _save,
         load: _load,

@@ -1,7 +1,7 @@
 import './App.css';
 import "./scrollbar.css";
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { TodaySessionPage } from '../pages/TodaySessionPage';
+import TodaySessionPage from '../pages/TodaySessionPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { HistoryPage } from '../pages/HistoryPage';
 import StyledToaster from 'src/shared/components/StyledToaster';

@@ -1,47 +1,9 @@
-import useTodaySession from "src/shared/hooks/useTodayActivities";
-import { WorkSession } from "src/features/work-session/components/WorkSession";
+
+import TodaySession from "src/features/today-session/components/TodaySession";
 import PageLayout from "src/shared/layouts/PageLayout";
-import { isToday, toDate } from "src/shared/utils/TimeUtils";
-import { useEffect } from "react";
 
 
-export function TodaySession() {
-    const { todaySession, save, setSession, saveInHistoryAndReset } = useTodaySession();
-
-
-    // Save in history if its another day
-    useEffect(() => {
-        const isPastSession = !isToday(toDate(todaySession.createdTimeStamp));
-        if (isPastSession && todaySession.activities.length > 0) {
-            saveInHistoryAndReset();
-        }
-
-        // save in every change
-        save();
-        console.log(todaySession);
-    }, [save, saveInHistoryAndReset, todaySession]);
-
-
-    // save on window close
-    useEffect(() => {
-        const _save = () => save();
-        window.addEventListener("beforeunload", _save);
-        return () => window.removeEventListener("beforeunload", _save);
-    });
-
-    // replaced with: save in every change
-    // useAutoSaving(save, 5000);
-
-    return (
-        <WorkSession
-            session={todaySession}
-            onSessionChange={setSession}
-        />
-    )
-}
-
-
-export function TodaySessionPage() {
+export default function TodaySessionPage() {
 
     return (
         <PageLayout>

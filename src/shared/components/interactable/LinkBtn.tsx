@@ -1,17 +1,17 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
-import { LinkType } from "src/types/types";
+import { Link as RouterLink } from "react-router-dom";
+import { Link } from "src/shared/types/Link";
 
 
-interface Props extends LinkType {
-    children: ReactNode;
-    onClick?: () => void;
+interface Props extends Link {
     className?: string;
+    onClick?: () => void;
+    children: ReactNode;
 }
 
-export default function LinkBtn({ children, to, target, onClick, className }: Props) {
+export default function LinkBtn({ className, to, target, onClick, children }: Props) {
     return (
-        <Link
+        <RouterLink
             className={`flex flex-row gap-1 self-center rounded-lg p-0.5 px-2 hover:cursor-pointer hover:bg-gray-700 ${className}`}
             onClick={onClick}
             to={to}

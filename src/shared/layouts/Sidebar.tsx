@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Container from "./Container";
 import clsx from "clsx";
-import { LinkType } from "src/types/types";
+import { Link as LinkType } from "src/shared/types/Link";
 import LinkBtn from "src/shared/components/interactable/LinkBtn";
 
 interface LinkBtnType extends LinkType {

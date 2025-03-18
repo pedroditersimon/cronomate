@@ -6,7 +6,7 @@ import { TimeInput } from "./TimeInput";
 
 interface Props {
     minutes?: number;
-    onMinutesChange?: (newMinutes: number | undefined) => void;
+    onMinutesChange?: (newMinutes: number | null) => void;
 
     readOnly?: boolean;
     className?: ClassValue;
@@ -35,13 +35,13 @@ export function TimeInputMinutes({ minutes, onMinutesChange, readOnly, className
     // 4am -> 240mins
     // 13pm -> 780mins
     // 1:30am -> 90mins
-    const handleTimeChange = (newTime: number | undefined) => {
+    const handleTimeChange = (newTime: number | null) => {
         // no update callback
         if (!onMinutesChange) return;
 
         // no time
         if (!newTime) {
-            onMinutesChange(undefined);
+            onMinutesChange(null);
             return;
         }
 

@@ -1,6 +1,9 @@
 import { useEffect, useRef } from "react";
 import usePageVisibility from "./usePageVisibility";
 
+// El tipo retornado por setInterval es NodeJS.Timeout (en entornos Node.js) o number (en navegadores).
+// Usar window.setInterval para asegurar el tipo number
+
 export default function useAutoSaving(save: () => void, timerMs: number) {
     const intervalRef = useRef<number | undefined>();
     const isPageVisible = usePageVisibility();
@@ -15,7 +18,7 @@ export default function useAutoSaving(save: () => void, timerMs: number) {
         }
 
         // Establece un intervalo que actualiza el estado cada segundo
-        intervalRef.current = setInterval(save, timerMs);
+        intervalRef.current = window.setInterval(save, timerMs);
 
         // Guarda y borra el intervalo cuando el componente se desmonta
         return () => {

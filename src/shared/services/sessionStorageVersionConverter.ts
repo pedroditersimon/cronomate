@@ -1,4 +1,5 @@
-import { WorkSession } from "src/types/Activity";
+import { WorkSession } from "src/features/work-session/types/WorkSession";
+
 
 
 function convertSession(session: any, fromVersion: string, toVersion: string) {

@@ -86,7 +86,7 @@ export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: number
   const minutes = Math.max(0, Math.min(parsedMinutes, 59));
 
   // Crear un NUEVO objeto Date configurado a la hora indicada
-  const time = toDate(baseTime);
+  const time = toDate(baseTime, true);
   time.setHours(hours);
   time.setMinutes(minutes);
 

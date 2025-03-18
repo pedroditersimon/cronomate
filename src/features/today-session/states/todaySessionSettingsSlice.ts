@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TodaySessionSettings } from "../types/TodaySessionSettings";
-import localSave from "src/services/localSave";
+import localSave from "src/shared/services/localSave";
 
 
 const getNewDefaultState = (): TodaySessionSettings => {

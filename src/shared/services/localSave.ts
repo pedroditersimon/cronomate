@@ -1,6 +1,6 @@
 import { version } from '../../../package.json';
 const appVersion = version;
-import { ISavedObject } from 'src/types/types';
+import { SavedObject } from 'src/shared/types/SavedObject';
 
 // save in local storage
 function save<T>(keyName: string, value: T) {
@@ -8,15 +8,15 @@ function save<T>(keyName: string, value: T) {
         savedTimeStamp: new Date().getTime(),
         appVersion,
         value
-    } as ISavedObject<T>));
+    } as SavedObject<T>));
 };
 
 // load SaveObjectType from local storage
-function getSaveObject<T>(keyName: string): ISavedObject<T> | null {
+function getSaveObject<T>(keyName: string): SavedObject<T> | null {
     const savedValue = localStorage.getItem(keyName);
     if (!savedValue) return null;
     try {
-        return JSON.parse(savedValue) as ISavedObject<T>;
+        return JSON.parse(savedValue) as SavedObject<T>;
     }
     catch (error) {
         console.error("Error loading from localStorage:", error);

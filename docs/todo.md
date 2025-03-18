@@ -52,6 +52,8 @@ Si la actividad esta colapsada, no mostrar el horizontal separator
 
 Si el link del sidebar no esta activo, no resaltarlo.
 
+Hacer una carpeta para los mocks de activitycreator, los default slices states. dentro de cada feature o en shared
+
 ## Generales
 
 -   [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.

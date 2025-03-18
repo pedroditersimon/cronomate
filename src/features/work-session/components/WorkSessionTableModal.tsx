@@ -1,6 +1,4 @@
 import { useMemo, useState } from "react";
-import recordService from "src/services/recordService";
-import { WorkSession } from "src/types/Activity";
 import Button from "src/shared/components/interactable/Button";
 import { Modal } from "src/shared/components/Modal";
 import { toDate } from "src/shared/utils/TimeUtils";
@@ -9,9 +7,11 @@ import { toast } from "sonner";
 import { CheckIcon, ClipboardDocumentIcon } from "src/shared/assets/Icons";
 import Dropdown from "src/shared/components/interactable/Dropdown";
 import { TimeUnit } from "src/shared/types/TimeUnit";
-import useUnrecordedActivity from "src/shared/hooks/useUnrecoredActivity";
-import workSessionService from "src/services/workSessionService";
 import Checkbox from "src/shared/components/interactable/Checkbox";
+import { WorkSession } from "src/features/work-session/types/WorkSession";
+import workSessionService from "src/features/work-session/services/workSessionService";
+import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
+import timeTrackService from "src/features/time-track/services/timeTrackService";
 
 interface Props {
     id: string;
@@ -19,14 +19,14 @@ interface Props {
 }
 
 export default function WorkSessionTableModal({ id, session }: Props) {
-    const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnit>("Horas");
+    const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnit>(TimeUnit.HOUR);
     const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
 
-    // Unrecorded Activity
+    // Untracked Activity
     const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
     const sessionTimer = workSessionService.getTimerWithOverrides(session.timer);
-    const unrecordedActivity = useUnrecordedActivity(session.activities, sessionTimer);
-    const hasUnrecoredActivity = unrecordedActivity.records.length > 0;
+    const untrackedActivity = useUntrackedActivity(session.activities, sessionTimer);
+    const hasUntrackedActivity = untrackedActivity.tracks.length > 0;
 
     // Pauses Activity
     const [includePausesActivity, setIncludePausesActivity] = useState(true);
@@ -36,13 +36,13 @@ export default function WorkSessionTableModal({ id, session }: Props) {
     const rows = useMemo(() => {
         // row is -> | date | title | description | time |
 
-        const _session = includeUnrecordedActivity && hasUnrecoredActivity
-            ? workSessionService.addActivity(session, unrecordedActivity)
+        const _session = includeUnrecordedActivity && hasUntrackedActivity
+            ? workSessionService.addActivity(session, untrackedActivity)
             : session; // otherwise, keep the same
 
         return _session.activities.map(activity => {
-            const elapsedTimeMs = recordService.getAllElapsedTime(activity.records);
-            const elapsedTime = elapsedTimeUnit === "Horas"
+            const elapsedTimeMs = timeTrackService.getAllElapsedTime(activity.tracks);
+            const elapsedTime = elapsedTimeUnit === TimeUnit.HOUR
                 ? elapsedTimeMs / 3.6e+6
                 : elapsedTimeMs / 60000;
             // Ceil
@@ -58,7 +58,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             };
         });
 
-    }, [includeUnrecordedActivity, hasUnrecoredActivity, session, unrecordedActivity, elapsedTimeUnit]);
+    }, [includeUnrecordedActivity, hasUntrackedActivity, session, untrackedActivity, elapsedTimeUnit]);
 
 
     const handleCopyTable = () => {
@@ -121,7 +121,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             {/* bottom */}
             <div className="flex flex-row gap-3 items-center">
 
-                {hasUnrecoredActivity &&
+                {hasUntrackedActivity &&
                     <Checkbox
                         value={includeUnrecordedActivity}
                         onChange={setIncludeUnrecordedActivity}

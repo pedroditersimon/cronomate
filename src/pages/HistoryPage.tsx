@@ -1,13 +1,13 @@
 import Container from 'src/shared/layouts/Container';
-import { WorkSession } from 'src/types/Activity';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ContainerTopbar from 'src/shared/layouts/ContainerTopbar';
 import WorkSessionItem from 'src/features/work-session/components/WorkSessionItem';
-import { WorkSession } from 'src/features/work-session/components/WorkSession';
+import WorkSessionComponent from 'src/features/work-session/components/WorkSession';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageLayout from 'src/shared/layouts/PageLayout';
 import HSeparator from 'src/shared/layouts/HSeparator';
-import sessionStorageService from 'src/services/sessionStorageService';
+import { WorkSession } from 'src/features/work-session/types/WorkSession';
+import sessionStorageService from 'src/shared/services/sessionStorageService';
 
 
 export function History() {
@@ -20,11 +20,14 @@ export function History() {
             .then((results) => setHistory(results));
     }, []);
 
-    const selectedSession = history.find(item => item.id === id);
+    const selectedSession = useMemo(
+        () => history.find(item => item.id === id),
+        [id, history]
+    );
 
     if (selectedSession) {
         return (
-            <WorkSession
+            <WorkSessionComponent
                 session={selectedSession}
                 onSessionChange={() => { }}
                 readOnly

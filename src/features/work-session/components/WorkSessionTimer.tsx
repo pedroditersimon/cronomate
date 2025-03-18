@@ -1,12 +1,15 @@
 import clsx from "clsx";
 import { ProgressBar } from "src/shared/components/ProgressBar";
 import { PlayIcon, StopIcon } from "src/shared/assets/Icons";
-import { WorkSession } from "src/types/Activity";
-import activityService from "src/services/activityService";
+
 import { useMemo } from "react";
 import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import Clickable from "src/shared/components/interactable/Clickable";
-import workSessionService from "src/services/workSessionService";
+import { WorkSession } from "src/features/work-session/types/WorkSession";
+import activityService from "src/features/activity/services/activityService";
+import workSessionService from "src/features/work-session/services/workSessionService";
+import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+
 
 
 interface Props {
@@ -37,7 +40,7 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
     return (
         <div
             className={clsx("flex flex-row ml-auto p-1 rounded-md",
-                { "bg-red-400": !readOnly && session.timer.running, }
+                { "bg-red-400": !readOnly && session.timer.status === TimeTrackStatus.RUNNING, }
             )}
         >
             {/* Today elapsed time txt */}
@@ -51,7 +54,7 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
                     {sessionProgress >= 0 &&
                         <ProgressBar
                             progress={sessionProgress}
-                            backgroundOnExcess={session.timer.running ? "bg-yellow-300" : undefined}
+                            backgroundOnExcess={session.timer.status === TimeTrackStatus.RUNNING ? "bg-yellow-300" : undefined}
                         />
                     }
                 </div>
@@ -60,11 +63,11 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
             {!readOnly && /* toggle timer btn */
                 <Clickable
                     className={clsx({
-                        "hover:bg-red-400": !session.timer.running,
-                        "hover:bg-white hover:text-red-400": session.timer.running,
+                        "hover:bg-red-400": session.timer.status !== TimeTrackStatus.RUNNING,
+                        "hover:bg-white hover:text-red-400": session.timer.status === TimeTrackStatus.RUNNING,
                     })}
-                    onClick={() => onTimerToggle(!session.timer.running)}
-                    children={session.timer.running
+                    onClick={() => onTimerToggle(session.timer.status !== TimeTrackStatus.RUNNING)}
+                    children={session.timer.status === TimeTrackStatus.RUNNING
                         ? <StopIcon />
                         : <PlayIcon />}
                 />

@@ -42,7 +42,7 @@ export function TimeInput({ time, onTimeChange, running, readOnly, className }: 
         if (!inputHasChanged) return;
 
         setInputTime(newInput);
-        if (onTimeChange) onTimeChange(newTime?.getTime());
+        if (onTimeChange) onTimeChange(newTime?.getTime() ?? null);
 
     }, [inputTime, time, onTimeChange]);
 

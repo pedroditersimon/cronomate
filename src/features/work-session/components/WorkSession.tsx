@@ -1,13 +1,12 @@
 import { WorkSession } from "../types/WorkSession";
-import { formatDateToText, isPast, toDate } from "src/shared/utils/TimeUtils";
+import { formatDateToText, toDate } from "src/shared/utils/TimeUtils";
 import { generateId } from "src/shared/utils/generateId";
 import Container from "src/shared/layouts/Container";
-import useTimer from "src/shared/hooks/useTimer";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import WorkSessionTimer from "./WorkSessionTimer";
 import WorkSessionSettings from "./WorkSessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
-import { useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { DBIcon, SettingsIcon } from "src/shared/assets/Icons";
 import clsx from "clsx";
 import Indicator from "src/shared/components/Indicator";
@@ -32,13 +31,16 @@ interface Props {
     session: WorkSession;
     onSessionChange: (newSession: WorkSession) => void;
     readOnly?: boolean;
+
+    // Content projection for WorkSessionSettings
+    inAboveSettings?: ReactNode;
+    inBelowSettings?: ReactNode;
 }
 
 
-export function WorkSession({ session, onSessionChange, readOnly }: Props) {
+export default function WorkSession({ session, onSessionChange, readOnly, inAboveSettings, inBelowSettings }: Props) {
     const saveIndicator = useIndicator();
     const [showSettings, setShowSettings] = useState(false);
-    const { workSessionSettings } = useWorkSessionSettigs();
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
 
@@ -48,45 +50,6 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
     // local wrapper state for untrackedActivity.isCollapsed
     const [untrackedActIsCollapsed, setUntrackedActIsCollapsed] = useState(untrackedActivity.isCollapsed);
     untrackedActivity.isCollapsed = untrackedActIsCollapsed;
-
-
-    // constantly update session timer
-    useTimer(() => {
-        const now = toDate().getTime();
-        let _session = session;
-
-        _session = workSessionService.setTimer(_session, {
-            ...session.timer,
-            start: session.timer.start || now,
-            end: now,
-        });
-
-        // stopOnSessionEnd
-        if (workSessionSettings.stopOnSessionEnd) {
-            const sessionShouldEnd = isPast(session.timer.endOverride);
-            if (sessionShouldEnd)
-                _session = workSessionService.stopTimerAndActivities(_session);
-        }
-
-        onSessionChange(_session);
-
-        console.log("Today timer");
-    }, 5000, session.timer.status === TimeTrackStatus.RUNNING && !readOnly);
-
-
-    // stop timer on window close
-    useEffect(() => {
-        // Feature not enabled
-        if (!workSessionSettings.stopOnClose) return;
-        console.log("stop timer on window close");
-        const stopActivities = () => {
-            const updatedSession = workSessionService.stopTimerAndActivities(session);
-            onSessionChange(updatedSession);
-        }
-
-        window.addEventListener("beforeunload", stopActivities);
-        return () => window.removeEventListener("beforeunload", stopActivities);
-    }, [onSessionChange, session, workSessionSettings]);
 
 
     function addRecordToPauseActivity(currentSession: WorkSession, track: TimeTrack): WorkSession {
@@ -219,6 +182,9 @@ export function WorkSession({ session, onSessionChange, readOnly }: Props) {
                     onSessionChange={onSessionChange}
                     onClose={() => setShowSettings(false)}
                     readOnly={readOnly}
+
+                    inAboveContent={inAboveSettings}  // Content projection
+                    inBelowContent={inBelowSettings}
                 />
             </ContainerOverlay>
 

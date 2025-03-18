@@ -2,14 +2,14 @@ import { version } from '../../../package.json';
 const appVersion = version;
 
 import indexedDBSave from './indexedDBSave';
-import { ISavedObjectWithId } from 'src/types/types';
+import { SavedObjectWithId } from 'src/shared/types/SavedObject';
 import { IdType } from './indexedDBSave';
 import sessionStorageVersionConverter from './sessionStorageVersionConverter';
 
 
 // Función para guardar un array de objetos genéricos en IndexedDB
 async function saveItems<T extends { id: IdType }>(storeName: string, items: T[]): Promise<void> {
-    const itemsToSave: Array<ISavedObjectWithId<T, IdType>> = items.map(item => (
+    const itemsToSave: Array<SavedObjectWithId<T, IdType>> = items.map(item => (
         {
             id: item.id,
             savedTimeStamp: new Date().getTime(),
@@ -22,7 +22,7 @@ async function saveItems<T extends { id: IdType }>(storeName: string, items: T[]
 
 
 // Función para obtener los objetos almacenados
-async function getSavedObjectItems<T extends { id: IdType }>(storeName: string): Promise<ISavedObjectWithId<T, IdType>[]> {
+async function getSavedObjectItems<T extends { id: IdType }>(storeName: string): Promise<SavedObjectWithId<T, IdType>[]> {
     return indexedDBSave.getItems(storeName);
 }
 

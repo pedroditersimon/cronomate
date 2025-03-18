@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Activity, Record, WorkSession } from "src/types/Activity";
-import activityService from "src/services/activityService";
-import localSave from "src/services/localSave";
+import activityService from "src/features/activity/services/activityService";
+import { Activity } from "src/features/activity/types/Activity";
+import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import { WorkSession } from "src/features/work-session/types/WorkSession";
+import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
+import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
 //import { workSessionSettingsSlice } from "./workSessionSettingsSlice";
 
@@ -13,7 +16,12 @@ const getNewDefaultState = (): WorkSession => {
         id: generateId(),
         createdTimeStamp: new Date().getTime(),
         timer: {
-            id: generateId()
+            id: generateId(),
+            start: Date.now(),
+            end: null,
+            status: TimeTrackStatus.STOPPED,
+            startOverride: null,
+            endOverride: null,
         },
         activities: [],
     };
@@ -53,7 +61,7 @@ const todaySessionSlice = createSlice({
         },
 
         // Timer
-        setTimer: (state, action: PayloadAction<{ newTimer: Record }>) => {
+        setTimer: (state, action: PayloadAction<{ newTimer: WorkSessionTimer }>) => {
             return {
                 ...state,
                 timer: action.payload.newTimer
