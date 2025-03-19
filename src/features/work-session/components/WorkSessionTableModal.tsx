@@ -88,33 +88,36 @@ export default function WorkSessionTableModal({ id, session }: Props) {
         >
 
             <table className="table-fixed"   >
-
-                <tr className="text-neutral-300 text-left border-b border-neutral-800">
-                    <th className="px-2 py-1">Fecha</th>
-                    <th className="px-2 py-1 min-w-40">Titulo</th>
-                    <th className="px-2 py-1 min-w-40">Descripción</th>
-                    <th className="py-1">
-                        <Dropdown
-                            className="text-neutral-300 border-none"
-                            value={elapsedTimeUnit}
-                            options={Object.values(TimeUnit)}
-                            onOption={(opt) => setElapsedTimeUnit(opt as TimeUnit)}
-                        />
-                    </th>
-                </tr>
-
-                {rows.map((row, index) => (
-                    <tr
-                        className={clsx("text-neutral-400 whitespace-normal break-words break-all",
-                            { "border-b border-neutral-800": index < rows.length - 1 }
-                        )}
-                    >
-                        <td className="p-2 max-w-96 text-nowrap">{row.date}</td>
-                        <td className="p-2 max-w-96">{row.title}</td>
-                        <td className="p-2 max-w-96">{row.description}</td>
-                        <td className="p-2 max-w-96 text-nowrap">{row.elapsedTime}</td>
+                <thead>
+                    <tr className="text-neutral-300 text-left border-b border-neutral-800">
+                        <th className="px-2 py-1">Fecha</th>
+                        <th className="px-2 py-1 min-w-40">Titulo</th>
+                        <th className="px-2 py-1 min-w-40">Descripción</th>
+                        <th className="py-1">
+                            <Dropdown
+                                className="text-neutral-300 border-none"
+                                value={elapsedTimeUnit}
+                                options={Object.values(TimeUnit)}
+                                onOption={(opt) => setElapsedTimeUnit(opt as TimeUnit)}
+                            />
+                        </th>
                     </tr>
-                ))}
+                </thead>
+                <tbody>
+                    {rows.map((row, index) => (
+                        <tr
+                            className={clsx("text-neutral-400 whitespace-normal break-words break-all",
+                                { "border-b border-neutral-800": index < rows.length - 1 }
+                            )}
+                        >
+                            <td className="p-2 max-w-96 text-nowrap">{row.date}</td>
+                            <td className="p-2 max-w-96">{row.title}</td>
+                            <td className="p-2 max-w-96">{row.description}</td>
+                            <td className="p-2 max-w-96 text-nowrap">{row.elapsedTime}</td>
+                        </tr>
+                    ))}
+                </tbody>
+
             </table>
 
 

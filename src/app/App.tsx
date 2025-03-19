@@ -1,12 +1,12 @@
-import './App.css';
-import "./scrollbar.css";
+import 'src/app/styles/App.css';
+import 'src/app/styles/scrollbar.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import TodaySessionPage from '../pages/TodaySessionPage';
 import { NotFoundPage } from '../pages/NotFoundPage';
 import { HistoryPage } from '../pages/HistoryPage';
 import StyledToaster from 'src/shared/components/StyledToaster';
 import ReduxStoreProvider from './states/redux/ReduxStoreProvider'
-
+// TODO: routing.md
 function App() {
   return (
     <ReduxStoreProvider>
@@ -14,7 +14,7 @@ function App() {
       <StyledToaster />
 
       <BrowserRouter>
-        // TODO: routing.md
+
         <Routes>
           <Route path='/' element={<TodaySessionPage />} />
 

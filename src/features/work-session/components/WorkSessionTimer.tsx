@@ -14,12 +14,12 @@ import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 
 interface Props {
     session: WorkSession;
-    onTimerToggle: (running: boolean) => void;
+    onSetTimerStatus: (newState: TimeTrackStatus) => void;
     readOnly?: boolean;
 }
 
 
-export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: Props) {
+export default function WorkSessionTimer({ session, onSetTimerStatus, readOnly }: Props) {
 
     // calculated states
     const [totalElapsedTimeTxt, sessionProgress] = useMemo(() => {
@@ -36,6 +36,11 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
         return [totalElapsedTimeTxt, sessionProgress];
     }, [session]);
 
+    function handleToggleTimerStatus() {
+        const newState = session.timer.status === TimeTrackStatus.RUNNING
+            ? TimeTrackStatus.STOPPED : TimeTrackStatus.RUNNING;
+        onSetTimerStatus(newState);
+    }
 
     return (
         <div
@@ -66,7 +71,7 @@ export default function WorkSessionTimer({ session, onTimerToggle, readOnly }: P
                         "hover:bg-red-400": session.timer.status !== TimeTrackStatus.RUNNING,
                         "hover:bg-white hover:text-red-400": session.timer.status === TimeTrackStatus.RUNNING,
                     })}
-                    onClick={() => onTimerToggle(session.timer.status !== TimeTrackStatus.RUNNING)}
+                    onClick={handleToggleTimerStatus}
                     children={session.timer.status === TimeTrackStatus.RUNNING
                         ? <StopIcon />
                         : <PlayIcon />}

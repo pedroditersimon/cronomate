@@ -127,6 +127,10 @@ export function isPast(time: number | undefined): boolean {
   return getElapsedTimeFromNow(time) < 0;
 }
 
+export function isPastOrNow(time: number | undefined): boolean {
+  return getElapsedTimeFromNow(time) <= 0;
+}
+
 export function isNow(time: number | undefined, offsetSeconds: number = 1): boolean {
   const elapsedTime = getElapsedTimeFromNow(time);
   return elapsedTime >= 0 && elapsedTime < offsetSeconds * 1000;

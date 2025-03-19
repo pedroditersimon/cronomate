@@ -60,10 +60,10 @@ function stopTimerAndActivities(session: WorkSession) {
     const now = toDate().getTime();
 
     // 1. Stop timer
-    const newTimer = {
+    const newTimer: WorkSessionTimer = {
         ...session.timer,
         end: now,
-        running: false
+        status: TimeTrackStatus.STOPPED
     };
 
     // 2. Stop all activities

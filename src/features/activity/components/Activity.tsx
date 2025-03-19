@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon } from "src/shared/assets/Icons";
 import { isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
-import { Activity } from "src/features/activity/types/Activity";
+import { Activity as ActivityType } from "src/features/activity/types/Activity";
 import clsx from "clsx";
 import HSeparator from "src/shared/layouts/HSeparator";
 import { generateId } from "src/shared/utils/generateId";
@@ -13,8 +13,8 @@ import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTr
 import ActivityTrack from "src/features/activity/components/ActivityTrack";
 
 interface Props {
-    activity: Activity;
-    onActivityChange: (newActivity: Activity) => void;
+    activity: ActivityType;
+    onActivityChange: (newActivity: ActivityType) => void;
     onTitleConfirm?: (newTitle: string) => void;
 
     showDeletedRecords?: boolean;
@@ -53,7 +53,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
         if (hasRunningRecords) {
             // set endTime to Now on running tracks
             const newTracks = activity.tracks.map(track => track.status === TimeTrackStatus.RUNNING
-                ? ({ ...track, endTime: now, running: false })
+                ? { ...track, endTime: now, status: TimeTrackStatus.STOPPED }
                 : track
             );
             onActivityChange({ ...activity, tracks: newTracks });

@@ -15,14 +15,15 @@ interface Props {
 const activityMock: Activity = {
     id: "activityMock",
     title: "Nueva actividad",
-    tracks: [{ // assume is running
+    tracks: [{
         id: "recordMock",
-        start: Date.now(),
+        start: 0,
         end: null,
-        status: TimeTrackStatus.RUNNING
+        status: TimeTrackStatus.STOPPED
     }],
     isCollapsed: true,
 };
+
 
 export default function ActivityCreator({ onCreate: onActivityCreated }: Props) {
     // local states

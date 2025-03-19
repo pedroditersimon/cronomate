@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import TodaySessionSettings from "src/features/today-session/components/TodaySessionSettings";
-import useTodaySession from "src/features/today-session/hooks/useTodayActivities";
+import useTodaySession from "src/features/today-session/hooks/useTodaySession";
 import useTodaySessionSettigs from "src/features/today-session/hooks/useTodaySessionSettigs";
 import workSessionService from "src/features/work-session/services/workSessionService";
 import useTimer from "src/shared/hooks/useTimer";
-import { isPast, isToday, toDate } from "src/shared/utils/TimeUtils";
+import { isPast, isPastOrNow, isToday, toDate } from "src/shared/utils/TimeUtils";
 import WorkSessionComponent from "src/features/work-session/components/WorkSession";
+
 
 interface Props {
     readOnly?: boolean;
@@ -15,8 +16,6 @@ interface Props {
 export default function TodaySession({ readOnly }: Props) {
     const { todaySession, save, setSession, saveInHistoryAndReset } = useTodaySession();
     const { todaySessionSettings } = useTodaySessionSettigs();
-
-
 
     // Save in history if its another day
     useEffect(() => {
@@ -27,7 +26,6 @@ export default function TodaySession({ readOnly }: Props) {
 
         // save in every change
         save();
-        console.log(todaySession);
     }, [save, saveInHistoryAndReset, todaySession]);
 
 
@@ -68,8 +66,8 @@ export default function TodaySession({ readOnly }: Props) {
         });
 
         // stopOnSessionEnd
-        if (todaySessionSettings.stopOnSessionEnd) {
-            const sessionShouldEnd = isPast(todaySession.timer.endOverride ?? undefined);
+        if (todaySessionSettings.stopOnSessionEnd && todaySession.timer.endOverride) {
+            const sessionShouldEnd = isPastOrNow(todaySession.timer.endOverride);
             if (sessionShouldEnd)
                 _session = workSessionService.stopTimerAndActivities(_session);
         }
@@ -83,7 +81,7 @@ export default function TodaySession({ readOnly }: Props) {
     return (
         <WorkSessionComponent
             session={todaySession}
-            onSessionChange={setSession}
+            onSessionChange={s => { setSession(s); console.log(s) }}
             inBelowSettings={<TodaySessionSettings />}
         />
     );

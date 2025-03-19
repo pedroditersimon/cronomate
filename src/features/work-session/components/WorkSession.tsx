@@ -1,4 +1,4 @@
-import { WorkSession } from "../types/WorkSession";
+import { WorkSession as WorkSessionType } from "../types/WorkSession";
 import { formatDateToText, toDate } from "src/shared/utils/TimeUtils";
 import { generateId } from "src/shared/utils/generateId";
 import Container from "src/shared/layouts/Container";
@@ -28,8 +28,8 @@ const pauseActivityMock: Activity = {
 
 
 interface Props {
-    session: WorkSession;
-    onSessionChange: (newSession: WorkSession) => void;
+    session: WorkSessionType;
+    onSessionChange: (newSession: WorkSessionType) => void;
     readOnly?: boolean;
 
     // Content projection for WorkSessionSettings
@@ -52,7 +52,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
     untrackedActivity.isCollapsed = untrackedActIsCollapsed;
 
 
-    function addRecordToPauseActivity(currentSession: WorkSession, track: TimeTrack): WorkSession {
+    function addRecordToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
         // get a copy of current
         let _session = currentSession;
 
@@ -77,13 +77,13 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
     };
 
 
-    function handleToggleTimer(currentSession: WorkSession, running: boolean): WorkSession {
+    function handleSetTimerStatus(currentSession: WorkSessionType, status: TimeTrackStatus): WorkSessionType {
         // get a copy of current
         let _session = currentSession;
         const now = toDate().getTime();
 
         // Stop timer and Stop all activities
-        if (!running) {
+        if (status === TimeTrackStatus.STOPPED) {
             _session = workSessionService.stopTimerAndActivities(_session);
             return _session;
         }
@@ -112,16 +112,16 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
     }
 
 
-    function handleToggleTimerWithState(running: boolean) {
+    function handleSetTimerStatusWithState(status: TimeTrackStatus) {
         // prevent edit in readOnly
         if (readOnly) return;
 
-        const updatedSession = handleToggleTimer(session, running);
+        const updatedSession = handleSetTimerStatus(session, status);
         onSessionChange(updatedSession);
     }
 
 
-    function handleSetActivity(currentSession: WorkSession, newActivity: Activity): WorkSession {
+    function handleSetActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
         // get a copy of current
         let _session = currentSession;
 
@@ -130,7 +130,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
         // play todayTimer if activity is running
         if (_session.timer.status !== TimeTrackStatus.RUNNING && activityService.hasRunningTracks(newActivity)) {
-            _session = handleToggleTimer(_session, true);
+            _session = handleSetTimerStatus(_session, TimeTrackStatus.RUNNING);
         }
 
         return _session;
@@ -146,7 +146,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
     }
 
 
-    function handleCreateNewActivity(currentSession: WorkSession, newActivity: Activity): WorkSession {
+    function handleCreateNewActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
         // get a copy of current
         let _session = currentSession;
 
@@ -154,7 +154,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
         // play session timer if the newActivity is running
         if (_session.timer.status !== TimeTrackStatus.RUNNING && activityService.hasRunningTracks(newActivity)) {
-            _session = handleToggleTimer(_session, true);
+            _session = handleSetTimerStatus(_session, TimeTrackStatus.RUNNING);
         }
 
         return _session;
@@ -206,7 +206,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
                 right={<WorkSessionTimer
                     session={session}
                     readOnly={readOnly}
-                    onTimerToggle={handleToggleTimerWithState}
+                    onSetTimerStatus={handleSetTimerStatusWithState}
                 />}
 
                 icon={<SettingsIcon />}

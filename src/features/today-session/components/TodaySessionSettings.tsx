@@ -1,6 +1,6 @@
 
 import useTodaySessionSettigs from "src/features/today-session/hooks/useTodaySessionSettigs";
-import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
+import { TodaySessionSettings as TodaySessionSettingsType } from "src/features/today-session/types/TodaySessionSettings";
 import FormField from "src/shared/components/forms/FormField";
 import ToggleTabs from "src/shared/components/interactable/ToggleTabs";
 
@@ -15,7 +15,7 @@ export default function TodaySessionSettings({ readOnly }: Props) {
 
     const { todaySessionSettings, setSettings, save } = useTodaySessionSettigs();
 
-    const handleSetSettings = (newSettings: TodaySessionSettings) => {
+    const handleSetSettings = (newSettings: TodaySessionSettingsType) => {
         setSettings(newSettings);
         save(); // save on edit
     }

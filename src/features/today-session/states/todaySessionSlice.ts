@@ -43,7 +43,6 @@ const todaySessionSlice = createSlice({
             const { session } = action.payload;
             localSave.save("todaySession", session || state);
             console.log("saved: todaySession");
-            console.log(state);
         },
         load: (state) => {
             return localSave.load("todaySession", state);
