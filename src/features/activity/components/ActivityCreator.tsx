@@ -6,39 +6,27 @@ import { Activity } from "src/features/activity/types/Activity";
 import ActivityComponent from "src/features/activity/components/Activity";
 import activityService from "src/features/activity/services/activityService";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
-
+import { newActivityMock } from "src/features/activity/mocks/newActivityMock";
 
 interface Props {
     onCreate: (newActivity: Activity) => void;
 }
 
-const activityMock: Activity = {
-    id: "activityMock",
-    title: "Nueva actividad",
-    tracks: [{
-        id: "recordMock",
-        start: 0,
-        end: null,
-        status: TimeTrackStatus.STOPPED
-    }],
-    isCollapsed: true,
-};
-
 
 export default function ActivityCreator({ onCreate: onActivityCreated }: Props) {
     // local states
-    const [activity, setActivity] = useState<Activity>(activityMock);
+    const [activity, setActivity] = useState<Activity>(newActivityMock);
     const [focused, setFocused] = useState(false);
 
 
     const hasChanges = useMemo(() => {
-        return activityService.hasChanges(activity, activityMock)
+        return activityService.hasChanges(activity, newActivityMock)
     }, [activity])
 
 
     const handleCreateActivity = (newActivity: Activity) => {
         // newActivity has no changes
-        if (!activityService.hasChanges(newActivity, activityMock))
+        if (!activityService.hasChanges(newActivity, newActivityMock))
             return;
 
         const now = toDate().getTime();
@@ -63,7 +51,7 @@ export default function ActivityCreator({ onCreate: onActivityCreated }: Props) 
         };
 
         onActivityCreated(newActivityWithRecord);   // crear el activity
-        setActivity(activityMock);                  // reset el placeholder
+        setActivity(newActivityMock);                  // reset el placeholder
     }
 
 
@@ -71,7 +59,7 @@ export default function ActivityCreator({ onCreate: onActivityCreated }: Props) 
     const handleSetActivity = (newActivity: Activity) => {
         // Reset to mock on empty title
         if (newActivity.title.trim().length === 0) {
-            setActivity(activityMock);
+            setActivity(newActivityMock);
             return;
         }
 

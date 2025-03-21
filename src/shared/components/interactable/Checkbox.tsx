@@ -12,6 +12,7 @@ interface Props extends PropsWithChildren {
     className?: ClassValue;
 }
 
+// If possible, use the ToggleTabs component instead of this one.
 export default function Checkbox({ value, onChange, checkedIcon, uncheckedIcon, className, children }: Props) {
     return (
         <Button

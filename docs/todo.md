@@ -44,15 +44,10 @@ Ademas, agilizar crear actividades, como que empieces a escribir y ya te lo escr
 Si pones un fin de joranda, se calcula "no categirzada" de toda la jornada futurua.
 Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como "no categorizada"
 
-persistir el override de inicio y fin. se podria agregar una config para activar esta feature.
-Entonces si no la activas, se borra, y si la activas, persiste la que pongas.
-
 Por defecto, manetner las actividades colapsadas (cerradas) para no mostrar tanta info.
 Si la actividad esta colapsada, no mostrar el horizontal separator
 
 Si el link del sidebar no esta activo, no resaltarlo.
-
-Hacer una carpeta para los mocks de activitycreator, los default slices states. dentro de cada feature o en shared
 
 ## Generales
 
@@ -65,6 +60,7 @@ Hacer una carpeta para los mocks de activitycreator, los default slices states. 
 -   [x] Guardar los session en un SavedObjectType.
 -   [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
 -   [ ] Que se pueda transferir los datos entre aplicaciones en diferentes dominios
+-   [x] Hacer una carpeta para mocks dentro de las features.
 
 #### Vista jornada
 
@@ -102,6 +98,9 @@ Hacer una carpeta para los mocks de activitycreator, los default slices states. 
 -   [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
 -   [ ] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
 -   [x] Opciones de today settings en orden de frecuencia de uso
+-   [ ] Persistir el override de inicio y fin. Persiste la que pongas sino, se borra en cada nueva jornada.
+    -   [ ] Agregar una config en slice.
+    -   [ ] Agregar una checkbox para activar esta feature.
 
 #### Vista tabla
 

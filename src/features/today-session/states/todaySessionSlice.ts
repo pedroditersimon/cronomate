@@ -6,12 +6,20 @@ import { WorkSession } from "src/features/work-session/types/WorkSession";
 import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
 import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
-//import { workSessionSettingsSlice } from "./workSessionSettingsSlice";
+import { todaySessionSettingsSlice } from "src/features/today-session/states/todaySessionSettingsSlice";
 
+const todaySessionSettings = todaySessionSettingsSlice.getInitialState();
 
-//const workSessionSettings = workSessionSettingsSlice.getInitialState();
+function getNewDefaultState(previousState?: WorkSession): WorkSession {
 
-const getNewDefaultState = (): WorkSession => {
+    let startOverride = null;
+    let endOverride = null;
+
+    // Restaurar overrides si estan habilitados
+    if (previousState && todaySessionSettings.saveTimerOverrides) {
+        ({ startOverride, endOverride } = previousState.timer);
+    }
+
     return {
         id: generateId(),
         createdTimeStamp: new Date().getTime(),
@@ -20,8 +28,8 @@ const getNewDefaultState = (): WorkSession => {
             start: Date.now(),
             end: null,
             status: TimeTrackStatus.STOPPED,
-            startOverride: null,
-            endOverride: null,
+            startOverride: startOverride,
+            endOverride: endOverride,
         },
         activities: [],
     };

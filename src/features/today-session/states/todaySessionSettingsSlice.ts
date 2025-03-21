@@ -6,7 +6,8 @@ import localSave from "src/shared/services/localSave";
 const getNewDefaultState = (): TodaySessionSettings => {
     return {
         stopOnClose: true,
-        stopOnSessionEnd: true
+        stopOnSessionEnd: true,
+        saveTimerOverrides: false,
     };
 }
 

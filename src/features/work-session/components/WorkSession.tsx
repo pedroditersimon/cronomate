@@ -18,14 +18,7 @@ import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTr
 import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
 import ActivityComponent from "src/features/activity/components/Activity";
-
-
-const pauseActivityMock: Activity = {
-    id: "pauses",
-    title: "Pausas",
-    tracks: []
-};
-
+import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
 
 interface Props {
     session: WorkSessionType;

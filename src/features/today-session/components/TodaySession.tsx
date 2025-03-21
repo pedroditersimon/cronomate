@@ -5,7 +5,7 @@ import useTodaySession from "src/features/today-session/hooks/useTodaySession";
 import useTodaySessionSettigs from "src/features/today-session/hooks/useTodaySessionSettigs";
 import workSessionService from "src/features/work-session/services/workSessionService";
 import useTimer from "src/shared/hooks/useTimer";
-import { isPast, isPastOrNow, isToday, toDate } from "src/shared/utils/TimeUtils";
+import { isPastOrNow, isToday, toDate } from "src/shared/utils/TimeUtils";
 import WorkSessionComponent from "src/features/work-session/components/WorkSession";
 
 
