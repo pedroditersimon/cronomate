@@ -55,7 +55,7 @@ export function TimeInputMinutes({ minutes, onMinutesChange, readOnly, className
     return (
         <TimeInput
             time={time}
-            onTimeChange={handleTimeChange}
+            onChange={handleTimeChange}
 
             readOnly={readOnly}
             className={className}

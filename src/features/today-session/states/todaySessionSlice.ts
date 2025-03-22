@@ -6,17 +6,16 @@ import { WorkSession } from "src/features/work-session/types/WorkSession";
 import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
 import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
-import { todaySessionSettingsSlice } from "src/features/today-session/states/todaySessionSettingsSlice";
+import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
 
-const todaySessionSettings = todaySessionSettingsSlice.getInitialState();
 
-function getNewDefaultState(previousState?: WorkSession): WorkSession {
+function getNewDefaultState(previousState?: WorkSession, settings?: TodaySessionSettings): WorkSession {
 
     let startOverride = null;
     let endOverride = null;
 
     // Restaurar overrides si estan habilitados
-    if (previousState && todaySessionSettings.saveTimerOverrides) {
+    if (previousState && settings?.saveTimerOverrides) {
         ({ startOverride, endOverride } = previousState.timer);
     }
 
@@ -56,8 +55,9 @@ const todaySessionSlice = createSlice({
             return localSave.load("todaySession", state);
         },
 
-        resetToDefaultState: () => {
-            const newState = getNewDefaultState();
+        resetToDefaultState: (state, action: PayloadAction<{ settings?: TodaySessionSettings }>) => {
+            const { settings } = action.payload;
+            const newState = getNewDefaultState(state, settings);
             localSave.save("todaySession", newState);
             return newState;
         },

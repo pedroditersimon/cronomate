@@ -146,8 +146,20 @@ function getArchived(timers: Array<TimeTrack>): Array<TimeTrack> {
     return timers.filter(r => r.status === TimeTrackStatus.ARCHIVED);
 }
 
+function updateRun(track: TimeTrack) {
+    if (track.status !== TimeTrackStatus.RUNNING)
+        return track;
+
+    const now = toDate().getTime();
+
+    return {
+        ...track,
+        start: track.start || now,
+        end: now,
+    };
+}
 
 export default {
     add, set, stop, stopAll, hasRunning, hasEndTime, hasAnyEndTime,
-    getAllElapsedTime, orderAllByStartTime, getUntrackedPeriods, getArchived
+    getAllElapsedTime, orderAllByStartTime, getUntrackedPeriods, getArchived, updateRun
 };

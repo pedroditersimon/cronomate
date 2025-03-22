@@ -102,6 +102,15 @@ function orderTracksByStartTime(activity: Activity): Activity {
     };
 }
 
+function updateRunningTracks(activity: Activity): Activity {
+    return {
+        ...activity,
+        tracks: activity.tracks.map(track =>
+            timeTrackService.updateRun(track)
+        )
+    };
+}
+
 export default {
     // Handle activities
     add,
@@ -115,5 +124,6 @@ export default {
     addTrack,
     hasRunningTracks,
     orderTracksByStartTime,
-    getAllElapsedTime
+    getAllElapsedTime,
+    updateRunningTracks
 };

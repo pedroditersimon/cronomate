@@ -1,3 +1,4 @@
+import { ac } from "node_modules/react-router/dist/development/route-data-aSUFWnQ6.mjs";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
@@ -53,28 +54,53 @@ function setActivities(session: WorkSession, newActivities: Array<Activity>) {
     };
 };
 
-function stopTimerAndActivities(session: WorkSession) {
-    // not running
-    if (session.timer.status !== TimeTrackStatus.RUNNING) return session;
-
+function stopTimerAndActivities(session: WorkSession): WorkSession {
+    let _session = session;
     const now = toDate().getTime();
 
-    // 1. Stop timer
-    const newTimer: WorkSessionTimer = {
-        ...session.timer,
-        end: now,
+    // 1. Stop all activities
+    _session = stopActivities(session);
+
+    // 2. Stop timer
+    _session.timer = {
+        ..._session.timer,
+        end: _session.timer.status === TimeTrackStatus.RUNNING
+            ? now : _session.timer.end, // now if running, otherwise keep same
         status: TimeTrackStatus.STOPPED
     };
 
-    // 2. Stop all activities
+    return _session;
+}
+
+
+function stopActivities(session: WorkSession) {
+    // Stop all activities
     const newActivities = activityService.stopAll(session.activities);
 
     return {
         ...session,
-        timer: newTimer,
         activities: newActivities
     } as WorkSession;
 }
+
+function updateTimerAndTracks(session: WorkSession) {
+    const now = toDate().getTime();
+    let _session = session;
+
+    // Session timer
+    _session = setTimer(_session, {
+        ...session.timer,
+        start: session.timer.start || now,
+        end: now,
+    });
+
+    // Tracks
+    _session = setActivities(_session,
+        _session.activities.map(activityService.updateRunningTracks)
+    );
+
+    return _session;
+};
 
 export default {
     setTimer,
@@ -85,5 +111,7 @@ export default {
     setActivity,
     setActivities,
 
-    stopTimerAndActivities
+    stopActivities,
+    stopTimerAndActivities,
+    updateTimerAndTracks
 };

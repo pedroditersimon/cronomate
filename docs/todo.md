@@ -38,9 +38,6 @@ como para comparar en la hoja del laburo
 Al establecer que se termine la joranada al llegar a la hora de fin,
 si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo el tiempo
 
-Facilitar crear nuevas actividaes, que al crear una, se haga stop de las otras y se de play solo a esa.
-Ademas, agilizar crear actividades, como que empieces a escribir y ya te lo escriba en el placeholder
-
 Si pones un fin de joranda, se calcula "no categirzada" de toda la jornada futurua.
 Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como "no categorizada"
 
@@ -49,14 +46,16 @@ Si la actividad esta colapsada, no mostrar el horizontal separator
 
 Si el link del sidebar no esta activo, no resaltarlo.
 
+Agregar icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint. Y eliminar el hint de abajo.
+
 ## Generales
 
 -   [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.
--   [ ] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese.
+-   [x] Unificar los ticks de useTimer para solo tener un timeout cada 1s y que todos usen ese.
 -   [ ] Hacer el tipico layout de activity y record que los envuelve, para reutilizarlo en otro lados.
--   [ ] Implementar imports absolutos.
+-   [x] Implementar imports absolutos.
 -   [-] El toaster se ve por debajo del modal dialog
--   [ ] Mover las funciones fuera del componente workSession, moverlo a el servicio.
+-   [x] Mover las funciones fuera del componente workSession, moverlo a el servicio.
 -   [x] Guardar los session en un SavedObjectType.
 -   [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
 -   [ ] Que se pueda transferir los datos entre aplicaciones en diferentes dominios
@@ -98,9 +97,11 @@ Si el link del sidebar no esta activo, no resaltarlo.
 -   [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
 -   [ ] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
 -   [x] Opciones de today settings en orden de frecuencia de uso
--   [ ] Persistir el override de inicio y fin. Persiste la que pongas sino, se borra en cada nueva jornada.
-    -   [ ] Agregar una config en slice.
-    -   [ ] Agregar una checkbox para activar esta feature.
+-   [x] Persistir el override de inicio y fin. Persiste la que pongas sino, se borra en cada nueva jornada.
+    -   [x] Agregar una config en slice.
+    -   [x] Agregar una checkbox para activar esta feature.
+-   [x] Al crear una nueva actividad, se haga stop de todas y se de play solo a esa.
+-   [x] Agilizar crear actividades, al tipear en el teclado, te lo escribe en el placeholder
 
 #### Vista tabla
 

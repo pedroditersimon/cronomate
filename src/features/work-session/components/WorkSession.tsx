@@ -71,6 +71,10 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
 
     function handleSetTimerStatus(currentSession: WorkSessionType, status: TimeTrackStatus): WorkSessionType {
+        // already in that state
+        if (currentSession.timer.status === status)
+            return currentSession;
+
         // get a copy of current
         let _session = currentSession;
         const now = toDate().getTime();
@@ -141,14 +145,15 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
     function handleCreateNewActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
         // get a copy of current
-        let _session = currentSession;
-
-        _session = workSessionService.addActivity(_session, newActivity);
+        // stop activites
+        let _session = workSessionService.stopActivities(currentSession);
 
         // play session timer if the newActivity is running
-        if (_session.timer.status !== TimeTrackStatus.RUNNING && activityService.hasRunningTracks(newActivity)) {
+        if (activityService.hasRunningTracks(newActivity)) {
             _session = handleSetTimerStatus(_session, TimeTrackStatus.RUNNING);
         }
+
+        _session = workSessionService.addActivity(_session, newActivity);
 
         return _session;
     }

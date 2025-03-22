@@ -8,7 +8,6 @@ import useTimer from "src/shared/hooks/useTimer";
 import { isPastOrNow, isToday, toDate } from "src/shared/utils/TimeUtils";
 import WorkSessionComponent from "src/features/work-session/components/WorkSession";
 
-
 interface Props {
     readOnly?: boolean;
 }
@@ -17,16 +16,17 @@ export default function TodaySession({ readOnly }: Props) {
     const { todaySession, save, setSession, saveInHistoryAndReset } = useTodaySession();
     const { todaySessionSettings } = useTodaySessionSettigs();
 
-    // Save in history if its another day
+    // 1. If session changes, save it
+    // 2. Save in history if its another day
     useEffect(() => {
         const isPastSession = !isToday(toDate(todaySession.createdTimeStamp));
-        if (isPastSession && todaySession.activities.length > 0) {
+        if (isPastSession) {
             saveInHistoryAndReset();
         }
 
         // save in every change
         save();
-    }, [save, saveInHistoryAndReset, todaySession]);
+    }, [todaySession, save, saveInHistoryAndReset]);
 
 
     // save on window close
@@ -34,13 +34,11 @@ export default function TodaySession({ readOnly }: Props) {
         const _save = () => save();
         window.addEventListener("beforeunload", _save);
         return () => window.removeEventListener("beforeunload", _save);
-    });
-
-    // replaced with: save in every change
-    // useAutoSaving(save, 5000);
+    }, [save]);
 
     // stop timer on window close
     useEffect(() => {
+        return; // disabled for now
         // Feature not enabled
         if (!todaySessionSettings.stopOnClose) return;
         console.log("stop timer on window close");
@@ -54,16 +52,12 @@ export default function TodaySession({ readOnly }: Props) {
     }, [setSession, todaySession, todaySessionSettings]);
 
 
-    // constantly update todaySession timer
+    // constantly update timer and tracks
     useTimer(() => {
-        const now = toDate().getTime();
+        console.log("Update today timer and tracks");
         let _session = todaySession;
 
-        _session = workSessionService.setTimer(_session, {
-            ...todaySession.timer,
-            start: todaySession.timer.start || now,
-            end: now,
-        });
+        _session = workSessionService.updateTimerAndTracks(_session);
 
         // stopOnSessionEnd
         if (todaySessionSettings.stopOnSessionEnd && todaySession.timer.endOverride) {
@@ -73,8 +67,6 @@ export default function TodaySession({ readOnly }: Props) {
         }
 
         setSession(_session);
-
-        console.log("Today timer");
     }, 5000, todaySession.timer.status === TimeTrackStatus.RUNNING && !readOnly);
 
 

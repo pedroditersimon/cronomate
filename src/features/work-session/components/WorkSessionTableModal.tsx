@@ -12,6 +12,7 @@ import { WorkSession } from "src/features/work-session/types/WorkSession";
 import workSessionService from "src/features/work-session/services/workSessionService";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
+import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
 
 interface Props {
     id: string;
@@ -21,6 +22,8 @@ interface Props {
 export default function WorkSessionTableModal({ id, session }: Props) {
     const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnit>(TimeUnit.HOUR);
     const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
+
+    const [includeDateCol, setIncludeDateCol] = useState(true);
 
     // Untracked Activity
     const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
@@ -33,12 +36,23 @@ export default function WorkSessionTableModal({ id, session }: Props) {
     const hasPausesActivity = session.activities.some(act => act.id === "pauses");
 
 
+
     const rows = useMemo(() => {
         // row is -> | date | title | description | time |
 
-        const _session = includeUnrecordedActivity && hasUntrackedActivity
+        let _session = includeUnrecordedActivity && hasUntrackedActivity
             ? workSessionService.addActivity(session, untrackedActivity)
             : session; // otherwise, keep the same
+
+        // Filter
+        _session = {
+            ..._session,
+            activities: _session.activities.filter(activity => {
+                // Exclude pauses
+                if (!includePausesActivity && activity.id === pauseActivityMock.id) return false;
+                return true;
+            })
+        };
 
         return _session.activities.map(activity => {
             const elapsedTimeMs = timeTrackService.getAllElapsedTime(activity.tracks);
@@ -65,18 +79,24 @@ export default function WorkSessionTableModal({ id, session }: Props) {
 
         setTableCopiedEffect(true);
         // come back to normal icon
-        setTimeout(() => setTableCopiedEffect(false), 1000);
+        setTimeout(() => setTableCopiedEffect(false), 3000);
 
-
-        // Convertir la tabla en texto
+        // Convertir la tabla en texto con columna opcional de fecha
         const tableText = rows
-            .map(row => `${row.date}\t${row.title}\t${row.description}\t${row.elapsedTime}`)
+            .map(row => [
+                ...(includeDateCol ? [row.date] : []),  // Columna condicional
+                row.title,
+                row.description,
+                row.elapsedTime
+            ].join("\t"))
             .join("\n");
 
         // Copiar el texto al portapapeles
-        navigator.clipboard.writeText(tableText).then(() => {
-            toast.success("¡La tabla ha sido copiada al portapapeles!");
-        });
+        navigator.clipboard
+            .writeText(tableText)
+            .then(() => {
+                toast.success("¡La tabla ha sido copiada al portapapeles!");
+            });
     };
 
 
@@ -86,43 +106,53 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             title="Tabla de actividades"
             closeOnClickOut
         >
-
-            <table className="table-fixed"   >
-                <thead>
-                    <tr className="text-neutral-300 text-left border-b border-neutral-800">
-                        <th className="px-2 py-1">Fecha</th>
-                        <th className="px-2 py-1 min-w-40">Titulo</th>
-                        <th className="px-2 py-1 min-w-40">Descripción</th>
-                        <th className="py-1">
-                            <Dropdown
-                                className="text-neutral-300 border-none"
-                                value={elapsedTimeUnit}
-                                options={Object.values(TimeUnit)}
-                                onOption={(opt) => setElapsedTimeUnit(opt as TimeUnit)}
-                            />
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row, index) => (
-                        <tr
-                            className={clsx("text-neutral-400 whitespace-normal break-words break-all",
-                                { "border-b border-neutral-800": index < rows.length - 1 }
+            <div className="size-full mr-4 overflow-y-auto overflow-x-hidden _text-sm">
+                <table>
+                    <thead>
+                        <tr className="text-neutral-300 text-left border-b border-neutral-800">
+                            {includeDateCol && (
+                                <th className="px-2 py-1">Fecha</th>
                             )}
-                        >
-                            <td className="p-2 max-w-96 text-nowrap">{row.date}</td>
-                            <td className="p-2 max-w-96">{row.title}</td>
-                            <td className="p-2 max-w-96">{row.description}</td>
-                            <td className="p-2 max-w-96 text-nowrap">{row.elapsedTime}</td>
+                            <th className="px-2 py-1 min-w-40">Titulo</th>
+                            <th className="px-2 py-1 min-w-40">Descripción</th>
+                            <th className="py-1">
+                                <Dropdown
+                                    className="text-neutral-300 border-none"
+                                    value={elapsedTimeUnit}
+                                    options={Object.values(TimeUnit)}
+                                    onOption={(opt) => setElapsedTimeUnit(opt as TimeUnit)}
+                                />
+                            </th>
                         </tr>
-                    ))}
-                </tbody>
-
-            </table>
-
+                    </thead>
+                    <tbody>
+                        {rows.map((row, index) => (
+                            <tr
+                                className={clsx("text-neutral-400 whitespace-normal break-words break-all",
+                                    { "border-b border-neutral-800": index < rows.length - 1 }
+                                )}
+                            >
+                                {includeDateCol && (
+                                    <td className="p-2 max-w-96 text-nowrap">{row.date}</td>
+                                )}
+                                <td className="p-2 max-w-96">{row.title}</td>
+                                <td className="p-2 max-w-96">{row.description}</td>
+                                <td className="p-2 max-w-96 text-nowrap">{row.elapsedTime}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             {/* bottom */}
             <div className="flex flex-row gap-3 items-center">
+
+                <Checkbox
+                    value={includeDateCol}
+                    onChange={setIncludeDateCol}
+                >
+                    Incluir Fecha
+                </Checkbox>
 
                 {hasUntrackedActivity &&
                     <Checkbox

@@ -21,7 +21,7 @@ export default function Button({ icon, onClick, disabled, className, children }:
             disabled={disabled}
             onClick={onClick}
         >
-            <div className="flex-grow flex flex-row gap-1 justify-center items-center">
+            <div className="flex-grow flex flex-row gap-1 justify-center items-center select-none">
                 {disabled
                     ? <ForbiddenIcon className="size-5" />
                     : icon

@@ -56,7 +56,7 @@ export default function ActivityTrack({ track, onChange, readOnly }: Props) {
             >
                 <TimeInput
                     time={track.start}
-                    onTimeChange={newStartTime => onChange({
+                    onChange={newStartTime => onChange({
                         ...track,
                         start: newStartTime ?? track.start // update or keep same
                     })}
@@ -65,9 +65,9 @@ export default function ActivityTrack({ track, onChange, readOnly }: Props) {
                 -
                 <TimeInput
                     time={track.end ?? undefined}
-                    onTimeChange={newEndTime => {
+                    onChange={newEndTime => {
                         const updatedEndTime = newEndTime ?? track.end;
-                        const shouldStop = newEndTime !== null && isNow(newEndTime);
+                        const shouldStop = newEndTime !== null && !isNow(newEndTime);
 
                         onChange({
                             ...track,

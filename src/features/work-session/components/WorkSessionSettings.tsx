@@ -69,7 +69,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                         className="max-w-full"
                         time={session.timer.startOverride || (session.timer.start ? session.timer.start + 1 : undefined)}
                         // si es undefined tambien el override lo es
-                        onTimeChange={newStartTime => handleChangeTimer({
+                        onChange={newStartTime => handleChangeTimer({
                             ...session.timer,
                             startOverride: newStartTime
                         })}
@@ -83,7 +83,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                             { "text-red-400": session.timer.status === TimeTrackStatus.RUNNING && !session.timer.endOverride }
                         )}
                         time={session.timer.endOverride || session.timer.end || undefined}
-                        onTimeChange={newEndTime => handleChangeTimer({
+                        onChange={newEndTime => handleChangeTimer({
                             ...session.timer,
                             endOverride: newEndTime
                         })}

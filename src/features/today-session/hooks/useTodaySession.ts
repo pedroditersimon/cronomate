@@ -10,6 +10,7 @@ import sessionStorageService from "src/shared/services/sessionStorageService";
 
 export default function useTodaySession() {
     const todaySession = useTypedSelector(state => state.todaySession);
+    const todaySessionSettings = useTypedSelector(state => state.todaySessionSettings);
 
     const dispatch = useDispatch();
 
@@ -43,7 +44,7 @@ export default function useTodaySession() {
 
     const saveInHistoryAndReset = () => {
         sessionStorageService.saveItems("History", [todaySession]);
-        dispatch(resetToDefaultState());
+        dispatch(resetToDefaultState({ settings: todaySessionSettings }));
         // Ya que se utiliza la variable local 'todaySession',
         // es posible que esta cambie y al guardar no se este guardando lo ultimo que cambio
         toast.success("Sesion guardada en history! Ver comentarios");

@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "src/shared/utils/TimeUtils";
 import clsx, { ClassValue } from "clsx";
-import useTimer from "src/shared/hooks/useTimer";
 
 
 interface Props {
     time?: number;
-    onTimeChange?: (newState: number | null) => void;
+    onChange?: (newState: number | null) => void;
 
     running?: boolean;
     readOnly?: boolean;
@@ -15,7 +14,7 @@ interface Props {
 
 
 // TimeInput based in Date
-export function TimeInput({ time, onTimeChange, running, readOnly, className }: Props) {
+export function TimeInput({ time, onChange, running, readOnly, className }: Props) {
     const [focused, setFocused] = useState(false);
     const [inputTime, setInputTime] = useState<string>(time ? to24HourFormat(toDate(time)) : "-");
 
@@ -27,10 +26,10 @@ export function TimeInput({ time, onTimeChange, running, readOnly, className }: 
 
 
     // constantly update to now if its running
-    useTimer(() => {
-        if (onTimeChange) onTimeChange(toDate().getTime());
-        console.log("TimeInput timer");
-    }, 5000, running);
+    // useTimer(() => {
+    //     if (onTimeChange) onTimeChange(toDate().getTime());
+    //     console.log("TimeInput timer");
+    // }, 5000, running);
 
 
     // convert text input to date and call 'onTimeChange'
@@ -42,9 +41,9 @@ export function TimeInput({ time, onTimeChange, running, readOnly, className }: 
         if (!inputHasChanged) return;
 
         setInputTime(newInput);
-        if (onTimeChange) onTimeChange(newTime?.getTime() ?? null);
+        if (onChange) onChange(newTime?.getTime() ?? null);
 
-    }, [inputTime, time, onTimeChange]);
+    }, [inputTime, time, onChange]);
 
 
     return (
@@ -62,10 +61,13 @@ export function TimeInput({ time, onTimeChange, running, readOnly, className }: 
 
                 value={inputTime}
                 maxLength={5}
-                readOnly={readOnly}
+                readOnly={readOnly || !focused}
                 onChange={e => setInputTime(e.target.value)}
 
-                onClick={(e: React.MouseEvent<HTMLInputElement>) => e.currentTarget.select()}
+                onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    e.currentTarget.select();
+                    setFocused(true);
+                }}
                 // select all text on click
                 onFocus={() => setFocused(true)}
 
@@ -75,9 +77,14 @@ export function TimeInput({ time, onTimeChange, running, readOnly, className }: 
                     setFocused(false);
                 }}
                 onKeyUp={e => {
-                    if (e.key !== "Enter") return;
-                    handleConfirmTime();
-                    e.currentTarget.blur();
+                    if (e.key === "Enter") {
+                        handleConfirmTime();
+                        setFocused(false);
+                    }
+                    else if (e.key === "Escape") {
+                        setInputTime(time ? to24HourFormat(toDate(time)) : "-");
+                        setFocused(false);
+                    }
                 }}
             />
         </div>

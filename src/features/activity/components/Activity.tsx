@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon } from "src/shared/assets/Icons";
 import { isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import { Activity as ActivityType } from "src/features/activity/types/Activity";
@@ -22,12 +22,22 @@ interface Props {
     selectTitleOnClick?: boolean;
 }
 
+export type ActivityHandle = {
+    focusTitle: () => void;
+};
 
-export default function Activity({ activity, onActivityChange, onTitleConfirm, showDeletedRecords, readOnly, selectTitleOnClick }: Props) {
+const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange, onTitleConfirm, showDeletedRecords, readOnly, selectTitleOnClick }, ref) => {
     // local states
+    const inputRef = useRef<HTMLInputElement | null>(null);
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
 
+    useImperativeHandle(ref, () => ({
+        focusTitle: () => {
+            setFocused(true);
+            inputRef.current?.select();
+        },
+    }));
 
     // sync title if activity changes
     useEffect(() => {
@@ -128,6 +138,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
                     })}
                 >
                     <input
+                        ref={inputRef}
                         className="bg-transparent outline-none mr-auto basis-1/2 "
                         placeholder={activity.title}
                         value={title}
@@ -218,4 +229,7 @@ export default function Activity({ activity, onActivityChange, onTitleConfirm, s
 
         </div>
     );
-}
+});
+
+
+export default Activity;

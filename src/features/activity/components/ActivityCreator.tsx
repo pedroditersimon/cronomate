@@ -1,9 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { generateId } from "src/shared/utils/generateId";
 import clsx from "clsx";
 import { toDate } from "src/shared/utils/TimeUtils";
 import { Activity } from "src/features/activity/types/Activity";
-import ActivityComponent from "src/features/activity/components/Activity";
+import ActivityComponent, { ActivityHandle } from "src/features/activity/components/Activity";
 import activityService from "src/features/activity/services/activityService";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import { newActivityMock } from "src/features/activity/mocks/newActivityMock";
@@ -13,11 +13,30 @@ interface Props {
 }
 
 
-export default function ActivityCreator({ onCreate: onActivityCreated }: Props) {
+export default function ActivityCreator({ onCreate }: Props) {
     // local states
+    const activityRef = useRef<ActivityHandle | null>(null);
     const [activity, setActivity] = useState<Activity>(newActivityMock);
     const [focused, setFocused] = useState(false);
 
+    // Focus on keyboard typing
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (focused) return; // Already focused
+            if (document.activeElement !== document.body) return; // Ignore if focusing other element
+            if (e.key.length > 1) return; // Ignore special keys
+
+            handleSetActivity({
+                ...activity,
+                title: e.key
+            });
+            setFocused(true);
+            activityRef.current?.focusTitle();
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    });
 
     const hasChanges = useMemo(() => {
         return activityService.hasChanges(activity, newActivityMock)
@@ -50,8 +69,8 @@ export default function ActivityCreator({ onCreate: onActivityCreated }: Props) 
             }]
         };
 
-        onActivityCreated(newActivityWithRecord);   // crear el activity
-        setActivity(newActivityMock);                  // reset el placeholder
+        onCreate(newActivityWithRecord);   // crear el activity
+        setActivity(newActivityMock);      // reset el placeholder
     }
 
 
@@ -84,7 +103,7 @@ export default function ActivityCreator({ onCreate: onActivityCreated }: Props) 
     }
 
 
-    const handleFocus = (focus: boolean) => {
+    const handleSetFocus = (focus: boolean) => {
         setFocused(focus);
 
         // Colapsar segun el focus
@@ -101,10 +120,11 @@ export default function ActivityCreator({ onCreate: onActivityCreated }: Props) 
                 "opacity-25": !focused && !hasChanges,
                 "opacity-100": focused || hasChanges
             })}
-            onFocus={() => handleFocus(true)}
-            onBlur={() => handleFocus(false)}
+            onFocus={() => handleSetFocus(true)}
+            onBlur={() => handleSetFocus(false)}
         >
             <ActivityComponent
+                ref={activityRef}
                 key={activity.id}
                 activity={activity}
                 onActivityChange={handleSetActivity}
