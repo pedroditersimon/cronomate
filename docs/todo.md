@@ -44,8 +44,6 @@ Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como 
 Por defecto, manetner las actividades colapsadas (cerradas) para no mostrar tanta info.
 Si la actividad esta colapsada, no mostrar el horizontal separator
 
-Si el link del sidebar no esta activo, no resaltarlo.
-
 Agregar icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint. Y eliminar el hint de abajo.
 
 ## Generales
@@ -170,6 +168,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 -   [ ] Configuracion.
     -   [ ] Jornada y descansos.
     -   [ ] Personalizacion visual (estilos).
+-   [x] Si el link no esta activo, no resaltarlo.
 
 #### Recomendaciones
 

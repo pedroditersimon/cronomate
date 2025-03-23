@@ -24,7 +24,9 @@ export default function ActivityCreator({ onCreate }: Props) {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (focused) return; // Already focused
             if (document.activeElement !== document.body) return; // Ignore if focusing other element
+            if (e.ctrlKey || e.altKey || e.metaKey) return; // Ignore if modifier keys
             if (e.key.length > 1) return; // Ignore special keys
+            if (e.key === " ") return; // Ignore spaces
 
             handleSetActivity({
                 ...activity,

@@ -11,7 +11,7 @@ export default function PageLayout({ children }: PropsWithChildren) {
                 <Sidebar
                     links={[
                         {
-                            to: "/#",
+                            to: "/",
                             icon: <BriefcaseIcon />,
                             text: "Hoy",
                         },
