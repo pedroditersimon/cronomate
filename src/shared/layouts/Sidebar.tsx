@@ -22,7 +22,7 @@ export default function Sidebar({ links }: Props) {
 
     return (
         <Container className="h-full">
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1">
                 {links.map(link => {
                     const isActive = basePath === link.to;
 
@@ -51,8 +51,11 @@ export default function Sidebar({ links }: Props) {
                             }
                             {link.text && (
                                 <span
-                                    className={clsx("mr-auto my-auto text-sm group-hover:text-base",
-                                        { "text-base": isActive }
+                                    className={clsx("mr-auto my-auto group-hover:text-base",
+                                        {
+                                            "text-base": isActive,
+                                            "text-sm": !isActive
+                                        }
                                     )}
                                     children={link.text}
                                 />

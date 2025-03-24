@@ -157,13 +157,14 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 -   [x] Agrupar sessiones por semana pasada, mes
 -   [ ] Se podria implementar una vista calendario, alternativa a la listada
 -   [x] Habilitar Settings en modo readonly
+-   [ ] Boton para descargar el historial en un .json
 
 #### Sidebar
 
 -   [x] Panel con botones de cada seccion.
     -   [ ] Es contraible.
--   [ ] Vista jornada.
--   [ ] Vista Historial de jornadas.
+-   [x] Vista jornada.
+-   [x] Vista Historial de jornadas.
 -   [ ] Resumen Dayli.
 -   [ ] Resumen semanal/mensual.
 -   [ ] Notas personales.
@@ -171,6 +172,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
     -   [ ] Jornada y descansos.
     -   [ ] Personalizacion visual (estilos).
 -   [x] Si el link no esta activo, no resaltarlo.
+-   [ ] Agregar un space-btween para enviar Historial y Ajustes al piso.
 
 #### Recomendaciones
 

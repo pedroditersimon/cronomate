@@ -16,11 +16,6 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             text: "Hoy",
                         },
                         {
-                            to: "/history",
-                            icon: <InboxStackIcon />,
-                            text: "Historial",
-                        },
-                        {
                             to: "/calendar",
                             text: "Calendario",
                             icon: <CalendarIcon />
@@ -29,6 +24,11 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             to: "/performance",
                             text: "Rendimiento",
                             icon: <ChartPieIcon />
+                        },
+                        {
+                            to: "/history",
+                            icon: <InboxStackIcon />,
+                            text: "Historial",
                         },
                         {
                             to: "/settings",
