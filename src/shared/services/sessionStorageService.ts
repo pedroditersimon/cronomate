@@ -12,8 +12,8 @@ async function saveItems<T extends { id: IdType }>(storeName: string, items: T[]
     const itemsToSave: Array<SavedObjectWithId<T, IdType>> = items.map(item => (
         {
             id: item.id,
-            savedTimestamp: new Date().getTime(),
-            appVersion,
+            generated_date: new Date().getTime(),
+            app_version: appVersion,
             value: item
         }
     ));
