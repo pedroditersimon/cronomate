@@ -15,6 +15,8 @@ import workSessionService from "src/features/work-session/services/workSessionSe
 import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import Activity from "src/features/activity/components/Activity";
+import { DateTime, Duration, Interval } from "luxon";
+import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 
 
 interface Props {
@@ -36,11 +38,16 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
 
     const sessionHasActivities = session.activities.length > 0;
 
-    const [deletedActivities, sessionTimerDuration] = useMemo(() => {
-        const sessionTimerDuration = workSessionService.getTimerDurationInMinutes(session.timer);
+    const [deletedActivities, timerDurationStr] = useMemo(() => {
         const deletedActivities = session.activities.filter(act => act.isDeleted);
-        return [deletedActivities, sessionTimerDuration];
+
+        const timerDurationMinutes = workSessionService.getTimerDurationInMinutes(session.timer);
+        const timerDurationMillis = timerDurationMinutes * 60 * 1000;
+        const timerDurationStr = convertElapsedTimeToText(timerDurationMillis) ?? "-";
+        return [deletedActivities, timerDurationStr];
     }, [session]);
+
+
 
     const handleChangeTimer = (newTimer: WorkSessionTimer) => {
         onSessionChange({
@@ -92,11 +99,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                 </FormField>
 
                 <FormField title="Duración" className="text-center">
-                    <TimeInputMinutes
-                        className="max-w-full"
-                        minutes={sessionTimerDuration}
-                        readOnly
-                    />
+                    <span>{timerDurationStr}</span>
                 </FormField>
             </div>
 

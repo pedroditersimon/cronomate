@@ -21,10 +21,7 @@ export default function TodaySessionSettings({ readOnly }: Props) {
             <FormField
                 title="Guardar inicio y fin"
                 show={!readOnly}
-                hint={{
-                    text: "Se guardarán inicio y fin para próximas jornadas.",
-                    show: todaySessionSettings.saveTimerOverrides,
-                }}
+                tooltip={{ text: "Guardar inicio y fin para próximas jornadas." }}
             >
                 <ToggleTabs falseLabel="Desactivado" trueLabel="Guardar"
                     value={todaySessionSettings.saveTimerOverrides}
@@ -39,9 +36,9 @@ export default function TodaySessionSettings({ readOnly }: Props) {
             <FormField
                 title="Detener al finalizar la jornada"
                 show={!readOnly}
-                hint={{
+                tooltip={{
                     text: "El temporizador se detendrá automáticamente al finalizar la jornada.",
-                    show: todaySessionSettings.stopOnSessionEnd,
+                    showOn: "content"
                 }}
             >
                 <ToggleTabs falseLabel="Desactivado" trueLabel="Al finalizar"

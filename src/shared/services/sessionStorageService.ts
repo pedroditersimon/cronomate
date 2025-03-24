@@ -12,7 +12,7 @@ async function saveItems<T extends { id: IdType }>(storeName: string, items: T[]
     const itemsToSave: Array<SavedObjectWithId<T, IdType>> = items.map(item => (
         {
             id: item.id,
-            savedTimeStamp: new Date().getTime(),
+            savedTimestamp: new Date().getTime(),
             appVersion,
             value: item
         }
@@ -38,7 +38,7 @@ async function getItems<T extends { id: IdType }>(storeName: string): Promise<T[
 
         return sessionStorageVersionConverter.convertSession(
             savedObject.value,
-            savedObject.appVersion,
+            savedObject.app_version,
             appVersion
         )
     });

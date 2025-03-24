@@ -46,6 +46,7 @@ export function getElapsedTime(start: Date | undefined, end: Date | undefined) {
   return endTime.getTime() - startTime.getTime();
 }
 
+// Ejemplo: 10h 30m
 export function convertElapsedTimeToText(elapsedMs: number) {
   if (elapsedMs <= 0) return undefined;
 

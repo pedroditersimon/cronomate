@@ -5,8 +5,8 @@ import { SavedObject } from 'src/shared/types/SavedObject';
 // save in local storage
 function save<T>(keyName: string, value: T) {
     localStorage.setItem(keyName, JSON.stringify({
-        savedTimeStamp: new Date().getTime(),
-        appVersion,
+        generated_date: new Date().getTime(),
+        app_version: appVersion,
         value
     } as SavedObject<T>));
 };

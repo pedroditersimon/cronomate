@@ -24,8 +24,6 @@ Por ejemplo si ponemos fin de jornada para mas adelante y todavia es temprano.
 si poner un endoverride alas 13, pero tu actividad termino mas adelante como a las 13.10.
 ese 10min, no se muestra en el timer de arriba
 
-En duracion de los settings de joranda, poner el mismo formato de (14h 22m) las activities
-
 Para el activiyCreator, hacer un componente desde cero, ya que tiene cosas que no van como el boton de borrado.
 
 las rows de la tabla de actividaes se pueden arrastrar y organizar
@@ -44,7 +42,7 @@ Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como 
 Por defecto, manetner las actividades colapsadas (cerradas) para no mostrar tanta info.
 Si la actividad esta colapsada, no mostrar el horizontal separator
 
-Agregar icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint. Y eliminar el hint de abajo.
+Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
 
 ## Generales
 
@@ -58,6 +56,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 -   [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
 -   [ ] Que se pueda transferir los datos entre aplicaciones en diferentes dominios
 -   [x] Hacer una carpeta para mocks dentro de las features.
+-   [ ] Icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint. Y eliminar el hint de abajo.
 
 #### Vista jornada
 
@@ -100,6 +99,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
     -   [x] Agregar una checkbox para activar esta feature.
 -   [x] Al crear una nueva actividad, se haga stop de todas y se de play solo a esa.
 -   [x] Agilizar crear actividades, al tipear en el teclado, te lo escribe en el placeholder
+-   [x] En duracion de los settings de joranda, poner el mismo formato de (14h 22m) las activities
 
 #### Vista tabla
 

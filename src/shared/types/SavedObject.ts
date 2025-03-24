@@ -1,6 +1,6 @@
 export interface SavedObject<T> {
-    savedTimeStamp: number; // saved time
-    appVersion: string;
+    generated_date: number; // saved time
+    app_version: string;
     value: T;
 }
 
