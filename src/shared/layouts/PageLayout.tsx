@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, SettingsIcon, InboxStackIcon } from "src/shared/assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon, ChartPieIcon, CalendarIcon } from "src/shared/assets/Icons";
 import Sidebar from "./Sidebar";
 
 
@@ -21,12 +21,14 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             text: "Historial",
                         },
                         {
-                            to: "/1",
-                            text: "Sin icono",
+                            to: "/calendar",
+                            text: "Calendario",
+                            icon: <CalendarIcon />
                         },
                         {
-                            to: "/2",
-                            icon: <BriefcaseIcon />,
+                            to: "/performance",
+                            text: "Rendimiento",
+                            icon: <ChartPieIcon />
                         },
                         {
                             to: "/settings",

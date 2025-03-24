@@ -1,4 +1,3 @@
-import { ac } from "node_modules/react-router/dist/development/route-data-aSUFWnQ6.mjs";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";

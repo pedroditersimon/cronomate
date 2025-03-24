@@ -152,7 +152,9 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 
 #### Vista Historial.
 
--   [ ] Agregar un dropdown para Ordernar el historial por: fecha de creacion, duracion
+-   [x] Dropdown para Ordernar el historial por: fecha de creacion, duracion
+-   [ ] Crear un panel de filtros comun, para SortBy y SortOrder, customizable
+-   [x] Agrupar sessiones por semana pasada, mes
 -   [ ] Se podria implementar una vista calendario, alternativa a la listada
 -   [x] Habilitar Settings en modo readonly
 
