@@ -7,32 +7,33 @@ import WorkSessionTimer from "./WorkSessionTimer";
 import WorkSessionSettings from "./WorkSessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
 import { ReactNode, useState } from "react";
-import { DBIcon, SettingsIcon } from "src/shared/assets/Icons";
+import { SettingsIcon } from "src/shared/assets/Icons";
 import clsx from "clsx";
-import Indicator from "src/shared/components/Indicator";
-import useIndicator from "src/shared/hooks/useIndicator";
 import { Activity } from "src/features/activity/types/Activity";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
 import workSessionService from "src/features/work-session/services/workSessionService";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
-import ActivityComponent from "src/features/activity/components/Activity";
+import ActivityComponent, { ActivityActions } from "src/features/activity/components/Activity";
 import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
+import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
+
+export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
 interface Props {
     session: WorkSessionType;
     onSessionChange: (newSession: WorkSessionType) => void;
-    readOnly?: boolean;
 
     // Content projection for WorkSessionSettings
     inAboveSettings?: ReactNode;
     inBelowSettings?: ReactNode;
+
+    allowedActions?: WorkSessionActions;
 }
 
 
-export default function WorkSession({ session, onSessionChange, readOnly, inAboveSettings, inBelowSettings }: Props) {
-    const saveIndicator = useIndicator();
+export default function WorkSession({ session, onSessionChange, allowedActions = "all", inAboveSettings, inBelowSettings }: Props) {
     const [showSettings, setShowSettings] = useState(false);
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
@@ -43,6 +44,15 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
     // local wrapper state for untrackedActivity.isCollapsed
     const [untrackedActIsCollapsed, setUntrackedActIsCollapsed] = useState(untrackedActivity.isCollapsed);
     untrackedActivity.isCollapsed = untrackedActIsCollapsed;
+
+    const unarchivedActivities = session.activities.filter(act => !act.isDeleted && activityService.hasUnarchivedTracks(act));
+
+    // Allowed actions
+    const canEdit = isActionAllowed(allowedActions, "edit");
+    const canCreate = isActionAllowed(allowedActions, "create");
+    // const canArchive = isActionAllowed(allowedActions, "archive");
+    // const canRestore = isActionAllowed(allowedActions, "restore");
+    const activitiesAllowedActions = allowedActions as ActivityActions;
 
 
     function addRecordToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
@@ -111,7 +121,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
     function handleSetTimerStatusWithState(status: TimeTrackStatus) {
         // prevent edit in readOnly
-        if (readOnly) return;
+        if (!canEdit) return;
 
         const updatedSession = handleSetTimerStatus(session, status);
         onSessionChange(updatedSession);
@@ -119,6 +129,11 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
 
     function handleSetActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
+
+        // prevent delete pauseActivity
+        if (newActivity.id === pauseActivityMock.id && newActivity.isDeleted)
+            return currentSession;
+
         // get a copy of current
         let _session = currentSession;
 
@@ -136,7 +151,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
     function handleSetActivityWithState(newActivity: Activity) {
         // prevent edit in readOnly
-        if (readOnly) return;
+        if (!canEdit) return;
 
         const updatedSession = handleSetActivity(session, newActivity);
         onSessionChange(updatedSession);
@@ -161,7 +176,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
 
     function handleCreateNewActivityWithState(newActivity: Activity) {
         // prevent edit in readOnly
-        if (readOnly) return;
+        if (!canCreate) return;
 
         const updatedSession = handleCreateNewActivity(session, newActivity);
         onSessionChange(updatedSession);
@@ -179,7 +194,7 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
                     session={session}
                     onSessionChange={onSessionChange}
                     onClose={() => setShowSettings(false)}
-                    readOnly={readOnly}
+                    allowedActions={allowedActions}
 
                     inAboveContent={inAboveSettings}  // Content projection
                     inBelowContent={inBelowSettings}
@@ -192,18 +207,10 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
                 className="group"
                 title={title}
 
-                // Saving indicator
-                middle={<Indicator
-                    className="text-green-400"
-                    text="Guardado"
-                    icon={<DBIcon className="size-5" />}
-                    indicatorState={saveIndicator.state}
-                />}
-
                 // Timer
                 right={<WorkSessionTimer
                     session={session}
-                    readOnly={readOnly}
+                    readOnly={!canEdit}
                     onSetTimerStatus={handleSetTimerStatusWithState}
                 />}
 
@@ -212,32 +219,33 @@ export default function WorkSession({ session, onSessionChange, readOnly, inAbov
             />
 
 
-            {!readOnly &&
+            {canCreate &&
                 <ActivityCreator onCreate={handleCreateNewActivityWithState} />
             }
 
-            { // create activities
-                session.activities.map(activity => (
+            { // Activities list
+                unarchivedActivities.map(activity => (
                     <ActivityComponent
                         key={activity.id}
                         activity={activity}
                         onActivityChange={handleSetActivityWithState}
-                        readOnly={readOnly}
+                        allowedActions={activitiesAllowedActions}
                     />
                 ))
             }
 
             {untrackedActivity.tracks.length > 0 && // show only if has records
                 <ActivityComponent
-                    key="unrecored"
+                    key={untrackedActivity.id}
                     activity={untrackedActivity}
                     onActivityChange={newActivity => setUntrackedActIsCollapsed(newActivity.isCollapsed ?? false)}
-                    readOnly
+                    allowedActions="none"
                 />
             }
         </Container >
     )
 }
+
 
 
 

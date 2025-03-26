@@ -50,7 +50,12 @@ function stopAll(list: Array<TimeTrack>): Array<TimeTrack> {
 function hasRunning(list: Array<TimeTrack>): boolean {
     return list.some(timer => timer.status === TimeTrackStatus.RUNNING);
 }
-
+function hasArchived(list: Array<TimeTrack>): boolean {
+    return list.some(timer => timer.status === TimeTrackStatus.ARCHIVED);
+}
+function hasUnarchived(list: Array<TimeTrack>): boolean {
+    return list.some(timer => timer.status !== TimeTrackStatus.ARCHIVED);
+}
 
 function hasEndTime(timer: TimeTrack | undefined | null): boolean {
     return timer?.end !== null && timer?.end !== undefined;
@@ -160,6 +165,6 @@ function updateRun(track: TimeTrack) {
 }
 
 export default {
-    add, set, stop, stopAll, hasRunning, hasEndTime, hasAnyEndTime,
+    add, set, stop, stopAll, hasRunning, hasArchived, hasUnarchived, hasEndTime, hasAnyEndTime,
     getAllElapsedTime, orderAllByStartTime, getUntrackedPeriods, getArchived, updateRun
 };

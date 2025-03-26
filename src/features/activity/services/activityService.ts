@@ -95,6 +95,14 @@ function hasRunningTracks(activity: Activity): boolean {
     return timeTrackService.hasRunning(activity.tracks);
 }
 
+function hasArchivedTracks(activity: Activity): boolean {
+    return timeTrackService.hasArchived(activity.tracks);
+}
+
+function hasUnarchivedTracks(activity: Activity): boolean {
+    return timeTrackService.hasUnarchived(activity.tracks);
+}
+
 function orderTracksByStartTime(activity: Activity): Activity {
     return {
         ...activity,
@@ -123,6 +131,8 @@ export default {
     setTrack,
     addTrack,
     hasRunningTracks,
+    hasArchivedTracks,
+    hasUnarchivedTracks,
     orderTracksByStartTime,
     getAllElapsedTime,
     updateRunningTracks

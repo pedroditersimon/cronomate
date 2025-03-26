@@ -23,7 +23,7 @@ export function SessionHistoryDetailPage() {
             <WorkSessionComponent
                 session={selectedSession}
                 onSessionChange={() => { }}
-                readOnly
+                allowedActions="none"
             />
         </PageLayout>
     );

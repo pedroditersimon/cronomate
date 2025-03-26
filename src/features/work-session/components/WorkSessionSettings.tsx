@@ -5,7 +5,6 @@ import FormField from "src/shared/components/forms/FormField";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";
 import HSeparator from "src/shared/layouts/HSeparator";
 import Clickable from "src/shared/components/interactable/Clickable";
-import { TimeInputMinutes } from "src/shared/components/interactable/TimeInputMinutes";
 import Button from "src/shared/components/interactable/Button";
 import { showModal } from "src/shared/components/Modal";
 import WorkSessionTableModal from "./WorkSessionTableModal";
@@ -13,8 +12,12 @@ import clsx from "clsx";
 import { WorkSession } from "src/features/work-session/types/WorkSession";
 import workSessionService from "src/features/work-session/services/workSessionService";
 import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
-import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import Activity from "src/features/activity/components/Activity";
+import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
+import { WorkSessionActions } from "src/features/work-session/components/WorkSession";
+import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
+import activityService from "src/features/activity/services/activityService";
 
 
 interface Props {
@@ -23,24 +26,33 @@ interface Props {
 
     onClose: () => void;
 
-    readOnly?: boolean;
-
     // Content projection
     inAboveContent?: ReactNode;
     inBelowContent?: ReactNode;
+
+    allowedActions?: WorkSessionActions;
 }
 
 
-export default function WorkSessionSettings({ session, onSessionChange, onClose, readOnly, inAboveContent, inBelowContent }: Props) {
-    const [, setExpandDeletedActivities] = useState(false);
+export default function WorkSessionSettings({ session, onSessionChange, onClose, allowedActions = "all", inAboveContent, inBelowContent }: Props) {
+    const [expandArchivedActivities, setExpandArchivedActivities] = useState(false);
 
     const sessionHasActivities = session.activities.length > 0;
 
-    const [deletedActivities, sessionTimerDuration] = useMemo(() => {
-        const sessionTimerDuration = workSessionService.getTimerDurationInMinutes(session.timer);
-        const deletedActivities = session.activities.filter(act => act.isDeleted);
-        return [deletedActivities, sessionTimerDuration];
-    }, [session]);
+    const [archivedActivities, timerDurationStr] = useMemo(() => {
+        const archivedActivities = session.activities
+            .filter(act => act.isDeleted || activityService.hasArchivedTracks(act))
+            .map(act => ({ ...act, isCollapsed: !expandArchivedActivities }));
+
+        const timerDurationMinutes = workSessionService.getTimerDurationInMinutes(session.timer);
+        const timerDurationMillis = timerDurationMinutes * 60 * 1000;
+        const timerDurationStr = convertElapsedTimeToText(timerDurationMillis) ?? "-";
+        return [archivedActivities, timerDurationStr];
+    }, [expandArchivedActivities, session.timer, session.activities]);
+
+    // Allowed actions
+    const canEdit = isActionAllowed(allowedActions, "edit");
+    const canRestore = isActionAllowed(allowedActions, "restore");
 
     const handleChangeTimer = (newTimer: WorkSessionTimer) => {
         onSessionChange({
@@ -48,6 +60,34 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
             timer: newTimer
         });
     }
+
+    const handleRestoreActivity = (activityId: string) => {
+        const newActivities = session.activities.map(act => {
+            if (act.id === activityId) {
+                return { ...act, isDeleted: false };
+            }
+            return act;
+        });
+
+        onSessionChange({
+            ...session,
+            activities: newActivities
+        });
+    };
+
+    const handleSetActivityTracks = (activityId: string, newTracks: TimeTrack[]) => {
+        const newActivities = session.activities.map(act => {
+            if (act.id === activityId) {
+                return { ...act, tracks: newTracks };
+            }
+            return act;
+        });
+
+        onSessionChange({
+            ...session,
+            activities: newActivities
+        });
+    };
 
     return (
         <>
@@ -73,7 +113,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                             ...session.timer,
                             startOverride: newStartTime
                         })}
-                        readOnly={readOnly}
+                        readOnly={!canEdit}
                     />
                 </FormField>
 
@@ -87,21 +127,22 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                             ...session.timer,
                             endOverride: newEndTime
                         })}
-                        readOnly={readOnly}
+                        readOnly={!canEdit}
                     />
                 </FormField>
 
                 <FormField title="Duración" className="text-center">
-                    <TimeInputMinutes
-                        className="max-w-full"
-                        minutes={sessionTimerDuration}
-                        readOnly
-                    />
+                    <span>{timerDurationStr}</span>
                 </FormField>
             </div>
 
 
-            <FormField title="Tabla de actividades">
+            <FormField
+                title="Tabla de actividades"
+                tooltip={{
+                    text: "Genera una tabla con las actividades de la jornada y sus duraciones."
+                }}
+            >
                 <Button
                     onClick={() => showModal("table")}
                     disabled={!sessionHasActivities}
@@ -116,23 +157,34 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
             {/* Actividades eliminadas */}
             <div className="flex flex-col gap-1">
                 <div className="flex gap-1 justify-between">
-                    <p className="text-gray-400 font-semibold">Actividades eliminadas</p>
+                    <p className="text-gray-400 font-semibold">Actividades archivadas</p>
                     <Clickable className="p-0 hover:bg-gray-700"
                         children={<ChevronVerticalIcon />}
-                        onClick={() => setExpandDeletedActivities(prev => !prev)}
+                        onClick={() => setExpandArchivedActivities(prev => !prev)}
                     />
                 </div>
                 <HSeparator className="mb-2" />
 
-                <div className="flex flex-col gap-5">
-                    {deletedActivities.length === 0
-                        ? <p className="text-gray-500 text-sm">No hay actividades eliminadas.</p>
-                        : deletedActivities.map(activity => (
+                {/* Archived activities */}
+                <div className="flex flex-col gap-2">
+                    {archivedActivities.length === 0
+                        ? <p className="text-gray-500 text-sm">No hay actividades archivadas.</p>
+                        : archivedActivities.map(activity => (
                             <Activity
                                 key={activity.id}
                                 activity={activity}
-                                onActivityChange={() => { }}
-                                readOnly
+                                onActivityChange={act => {
+                                    // if it was deleted and now is not (restored)
+                                    if (activity.isDeleted && !act.isDeleted) {
+                                        handleRestoreActivity(act.id);
+                                    }
+                                    // otherwise, just update the tracks, they can be restored
+                                    else {
+                                        handleSetActivityTracks(act.id, act.tracks);
+                                    }
+                                }}
+                                allowedActions={canRestore ? ["restore"] : "none"}
+                                showArchivedTracks
                             />
                         ))
                     }

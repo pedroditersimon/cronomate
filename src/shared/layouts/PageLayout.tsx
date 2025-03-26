@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, SettingsIcon, InboxStackIcon, ChartPieIcon, CalendarIcon } from "src/shared/assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon, ChartPieIcon, CalendarIcon, PresentationChartLineIcon, LineChartFillIcon, ChartNoAxesCombinedIcon, ChartLineIcon } from "src/shared/assets/Icons";
 import Sidebar from "./Sidebar";
 
 
@@ -23,7 +23,7 @@ export default function PageLayout({ children }: PropsWithChildren) {
                         {
                             to: "/performance",
                             text: "Rendimiento",
-                            icon: <ChartPieIcon />
+                            icon: <ChartNoAxesCombinedIcon />
                         },
                         {
                             to: "/history",

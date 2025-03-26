@@ -24,8 +24,6 @@ Por ejemplo si ponemos fin de jornada para mas adelante y todavia es temprano.
 si poner un endoverride alas 13, pero tu actividad termino mas adelante como a las 13.10.
 ese 10min, no se muestra en el timer de arriba
 
-En duracion de los settings de joranda, poner el mismo formato de (14h 22m) las activities
-
 Para el activiyCreator, hacer un componente desde cero, ya que tiene cosas que no van como el boton de borrado.
 
 las rows de la tabla de actividaes se pueden arrastrar y organizar
@@ -44,7 +42,7 @@ Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como 
 Por defecto, manetner las actividades colapsadas (cerradas) para no mostrar tanta info.
 Si la actividad esta colapsada, no mostrar el horizontal separator
 
-Agregar icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint. Y eliminar el hint de abajo.
+Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
 
 ## Generales
 
@@ -58,6 +56,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 -   [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
 -   [ ] Que se pueda transferir los datos entre aplicaciones en diferentes dominios
 -   [x] Hacer una carpeta para mocks dentro de las features.
+-   [x] Icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint.
 
 #### Vista jornada
 
@@ -80,15 +79,15 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 -   [ ] Las actividades se ordenan por startTime
 -   [ ] Animacion al ordenar actividades
 -   [ ] El activity de pausas debe estar siempre a lo ultimo
--   [ ] Panel ajustes de jornada.
+-   [x] Panel ajustes de jornada.
     -   [x] Se abre en una ruedita de configuración del container del `todayActivity`.
     -   [x] Listar activities eliminadas.
-    -   [ ] Opción de restaurar activities eliminadas.
+    -   [x] Opción de restaurar activities eliminadas.
     -   [x] Toggle para auto-stop, unicamente para este today.
     -   [x] TimeInput para inicio y fin de jornada.
     -   [x] Guardar los ajustes en localStorage, y cargar siempre esos.
     -   [x] Aplicar configuracion en el workSession.
--   [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
+-   [ ] Oculta las **activities** eliminadas **luego** de la animacion de tachado.
 -   [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 -   [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 -   [x] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
@@ -100,6 +99,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
     -   [x] Agregar una checkbox para activar esta feature.
 -   [x] Al crear una nueva actividad, se haga stop de todas y se de play solo a esa.
 -   [x] Agilizar crear actividades, al tipear en el teclado, te lo escribe en el placeholder
+-   [x] En duracion de los settings de joranda, poner el mismo formato de (14h 22m) las activities
 
 #### Vista tabla
 
@@ -113,6 +113,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
 -   [x] Redondear el tiempo para arriba a 2 digitos despues del cero
 -   [x] toggle para incluir "Pausas".
 -   [x] toggle para incluir "Sin actividad".
+-   [ ] Filtrar Actividades archivadas o que su duracion total sea 0
 
 #### Actividad (Activity)
 
@@ -129,7 +130,7 @@ Agregar icono de signo de pregunta en los formFields que salga un tooltip mostra
         -   [ ] Crear el botón en el panel de detalles.
         -   [ ] Marcar como `eliminadas` en lugar de borrarlas.
         -   [ ] Aparecen dentro de un panel en la jornada.
--   [ ] Oculta las entradas eliminadas **luego** de la animacion de tachado.
+-   [ ] Oculta las **entradas** eliminadas **luego** de la animacion de tachado.
 -   [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
 -   [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 -   [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.
