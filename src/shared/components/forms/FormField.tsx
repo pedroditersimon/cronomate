@@ -27,17 +27,17 @@ interface Props extends PropsWithChildren {
 export default function FormField({ title, show = true, className, hint, tooltip, children }: Props) {
 
     return (
-        <div className={clsx("flex flex-col gap-1 mb-1 w-full tooltip", className,
+        <div className={clsx("flex flex-col gap-1 mb-1 w-full", className,
             { "hidden": !show }
         )}>
 
             {/* Title */}
             <div className="flex items-center justify-between">
-                <p className="text-gray-400 font-semibold">{title}</p>
+                <p className="flex-1 text-gray-400 font-semibold">{title}</p>
 
                 {tooltip && (tooltip.showOn ?? "icon") === "icon" && (
                     <Tooltip text={tooltip.text} position={tooltip.position || "bottom-end"}>
-                        <QuestionIcon className="size-6 text-gray-600" />
+                        <QuestionIcon className="size-6 text-gray-700 hover:text-gray-400" />
                     </Tooltip>
                 )}
             </div>

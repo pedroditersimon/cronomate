@@ -56,7 +56,7 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
 -   [x] Eliminar propiedad 'maxDurationMinutes' del timer de jornada, se calcula con el 'endTimeOverride'.
 -   [ ] Que se pueda transferir los datos entre aplicaciones en diferentes dominios
 -   [x] Hacer una carpeta para mocks dentro de las features.
--   [ ] Icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint. Y eliminar el hint de abajo.
+-   [x] Icono de signo de pregunta en los formFields que salga un tooltip mostrando el hint.
 
 #### Vista jornada
 
@@ -79,15 +79,15 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
 -   [ ] Las actividades se ordenan por startTime
 -   [ ] Animacion al ordenar actividades
 -   [ ] El activity de pausas debe estar siempre a lo ultimo
--   [ ] Panel ajustes de jornada.
+-   [x] Panel ajustes de jornada.
     -   [x] Se abre en una ruedita de configuración del container del `todayActivity`.
     -   [x] Listar activities eliminadas.
-    -   [ ] Opción de restaurar activities eliminadas.
+    -   [x] Opción de restaurar activities eliminadas.
     -   [x] Toggle para auto-stop, unicamente para este today.
     -   [x] TimeInput para inicio y fin de jornada.
     -   [x] Guardar los ajustes en localStorage, y cargar siempre esos.
     -   [x] Aplicar configuracion en el workSession.
--   [ ] Oculta las activities eliminadas **luego** de la animacion de tachado.
+-   [ ] Oculta las **activities** eliminadas **luego** de la animacion de tachado.
 -   [-] Hacer un div con overflow scroll para las actividades, sin incluir el activityCreator.
 -   [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 -   [x] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
@@ -113,6 +113,7 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
 -   [x] Redondear el tiempo para arriba a 2 digitos despues del cero
 -   [x] toggle para incluir "Pausas".
 -   [x] toggle para incluir "Sin actividad".
+-   [ ] Filtrar Actividades archivadas o que su duracion total sea 0
 
 #### Actividad (Activity)
 
@@ -129,7 +130,7 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
         -   [ ] Crear el botón en el panel de detalles.
         -   [ ] Marcar como `eliminadas` en lugar de borrarlas.
         -   [ ] Aparecen dentro de un panel en la jornada.
--   [ ] Oculta las entradas eliminadas **luego** de la animacion de tachado.
+-   [ ] Oculta las **entradas** eliminadas **luego** de la animacion de tachado.
 -   [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
 -   [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 -   [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.

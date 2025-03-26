@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon } from "src/shared/assets/Icons";
+import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon, UndoIcon } from "src/shared/assets/Icons";
 import { isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import { Activity as ActivityType } from "src/features/activity/types/Activity";
 import clsx from "clsx";
@@ -10,27 +10,37 @@ import timeTrackService from "src/features/time-track/services/timeTrackService"
 import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
-import ActivityTrack from "src/features/activity/components/ActivityTrack";
+import ActivityTrack, { TimeTrackActions } from "src/features/activity/components/ActivityTrack";
+import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
+
+export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
 interface Props {
     activity: ActivityType;
     onActivityChange: (newActivity: ActivityType) => void;
     onTitleConfirm?: (newTitle: string) => void;
 
-    showDeletedRecords?: boolean;
-    readOnly?: boolean;
+    showArchivedTracks?: boolean;
     selectTitleOnClick?: boolean;
+
+    allowedActions?: ActivityActions;
 }
 
 export type ActivityHandle = {
     focusTitle: () => void;
 };
 
-const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange, onTitleConfirm, showDeletedRecords, readOnly, selectTitleOnClick }, ref) => {
+const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange, onTitleConfirm, showArchivedTracks, selectTitleOnClick, allowedActions = "all", }, ref) => {
     // local states
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
+
+    // Allowed actions
+    const canEdit = isActionAllowed(allowedActions, "edit");
+    const canArchive = isActionAllowed(allowedActions, "archive");
+    const canRestore = isActionAllowed(allowedActions, "restore");
+    const tracksAllowedActions: TimeTrackActions = allowedActions;
 
     useImperativeHandle(ref, () => ({
         focusTitle: () => {
@@ -111,6 +121,12 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
         });
     }
 
+    const handleUndoArchive = () => {
+        onActivityChange({
+            ...activity,
+            isDeleted: false,
+        });
+    };
 
     const handleSetCollapsed = (isCollapsed: boolean) => {
         onActivityChange({
@@ -119,10 +135,10 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
         });
     }
 
-
     return (
-        <div className="flex flex-col gap-1 min-w-80">
+        <div className="flex flex-col gap-1 min-w-80"  >
             <div className="flex flex-row gap-1">
+                {/* Collapse btn */}
                 <Clickable
                     className="hover:bg-gray-700"
                     onClick={() => handleSetCollapsed(!activity.isCollapsed)}
@@ -130,25 +146,29 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                         ? <ChevronRightIcon />
                         : <ChevronDownIcon />}
                 />
+
+                {/* Title input */}
                 <div
-                    className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-colors", {
+                    className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-all duration-300", {
                         "bg-red-400": hasRunningRecords,
                         "bg-gray-700": focused,
-                        "hover:bg-gray-700": !hasRunningRecords && !readOnly,
+                        "hover:bg-gray-700": canEdit && !hasRunningRecords,
+                        "strike-div": activity.isDeleted
                     })}
                 >
                     <input
                         ref={inputRef}
-                        className="bg-transparent outline-none mr-auto basis-1/2 "
+                        className={clsx("bg-transparent outline-none mr-auto basis-1/2 group",
+                            { "opacity-50": activity.isDeleted })}
                         placeholder={activity.title}
                         value={title}
-                        readOnly={readOnly}
+                        readOnly={!canEdit}
                         onChange={e => {
-                            if (readOnly) return;
+                            if (!canEdit) return;
                             setTitle(e.target.value);
                         }}
                         onFocus={() => {
-                            if (readOnly) return;
+                            if (!canEdit) return;
                             setFocused(true);
                         }}
 
@@ -158,12 +178,12 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
 
                         // on confirm input
                         onBlur={() => {
-                            if (readOnly) return;
+                            if (!canEdit) return;
                             setFocused(false);
                             handleSetTitle(title);
                         }}
                         onKeyUp={e => {
-                            if (readOnly) return;
+                            if (!canEdit) return;
                             if (e.key === "Enter") {
                                 e.currentTarget.blur();
                                 if (onTitleConfirm) setTimeout(() => onTitleConfirm(title), 50);
@@ -179,14 +199,14 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                             }
                         }}
                     />
-                    <span className={clsx({ "pr-1": readOnly })} >
+                    <span className={clsx({ "pr-1": !canEdit })} >
                         {totalElapsedTimeTxt}
                     </span>
 
                     {/* Delete activity btn */}
-                    {!readOnly &&
+                    {canArchive &&
                         <Clickable
-                            className="hidden group-hover:block"
+                            className="hidden group-hover:block opacity-100"
                             children={
                                 <TrashIcon
                                     className={clsx("hover:bg-red-400",
@@ -197,8 +217,18 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                         />
                     }
 
+                    {/* Restore btn */}
+                    {canRestore && activity.isDeleted &&
+                        <Clickable
+                            className="hidden group-hover:block"
+                            children={<UndoIcon className="hover:bg-red-400 size-5" />}
+                            onClick={handleUndoArchive}
+                            tooltip={{ text: "Restaurar" }}
+                        />
+                    }
+
                     {/* Play/Stop activity btn */}
-                    {!readOnly &&
+                    {canEdit &&
                         <Clickable
                             onClick={handleRun}
                             children={hasRunningRecords
@@ -211,16 +241,18 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
             </div>
 
             <HSeparator />
+
+            {/* Track list */}
             <div className="flex flex-col gap-1 ml-6">
                 {activity.tracks.map((track, i) => {
-                    if (track.status === TimeTrackStatus.ARCHIVED && !showDeletedRecords && !readOnly) return;
-                    if (track.status === TimeTrackStatus.STOPPED && activity.isCollapsed && !readOnly) return;
+                    if (!showArchivedTracks && track.status === TimeTrackStatus.ARCHIVED) return;
+                    if (activity.isCollapsed && track.status !== TimeTrackStatus.RUNNING) return;
                     return (<>
                         <ActivityTrack
                             key={track.id}
                             track={track}
                             onChange={handleSetTrack}
-                            readOnly={readOnly}
+                            allowedActions={tracksAllowedActions}
                         />
                         {i < activity.tracks.length - 1 && <HSeparator />}
                     </>)
