@@ -23,7 +23,12 @@ export function SessionHistoryDetailPage() {
             <WorkSessionComponent
                 session={selectedSession}
                 onSessionChange={() => { }}
-                allowedActions="none"
+
+                // Disable all actions
+                canEdit={false}
+                canCreate={false}
+                canArchive={false}
+                canRestore={false}
             />
         </PageLayout>
     );

@@ -15,8 +15,6 @@ import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTim
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import Activity from "src/features/activity/components/Activity";
 import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
-import { WorkSessionActions } from "src/features/work-session/components/WorkSession";
-import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
 import activityService from "src/features/activity/services/activityService";
 
 
@@ -30,11 +28,25 @@ interface Props {
     inAboveContent?: ReactNode;
     inBelowContent?: ReactNode;
 
-    allowedActions?: WorkSessionActions;
+    // Allowed actions
+    canEdit?: boolean;
+    canRestore?: boolean;
 }
 
 
-export default function WorkSessionSettings({ session, onSessionChange, onClose, allowedActions = "all", inAboveContent, inBelowContent }: Props) {
+export default function WorkSessionSettings({
+    session,
+    onSessionChange,
+    onClose,
+
+    // Content projection
+    inAboveContent,
+    inBelowContent,
+
+    // Allowed actions
+    canEdit = true,
+    canRestore = true,
+}: Props) {
     const [expandArchivedActivities, setExpandArchivedActivities] = useState(false);
 
     const sessionHasActivities = session.activities.length > 0;
@@ -49,10 +61,6 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
         const timerDurationStr = convertElapsedTimeToText(timerDurationMillis) ?? "-";
         return [archivedActivities, timerDurationStr];
     }, [expandArchivedActivities, session.timer, session.activities]);
-
-    // Allowed actions
-    const canEdit = isActionAllowed(allowedActions, "edit");
-    const canRestore = isActionAllowed(allowedActions, "restore");
 
     const handleChangeTimer = (newTimer: WorkSessionTimer) => {
         onSessionChange({
@@ -161,6 +169,7 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                     <Clickable className="p-0 hover:bg-gray-700"
                         children={<ChevronVerticalIcon />}
                         onClick={() => setExpandArchivedActivities(prev => !prev)}
+                        tooltip={{ text: "Expandir", position: "left" }}
                     />
                 </div>
                 <HSeparator className="mb-2" />
@@ -183,8 +192,11 @@ export default function WorkSessionSettings({ session, onSessionChange, onClose,
                                         handleSetActivityTracks(act.id, act.tracks);
                                     }
                                 }}
-                                allowedActions={canRestore ? ["restore"] : "none"}
                                 showArchivedTracks
+
+                                canRestore={canRestore}
+                                canArchive={false}
+                                canEdit={false}
                             />
                         ))
                     }

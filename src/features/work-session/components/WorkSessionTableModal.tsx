@@ -107,7 +107,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             closeOnClickOut
         >
             <div className="size-full mr-4 overflow-y-auto overflow-x-hidden _text-sm">
-                <table>
+                <table className="w-full">
                     <thead>
                         <tr className="text-neutral-300 text-left border-b border-neutral-800">
                             {includeDateCol && (

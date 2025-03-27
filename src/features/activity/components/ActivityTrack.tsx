@@ -5,18 +5,28 @@ import clsx from "clsx";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
-import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
 
-export type TimeTrackActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
 interface Props {
     track: TimeTrack;
     onChange: (newTimer: TimeTrack) => void;
-    allowedActions?: TimeTrackActions;
+
+    // Allowed actions
+    canEdit?: boolean;
+    canArchive?: boolean;
+    canRestore?: boolean;
 }
 
 
-export default function ActivityTrack({ track, onChange, allowedActions = "all" }: Props) {
+export default function ActivityTrack({
+    track,
+    onChange,
+
+    // Allowed actions
+    canEdit = true,
+    canArchive = true,
+    canRestore = true
+}: Props) {
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
@@ -36,11 +46,6 @@ export default function ActivityTrack({ track, onChange, allowedActions = "all" 
             status: TimeTrackStatus.ARCHIVED,
         });
     }
-
-    // Allowed actions
-    const canEdit = isActionAllowed(allowedActions, "edit");
-    const canArchive = isActionAllowed(allowedActions, "archive");
-    const canRestore = isActionAllowed(allowedActions, "restore");
 
     const handleUndoArchive = () => {
         if (track.status !== TimeTrackStatus.ARCHIVED)
@@ -111,7 +116,7 @@ export default function ActivityTrack({ track, onChange, allowedActions = "all" 
                     className="hidden group-hover:block"
                     children={<TrashIcon className="hover:bg-red-400 size-5" />}
                     onClick={handleArchive}
-                    tooltip={{ text: "Archivar" }}
+                    tooltip={{ text: "Archivar", position: "left" }}
                 />
             }
 
@@ -121,7 +126,7 @@ export default function ActivityTrack({ track, onChange, allowedActions = "all" 
                     className="hidden group-hover:block"
                     children={<UndoIcon className="hover:bg-red-400 size-5" />}
                     onClick={handleUndoArchive}
-                    tooltip={{ text: "Restaurar" }}
+                    tooltip={{ text: "Restaurar", position: "left" }}
                 />
             }
 

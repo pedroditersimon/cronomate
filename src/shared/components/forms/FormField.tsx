@@ -36,7 +36,7 @@ export default function FormField({ title, show = true, className, hint, tooltip
                 <p className="flex-1 text-gray-400 font-semibold">{title}</p>
 
                 {tooltip && (tooltip.showOn ?? "icon") === "icon" && (
-                    <Tooltip text={tooltip.text} position={tooltip.position || "bottom-end"}>
+                    <Tooltip text={tooltip.text} position={tooltip.position || "left"} showDelayMs={150}>
                         <QuestionIcon className="size-6 text-gray-700 hover:text-gray-400" />
                     </Tooltip>
                 )}

@@ -15,9 +15,8 @@ import workSessionService from "src/features/work-session/services/workSessionSe
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
-import ActivityComponent, { ActivityActions } from "src/features/activity/components/Activity";
+import ActivityComponent from "src/features/activity/components/Activity";
 import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
-import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
 
 export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
@@ -29,11 +28,26 @@ interface Props {
     inAboveSettings?: ReactNode;
     inBelowSettings?: ReactNode;
 
-    allowedActions?: WorkSessionActions;
+    // Allowed actions
+    canEdit?: boolean;
+    canCreate?: boolean;
+    canArchive?: boolean;
+    canRestore?: boolean;
 }
 
 
-export default function WorkSession({ session, onSessionChange, allowedActions = "all", inAboveSettings, inBelowSettings }: Props) {
+export default function WorkSession({
+    session,
+    onSessionChange,
+    inAboveSettings,
+    inBelowSettings,
+
+    // Allowed actions
+    canEdit = true,
+    canCreate = true,
+    canArchive = true,
+    canRestore = true,
+}: Props) {
     const [showSettings, setShowSettings] = useState(false);
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
@@ -46,14 +60,6 @@ export default function WorkSession({ session, onSessionChange, allowedActions =
     untrackedActivity.isCollapsed = untrackedActIsCollapsed;
 
     const unarchivedActivities = session.activities.filter(act => !act.isDeleted && activityService.hasUnarchivedTracks(act));
-
-    // Allowed actions
-    const canEdit = isActionAllowed(allowedActions, "edit");
-    const canCreate = isActionAllowed(allowedActions, "create");
-    // const canArchive = isActionAllowed(allowedActions, "archive");
-    // const canRestore = isActionAllowed(allowedActions, "restore");
-    const activitiesAllowedActions = allowedActions as ActivityActions;
-
 
     function addRecordToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
         // get a copy of current
@@ -98,11 +104,11 @@ export default function WorkSession({ session, onSessionChange, allowedActions =
         // Play timer
 
         // not first time, add a pause
-        if (_session.timer.start) {
+        if (_session.timer.start && session.timer.end !== null) {
             _session = addRecordToPauseActivity(_session,
                 {
                     id: generateId(),
-                    start: _session.timer.end ?? now,
+                    start: _session.timer.end!,
                     end: now,
                     status: TimeTrackStatus.STOPPED
                 }
@@ -194,10 +200,14 @@ export default function WorkSession({ session, onSessionChange, allowedActions =
                     session={session}
                     onSessionChange={onSessionChange}
                     onClose={() => setShowSettings(false)}
-                    allowedActions={allowedActions}
 
-                    inAboveContent={inAboveSettings}  // Content projection
+                    // Content projection
+                    inAboveContent={inAboveSettings}
                     inBelowContent={inBelowSettings}
+
+                    // Allowed actions
+                    canEdit={canEdit}
+                    canRestore={canRestore}
                 />
             </ContainerOverlay>
 
@@ -223,23 +233,32 @@ export default function WorkSession({ session, onSessionChange, allowedActions =
                 <ActivityCreator onCreate={handleCreateNewActivityWithState} />
             }
 
-            { // Activities list
-                unarchivedActivities.map(activity => (
-                    <ActivityComponent
-                        key={activity.id}
-                        activity={activity}
-                        onActivityChange={handleSetActivityWithState}
-                        allowedActions={activitiesAllowedActions}
-                    />
-                ))
-            }
+            <div className="flex flex-col gap-2">
+                { // Activities list
+                    unarchivedActivities.map(activity => (
+                        <ActivityComponent
+                            key={activity.id}
+                            activity={activity}
+                            onActivityChange={handleSetActivityWithState}
+
+                            canEdit={canEdit}
+                            canArchive={canArchive}
+                            canRestore={canRestore}
+                        />
+                    ))
+                }
+            </div>
 
             {untrackedActivity.tracks.length > 0 && // show only if has records
                 <ActivityComponent
                     key={untrackedActivity.id}
                     activity={untrackedActivity}
                     onActivityChange={newActivity => setUntrackedActIsCollapsed(newActivity.isCollapsed ?? false)}
-                    allowedActions="none"
+
+                    // disable actions on untrackedActivity
+                    canEdit={false}
+                    canArchive={false}
+                    canRestore={false}
                 />
             }
         </Container >

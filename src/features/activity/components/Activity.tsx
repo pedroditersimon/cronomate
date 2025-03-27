@@ -10,8 +10,7 @@ import timeTrackService from "src/features/time-track/services/timeTrackService"
 import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
-import ActivityTrack, { TimeTrackActions } from "src/features/activity/components/ActivityTrack";
-import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
+import ActivityTrack from "src/features/activity/components/ActivityTrack";
 
 export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
@@ -23,24 +22,33 @@ interface Props {
     showArchivedTracks?: boolean;
     selectTitleOnClick?: boolean;
 
-    allowedActions?: ActivityActions;
+    // Allowed actions
+    canEdit?: boolean;
+    canArchive?: boolean;
+    canRestore?: boolean;
 }
 
 export type ActivityHandle = {
     focusTitle: () => void;
 };
 
-const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange, onTitleConfirm, showArchivedTracks, selectTitleOnClick, allowedActions = "all", }, ref) => {
+const Activity = forwardRef<ActivityHandle, Props>(({
+    activity,
+    onActivityChange,
+    onTitleConfirm,
+    showArchivedTracks,
+    selectTitleOnClick,
+
+    // Allowed actions
+    canEdit = true,
+    canArchive = true,
+    canRestore = true
+}, ref) => {
     // local states
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
-
-    // Allowed actions
-    const canEdit = isActionAllowed(allowedActions, "edit");
-    const canArchive = isActionAllowed(allowedActions, "archive");
-    const canRestore = isActionAllowed(allowedActions, "restore");
-    const tracksAllowedActions: TimeTrackActions = allowedActions;
+    const [isExpanded, setIsExpanded] = useState(false);
 
     useImperativeHandle(ref, () => ({
         focusTitle: () => {
@@ -56,21 +64,21 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
 
 
     // calculated states
-    const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {
+    const [hasRunningTracks, totalElapsedTimeTxt] = useMemo(() => {
 
         const totalElapsedTime = timeTrackService.getAllElapsedTime(activity.tracks);
         const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
 
-        const hasRunningRecords = activityService.hasRunningTracks(activity);
+        const hasRunningTracks = activityService.hasRunningTracks(activity);
 
-        return [hasRunningRecords, totalElapsedTimeTxt];
+        return [hasRunningTracks, totalElapsedTimeTxt];
     }, [activity]);
 
 
     const handleRun = () => {
         const now = toDate().getTime();
 
-        if (hasRunningRecords) {
+        if (hasRunningTracks) {
             // set endTime to Now on running tracks
             const newTracks = activity.tracks.map(track => track.status === TimeTrackStatus.RUNNING
                 ? { ...track, endTime: now, status: TimeTrackStatus.STOPPED }
@@ -128,31 +136,24 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
         });
     };
 
-    const handleSetCollapsed = (isCollapsed: boolean) => {
-        onActivityChange({
-            ...activity,
-            isCollapsed: isCollapsed,
-        });
-    }
-
     return (
         <div className="flex flex-col gap-1 min-w-80"  >
             <div className="flex flex-row gap-1">
                 {/* Collapse btn */}
                 <Clickable
                     className="hover:bg-gray-700"
-                    onClick={() => handleSetCollapsed(!activity.isCollapsed)}
-                    children={activity.isCollapsed
-                        ? <ChevronRightIcon />
-                        : <ChevronDownIcon />}
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    children={isExpanded
+                        ? <ChevronDownIcon />
+                        : <ChevronRightIcon />}
                 />
 
                 {/* Title input */}
                 <div
                     className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-all duration-300", {
-                        "bg-red-400": hasRunningRecords,
+                        "bg-red-400": hasRunningTracks,
                         "bg-gray-700": focused,
-                        "hover:bg-gray-700": canEdit && !hasRunningRecords,
+                        "hover:bg-gray-700": canEdit && !hasRunningTracks,
                         "strike-div": activity.isDeleted
                     })}
                 >
@@ -203,17 +204,18 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                         {totalElapsedTimeTxt}
                     </span>
 
-                    {/* Delete activity btn */}
+                    {/* Archive activity btn */}
                     {canArchive &&
                         <Clickable
                             className="hidden group-hover:block opacity-100"
                             children={
                                 <TrashIcon
-                                    className={clsx("hover:bg-red-400",
-                                        { "hover:bg-white hover:text-red-400": hasRunningRecords })}
+                                    className={clsx("hover:bg-red-400 size-5",
+                                        { "hover:bg-white hover:text-red-400": hasRunningTracks })}
                                 />
                             }
                             onClick={handleDelete}
+                            tooltip={{ text: "Archivar", position: "left" }}
                         />
                     }
 
@@ -223,7 +225,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                             className="hidden group-hover:block"
                             children={<UndoIcon className="hover:bg-red-400 size-5" />}
                             onClick={handleUndoArchive}
-                            tooltip={{ text: "Restaurar" }}
+                            tooltip={{ text: "Restaurar", position: "left" }}
                         />
                     }
 
@@ -231,7 +233,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                     {canEdit &&
                         <Clickable
                             onClick={handleRun}
-                            children={hasRunningRecords
+                            children={hasRunningTracks
                                 ? <StopIcon className="hover:bg-white hover:text-red-400" />
                                 : <PlayIcon className="hover:bg-red-400" />}
                         />
@@ -240,19 +242,24 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                 </div>
             </div>
 
+
             <HSeparator />
+
 
             {/* Track list */}
             <div className="flex flex-col gap-1 ml-6">
                 {activity.tracks.map((track, i) => {
                     if (!showArchivedTracks && track.status === TimeTrackStatus.ARCHIVED) return;
-                    if (activity.isCollapsed && track.status !== TimeTrackStatus.RUNNING) return;
+                    if (!isExpanded && track.status !== TimeTrackStatus.RUNNING) return;
                     return (<>
                         <ActivityTrack
                             key={track.id}
                             track={track}
                             onChange={handleSetTrack}
-                            allowedActions={tracksAllowedActions}
+
+                            canEdit={canEdit}
+                            canArchive={canArchive}
+                            canRestore={canRestore}
                         />
                         {i < activity.tracks.length - 1 && <HSeparator />}
                     </>)
