@@ -48,6 +48,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
+    const [isExpanded, setIsExpanded] = useState(false);
 
     useImperativeHandle(ref, () => ({
         focusTitle: () => {
@@ -135,23 +136,16 @@ const Activity = forwardRef<ActivityHandle, Props>(({
         });
     };
 
-    const handleSetCollapsed = (isCollapsed: boolean) => {
-        onActivityChange({
-            ...activity,
-            isCollapsed: isCollapsed,
-        });
-    }
-
     return (
         <div className="flex flex-col gap-1 min-w-80"  >
             <div className="flex flex-row gap-1">
                 {/* Collapse btn */}
                 <Clickable
                     className="hover:bg-gray-700"
-                    onClick={() => handleSetCollapsed(!activity.isCollapsed)}
-                    children={activity.isCollapsed
-                        ? <ChevronRightIcon />
-                        : <ChevronDownIcon />}
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    children={isExpanded
+                        ? <ChevronDownIcon />
+                        : <ChevronRightIcon />}
                 />
 
                 {/* Title input */}
@@ -248,13 +242,15 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                 </div>
             </div>
 
+
             <HSeparator />
+
 
             {/* Track list */}
             <div className="flex flex-col gap-1 ml-6">
                 {activity.tracks.map((track, i) => {
                     if (!showArchivedTracks && track.status === TimeTrackStatus.ARCHIVED) return;
-                    if (activity.isCollapsed && track.status !== TimeTrackStatus.RUNNING) return;
+                    if (!isExpanded && track.status !== TimeTrackStatus.RUNNING) return;
                     return (<>
                         <ActivityTrack
                             key={track.id}

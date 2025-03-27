@@ -233,19 +233,21 @@ export default function WorkSession({
                 <ActivityCreator onCreate={handleCreateNewActivityWithState} />
             }
 
-            { // Activities list
-                unarchivedActivities.map(activity => (
-                    <ActivityComponent
-                        key={activity.id}
-                        activity={activity}
-                        onActivityChange={handleSetActivityWithState}
+            <div className="flex flex-col gap-2">
+                { // Activities list
+                    unarchivedActivities.map(activity => (
+                        <ActivityComponent
+                            key={activity.id}
+                            activity={activity}
+                            onActivityChange={handleSetActivityWithState}
 
-                        canEdit={canEdit}
-                        canArchive={canArchive}
-                        canRestore={canRestore}
-                    />
-                ))
-            }
+                            canEdit={canEdit}
+                            canArchive={canArchive}
+                            canRestore={canRestore}
+                        />
+                    ))
+                }
+            </div>
 
             {untrackedActivity.tracks.length > 0 && // show only if has records
                 <ActivityComponent
