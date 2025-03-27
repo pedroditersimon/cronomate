@@ -100,6 +100,7 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
 -   [x] Al crear una nueva actividad, se haga stop de todas y se de play solo a esa.
 -   [x] Agilizar crear actividades, al tipear en el teclado, te lo escribe en el placeholder
 -   [x] En duracion de los settings de joranda, poner el mismo formato de (14h 22m) las activities
+-   [x] Bug: Al crear primera actividad, aparece una pausa ???.
 
 #### Vista tabla
 

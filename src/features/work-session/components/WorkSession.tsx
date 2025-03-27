@@ -18,6 +18,7 @@ import ActivityCreator from "src/features/activity/components/ActivityCreator";
 import ActivityComponent, { ActivityActions } from "src/features/activity/components/Activity";
 import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
 import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
+import { DateTime } from "luxon";
 
 export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
@@ -98,11 +99,11 @@ export default function WorkSession({ session, onSessionChange, allowedActions =
         // Play timer
 
         // not first time, add a pause
-        if (_session.timer.start) {
+        if (_session.timer.start && session.timer.end !== null) {
             _session = addRecordToPauseActivity(_session,
                 {
                     id: generateId(),
-                    start: _session.timer.end ?? now,
+                    start: _session.timer.end!,
                     end: now,
                     status: TimeTrackStatus.STOPPED
                 }
