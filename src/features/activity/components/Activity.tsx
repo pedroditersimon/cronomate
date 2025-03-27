@@ -210,17 +210,18 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                         {totalElapsedTimeTxt}
                     </span>
 
-                    {/* Delete activity btn */}
+                    {/* Archive activity btn */}
                     {canArchive &&
                         <Clickable
                             className="hidden group-hover:block opacity-100"
                             children={
                                 <TrashIcon
-                                    className={clsx("hover:bg-red-400",
+                                    className={clsx("hover:bg-red-400 size-5",
                                         { "hover:bg-white hover:text-red-400": hasRunningRecords })}
                                 />
                             }
                             onClick={handleDelete}
+                            tooltip={{ text: "Archivar", position: "top-end" }}
                         />
                     }
 
@@ -230,7 +231,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                             className="hidden group-hover:block"
                             children={<UndoIcon className="hover:bg-red-400 size-5" />}
                             onClick={handleUndoArchive}
-                            tooltip={{ text: "Restaurar" }}
+                            tooltip={{ text: "Restaurar", position: "top-end" }}
                         />
                     }
 
