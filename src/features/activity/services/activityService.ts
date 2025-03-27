@@ -1,14 +1,24 @@
-
 import { Activity } from "src/features/activity/types/Activity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
 import { TimeTrack } from "src/features/time-track/types/TimeTrack";
 import { Result, ok } from "src/shared/types/Result";
 
 
-function add(list: Array<Activity>, activity: Activity): Array<Activity> {
-    // already exists!
+function add(list: Array<Activity>, activity: Activity, fusion: boolean = true): Array<Activity> {
+
+    // activity id already exists!
     if (list.some(item => item.id === activity.id)) {
         throw new Error(`The activity with ID ${activity.id} already exists.`);
+    }
+
+    // activity title already exists, fusion tracks
+    const matchedActivityTitle = list.find(item => item.title === activity.title);
+    if (matchedActivityTitle && fusion) {
+        return set(list, {
+            ...matchedActivityTitle,
+            // fusion tracks
+            tracks: [...matchedActivityTitle.tracks, ...activity.tracks]
+        });
     }
 
     return [...list, { ...activity }];

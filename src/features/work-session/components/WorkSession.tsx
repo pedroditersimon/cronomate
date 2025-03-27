@@ -49,17 +49,19 @@ export default function WorkSession({
     canRestore = true,
 }: Props) {
     const [showSettings, setShowSettings] = useState(false);
+    const [isActivityCreatorFocused, setIsActivityCreatorFocused] = useState(false);
 
     const title = formatDateToText(toDate(session.createdTimeStamp));
 
+    // Filter deleted activities and activities without tracks
+    const filteredActivities = session.activities.filter(act => !act.isDeleted && activityService.hasUnarchivedTracks(act));
+
     // Untracked Activity
     const sessionTimer = workSessionService.getTimerWithOverrides(session.timer);
-    const untrackedActivity = useUntrackedActivity(session.activities, sessionTimer);
+    const untrackedActivity = useUntrackedActivity(filteredActivities, sessionTimer);
     // local wrapper state for untrackedActivity.isCollapsed
     const [untrackedActIsCollapsed, setUntrackedActIsCollapsed] = useState(untrackedActivity.isCollapsed);
     untrackedActivity.isCollapsed = untrackedActIsCollapsed;
-
-    const unarchivedActivities = session.activities.filter(act => !act.isDeleted && activityService.hasUnarchivedTracks(act));
 
     function addRecordToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
         // get a copy of current
@@ -230,12 +232,19 @@ export default function WorkSession({
 
 
             {canCreate &&
-                <ActivityCreator onCreate={handleCreateNewActivityWithState} />
+                <ActivityCreator
+                    onCreate={handleCreateNewActivityWithState}
+                    onFocusChange={setIsActivityCreatorFocused}
+                />
             }
 
-            <div className="flex flex-col gap-2">
+            <div
+                className={clsx("flex flex-col gap-2",
+                    { "opacity-25": isActivityCreatorFocused }
+                )}
+            >
                 { // Activities list
-                    unarchivedActivities.map(activity => (
+                    filteredActivities.map(activity => (
                         <ActivityComponent
                             key={activity.id}
                             activity={activity}
@@ -251,6 +260,9 @@ export default function WorkSession({
 
             {untrackedActivity.tracks.length > 0 && // show only if has records
                 <ActivityComponent
+                    className={clsx(
+                        { "opacity-25": isActivityCreatorFocused }
+                    )}
                     key={untrackedActivity.id}
                     activity={untrackedActivity}
                     onActivityChange={newActivity => setUntrackedActIsCollapsed(newActivity.isCollapsed ?? false)}

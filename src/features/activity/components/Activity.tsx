@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState }
 import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon, UndoIcon } from "src/shared/assets/Icons";
 import { isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import { Activity as ActivityType } from "src/features/activity/types/Activity";
-import clsx from "clsx";
+import clsx, { ClassValue } from "clsx";
 import HSeparator from "src/shared/layouts/HSeparator";
 import { generateId } from "src/shared/utils/generateId";
 import { findLast } from "lodash";
@@ -11,16 +11,20 @@ import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import ActivityTrack from "src/features/activity/components/ActivityTrack";
+import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
 
 export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
 interface Props {
+    className?: ClassValue;
     activity: ActivityType;
     onActivityChange: (newActivity: ActivityType) => void;
     onTitleConfirm?: (newTitle: string) => void;
 
     showArchivedTracks?: boolean;
     selectTitleOnClick?: boolean;
+
+    isExpanded?: boolean;
 
     // Allowed actions
     canEdit?: boolean;
@@ -33,11 +37,14 @@ export type ActivityHandle = {
 };
 
 const Activity = forwardRef<ActivityHandle, Props>(({
+    className,
     activity,
     onActivityChange,
     onTitleConfirm,
     showArchivedTracks,
     selectTitleOnClick,
+
+    isExpanded: _isExpanded = false,
 
     // Allowed actions
     canEdit = true,
@@ -48,7 +55,10 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(_isExpanded);
+
+    // sync isExpanded with prop
+    useEffect(() => setIsExpanded(_isExpanded), [_isExpanded]);
 
     useImperativeHandle(ref, () => ({
         focusTitle: () => {
@@ -137,12 +147,12 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     };
 
     return (
-        <div className="flex flex-col gap-1 min-w-80"  >
+        <div className={clsx("flex flex-col gap-1 min-w-80", className)}  >
             <div className="flex flex-row gap-1">
                 {/* Collapse btn */}
                 <Clickable
                     className="hover:bg-gray-700"
-                    onClick={() => setIsExpanded(!isExpanded)}
+                    onClick={() => setIsExpanded(prev => !prev)}
                     children={isExpanded
                         ? <ChevronDownIcon />
                         : <ChevronRightIcon />}
@@ -205,7 +215,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                     </span>
 
                     {/* Archive activity btn */}
-                    {canArchive &&
+                    {canArchive && activity.id !== pauseActivityMock.id &&
                         <Clickable
                             className="hidden group-hover:block opacity-100"
                             children={

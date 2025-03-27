@@ -10,19 +10,31 @@ import { newActivityMock } from "src/features/activity/mocks/newActivityMock";
 
 interface Props {
     onCreate: (newActivity: Activity) => void;
+    onFocusChange?: (focus: boolean) => void;
 }
 
 
-export default function ActivityCreator({ onCreate }: Props) {
+export default function ActivityCreator({ onCreate, onFocusChange }: Props) {
     // local states
     const activityRef = useRef<ActivityHandle | null>(null);
     const [activity, setActivity] = useState<Activity>(newActivityMock);
-    const [focused, setFocused] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
+
+    const handleSetFocus = (focus: boolean) => {
+        // Colapsar segun el focus
+        setActivity({
+            ...activity,
+            isCollapsed: !focus
+        });
+
+        setIsFocused(focus);
+        if (onFocusChange) onFocusChange(focus);
+    }
 
     // Focus on keyboard typing
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
-            if (focused) return; // Already focused
+            if (isFocused) return; // Already focused
             if (document.activeElement !== document.body) return; // Ignore if focusing other element
             if (e.ctrlKey || e.altKey || e.metaKey) return; // Ignore if modifier keys
             if (e.key.length > 1) return; // Ignore special keys
@@ -32,7 +44,7 @@ export default function ActivityCreator({ onCreate }: Props) {
                 ...activity,
                 title: e.key
             });
-            setFocused(true);
+            handleSetFocus(true);
             activityRef.current?.focusTitle();
         };
 
@@ -105,22 +117,11 @@ export default function ActivityCreator({ onCreate }: Props) {
     }
 
 
-    const handleSetFocus = (focus: boolean) => {
-        setFocused(focus);
-
-        // Colapsar segun el focus
-        setActivity({
-            ...activity,
-            isCollapsed: !focus
-        });
-    }
-
-
     return (
         <div
             className={clsx("transition-opacity", {
-                "opacity-25": !focused && !hasChanges,
-                "opacity-100": focused || hasChanges
+                "opacity-25": !isFocused && !hasChanges,
+                "opacity-100": isFocused || hasChanges
             })}
             onFocus={() => handleSetFocus(true)}
             onBlur={() => handleSetFocus(false)}
@@ -132,6 +133,8 @@ export default function ActivityCreator({ onCreate }: Props) {
                 onActivityChange={handleSetActivity}
                 onTitleConfirm={handleOnTitleConfirm}
                 selectTitleOnClick
+
+                isExpanded={isFocused}
 
                 canEdit={true} // Edit only
                 canArchive={false}

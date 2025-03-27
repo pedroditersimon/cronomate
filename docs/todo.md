@@ -24,8 +24,6 @@ Por ejemplo si ponemos fin de jornada para mas adelante y todavia es temprano.
 si poner un endoverride alas 13, pero tu actividad termino mas adelante como a las 13.10.
 ese 10min, no se muestra en el timer de arriba
 
-Para el activiyCreator, hacer un componente desde cero, ya que tiene cosas que no van como el boton de borrado.
-
 las rows de la tabla de actividaes se pueden arrastrar y organizar
 
 columna de nombre de proyecto.
@@ -38,9 +36,6 @@ si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo 
 
 Si pones un fin de joranda, se calcula "no categirzada" de toda la jornada futurua.
 Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como "no categorizada"
-
-Por defecto, manetner las actividades colapsadas (cerradas) para no mostrar tanta info.
-Si la actividad esta colapsada, no mostrar el horizontal separator
 
 Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
 
@@ -92,7 +87,7 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
 -   [x] Implementar una notificación visual (texto con ícono y animación en el contenedor) que indique cuándo se realiza un guardado explícito (no automáticos).
 -   [x] Stop-timer automático al finalizar la jornada laboral, si se establece. el auto-stop puede modificarse en la config del "Today".
 -   [ ] Cinco minutos antes del auto-stop, mostrar una advertencia en pantalla con un sonido de alerta, dando la opción de cancelar el auto-stop.
--   [ ] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
+-   [-] El inicio de la primer tarea que creas de un session sera el inicio de la joranda, Solo al principio.
 -   [x] Opciones de today settings en orden de frecuencia de uso
 -   [x] Persistir el override de inicio y fin. Persiste la que pongas sino, se borra en cada nueva jornada.
     -   [x] Agregar una config en slice.
@@ -133,8 +128,8 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
         -   [ ] Marcar como `eliminadas` en lugar de borrarlas.
         -   [ ] Aparecen dentro de un panel en la jornada.
 -   [ ] Oculta las **entradas** eliminadas **luego** de la animacion de tachado.
--   [ ] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
--   [ ] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
+-   [x] Ocultar las actividades que no tienen entradas o todas estan eliminadas.
+-   [x] al crear una actividad con el mismo nombre de una existe, agrega una entrada a la existente.
 -   [ ] Agregar un pequeño gap entre el titulo y el tiempo transcurrido.
 -   [ ] En actividad "sin registrar, debe funcionar con el endDate del session timer unicamente con el tiempo pasado o now.
 -   [x] Cambiar titulo y descripcion de "unrecordedActivity" a una mas adecuada.
@@ -160,7 +155,7 @@ Agregar sonidos a los toasts de sonner, un sonido para success, otr para error e
 -   [x] Agrupar sessiones por semana pasada, mes
 -   [ ] Se podria implementar una vista calendario, alternativa a la listada
 -   [x] Habilitar Settings en modo readonly
--   [ ] Boton para descargar el historial en un .json
+-   [x] Boton para descargar el historial en un .json
 
 #### Sidebar
 
