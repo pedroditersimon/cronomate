@@ -63,21 +63,21 @@ const Activity = forwardRef<ActivityHandle, Props>(({
 
 
     // calculated states
-    const [hasRunningRecords, totalElapsedTimeTxt] = useMemo(() => {
+    const [hasRunningTracks, totalElapsedTimeTxt] = useMemo(() => {
 
         const totalElapsedTime = timeTrackService.getAllElapsedTime(activity.tracks);
         const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
 
-        const hasRunningRecords = activityService.hasRunningTracks(activity);
+        const hasRunningTracks = activityService.hasRunningTracks(activity);
 
-        return [hasRunningRecords, totalElapsedTimeTxt];
+        return [hasRunningTracks, totalElapsedTimeTxt];
     }, [activity]);
 
 
     const handleRun = () => {
         const now = toDate().getTime();
 
-        if (hasRunningRecords) {
+        if (hasRunningTracks) {
             // set endTime to Now on running tracks
             const newTracks = activity.tracks.map(track => track.status === TimeTrackStatus.RUNNING
                 ? { ...track, endTime: now, status: TimeTrackStatus.STOPPED }
@@ -157,9 +157,9 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                 {/* Title input */}
                 <div
                     className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-all duration-300", {
-                        "bg-red-400": hasRunningRecords,
+                        "bg-red-400": hasRunningTracks,
                         "bg-gray-700": focused,
-                        "hover:bg-gray-700": canEdit && !hasRunningRecords,
+                        "hover:bg-gray-700": canEdit && !hasRunningTracks,
                         "strike-div": activity.isDeleted
                     })}
                 >
@@ -217,11 +217,11 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                             children={
                                 <TrashIcon
                                     className={clsx("hover:bg-red-400 size-5",
-                                        { "hover:bg-white hover:text-red-400": hasRunningRecords })}
+                                        { "hover:bg-white hover:text-red-400": hasRunningTracks })}
                                 />
                             }
                             onClick={handleDelete}
-                            tooltip={{ text: "Archivar", position: "top-end" }}
+                            tooltip={{ text: "Archivar", position: "left" }}
                         />
                     }
 
@@ -231,7 +231,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                             className="hidden group-hover:block"
                             children={<UndoIcon className="hover:bg-red-400 size-5" />}
                             onClick={handleUndoArchive}
-                            tooltip={{ text: "Restaurar", position: "top-end" }}
+                            tooltip={{ text: "Restaurar", position: "left" }}
                         />
                     }
 
@@ -239,7 +239,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                     {canEdit &&
                         <Clickable
                             onClick={handleRun}
-                            children={hasRunningRecords
+                            children={hasRunningTracks
                                 ? <StopIcon className="hover:bg-white hover:text-red-400" />
                                 : <PlayIcon className="hover:bg-red-400" />}
                         />

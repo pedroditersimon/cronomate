@@ -116,7 +116,7 @@ export default function ActivityTrack({
                     className="hidden group-hover:block"
                     children={<TrashIcon className="hover:bg-red-400 size-5" />}
                     onClick={handleArchive}
-                    tooltip={{ text: "Archivar", position: "top-end" }}
+                    tooltip={{ text: "Archivar", position: "left" }}
                 />
             }
 
@@ -126,7 +126,7 @@ export default function ActivityTrack({
                     className="hidden group-hover:block"
                     children={<UndoIcon className="hover:bg-red-400 size-5" />}
                     onClick={handleUndoArchive}
-                    tooltip={{ text: "Restaurar", position: "top-end" }}
+                    tooltip={{ text: "Restaurar", position: "left" }}
                 />
             }
 

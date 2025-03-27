@@ -169,6 +169,7 @@ export default function WorkSessionSettings({
                     <Clickable className="p-0 hover:bg-gray-700"
                         children={<ChevronVerticalIcon />}
                         onClick={() => setExpandArchivedActivities(prev => !prev)}
+                        tooltip={{ text: "Expandir", position: "left" }}
                     />
                 </div>
                 <HSeparator className="mb-2" />
