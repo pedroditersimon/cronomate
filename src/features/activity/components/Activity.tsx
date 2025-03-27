@@ -10,8 +10,7 @@ import timeTrackService from "src/features/time-track/services/timeTrackService"
 import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
-import ActivityTrack, { TimeTrackActions } from "src/features/activity/components/ActivityTrack";
-import { isActionAllowed } from "src/shared/utils/checkAllowedActions";
+import ActivityTrack from "src/features/activity/components/ActivityTrack";
 
 export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
@@ -23,24 +22,32 @@ interface Props {
     showArchivedTracks?: boolean;
     selectTitleOnClick?: boolean;
 
-    allowedActions?: ActivityActions;
+    // Allowed actions
+    canEdit?: boolean;
+    canArchive?: boolean;
+    canRestore?: boolean;
 }
 
 export type ActivityHandle = {
     focusTitle: () => void;
 };
 
-const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange, onTitleConfirm, showArchivedTracks, selectTitleOnClick, allowedActions = "all", }, ref) => {
+const Activity = forwardRef<ActivityHandle, Props>(({
+    activity,
+    onActivityChange,
+    onTitleConfirm,
+    showArchivedTracks,
+    selectTitleOnClick,
+
+    // Allowed actions
+    canEdit = true,
+    canArchive = true,
+    canRestore = true
+}, ref) => {
     // local states
     const inputRef = useRef<HTMLInputElement | null>(null);
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
-
-    // Allowed actions
-    const canEdit = isActionAllowed(allowedActions, "edit");
-    const canArchive = isActionAllowed(allowedActions, "archive");
-    const canRestore = isActionAllowed(allowedActions, "restore");
-    const tracksAllowedActions: TimeTrackActions = allowedActions;
 
     useImperativeHandle(ref, () => ({
         focusTitle: () => {
@@ -252,7 +259,10 @@ const Activity = forwardRef<ActivityHandle, Props>(({ activity, onActivityChange
                             key={track.id}
                             track={track}
                             onChange={handleSetTrack}
-                            allowedActions={tracksAllowedActions}
+
+                            canEdit={canEdit}
+                            canArchive={canArchive}
+                            canRestore={canRestore}
                         />
                         {i < activity.tracks.length - 1 && <HSeparator />}
                     </>)

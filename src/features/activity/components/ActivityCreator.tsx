@@ -132,7 +132,10 @@ export default function ActivityCreator({ onCreate }: Props) {
                 onActivityChange={handleSetActivity}
                 onTitleConfirm={handleOnTitleConfirm}
                 selectTitleOnClick
-                allowedActions={["edit"]}
+
+                canEdit={true} // Edit only
+                canArchive={false}
+                canRestore={false}
             />
         </div>
     );
