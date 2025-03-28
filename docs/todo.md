@@ -39,6 +39,8 @@ Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como 
 
 Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
 
+Ver posibilidad de cambiar el formato de tiempo almacenado por 'HH:mm:ss' envés de epoch millis
+
 ## Generales
 
 -   [x] Al cerrar la app, todos los timers se hacen stop y se guarda en local storage.

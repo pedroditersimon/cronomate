@@ -7,7 +7,7 @@ import WorkSessionTimer from "./WorkSessionTimer";
 import WorkSessionSettings from "./WorkSessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
 import { ReactNode, useState } from "react";
-import { SettingsIcon } from "src/shared/assets/Icons";
+import { SettingsIcon } from "src/assets/Icons";
 import clsx from "clsx";
 import { Activity } from "src/features/activity/types/Activity";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";

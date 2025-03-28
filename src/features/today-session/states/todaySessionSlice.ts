@@ -7,24 +7,42 @@ import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTim
 import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
 import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
+import { DateTime } from "luxon";
 
 
 function getNewDefaultState(previousState?: WorkSession, settings?: TodaySessionSettings): WorkSession {
 
-    let startOverride = null;
-    let endOverride = null;
+    const currentDate = DateTime.now();
 
-    // Restaurar overrides si estan habilitados
-    if (previousState && settings?.saveTimerOverrides) {
-        ({ startOverride, endOverride } = previousState.timer);
+    // Desplazar a la fecha de hoy manteniendo hora, minuto y segundo.
+    function adjustToCurrentDate(timestamp: number | null) {
+        if (timestamp === null) return null;
+
+        const originalDate = DateTime.fromMillis(timestamp);
+        if (!originalDate.isValid) return null;
+
+        const { hour, minute, second } = originalDate;
+        return currentDate.set({ hour, minute, second }).toMillis();
     }
+
+    // Restaurar overrides del estado anterior
+    const shouldRestoreOverrides = previousState && settings?.saveTimerOverrides;
+
+    const startOverride = shouldRestoreOverrides
+        ? adjustToCurrentDate(previousState.timer.startOverride)
+        : null;
+
+    const endOverride = shouldRestoreOverrides
+        ? adjustToCurrentDate(previousState.timer.endOverride)
+        : null;
+
 
     return {
         id: generateId(),
-        createdTimeStamp: new Date().getTime(),
+        createdTimeStamp: currentDate.toMillis(),
         timer: {
             id: generateId(),
-            start: Date.now(),
+            start: currentDate.toMillis(),
             end: null,
             status: TimeTrackStatus.STOPPED,
             startOverride: startOverride,

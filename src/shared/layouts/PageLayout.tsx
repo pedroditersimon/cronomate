@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, SettingsIcon, InboxStackIcon, CalendarIcon, ChartNoAxesCombinedIcon } from "src/shared/assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon, CalendarIcon, ChartNoAxesCombinedIcon } from "src/assets/Icons";
 import Sidebar from "./Sidebar";
 import { ROUTES } from "src/app/routing/routes";
 

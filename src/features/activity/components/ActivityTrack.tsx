@@ -1,4 +1,4 @@
-import { CircleIcon, TrashIcon, UndoIcon } from "src/shared/assets/Icons";
+import { CircleIcon, TrashIcon, UndoIcon } from "src/assets/Icons";
 import { getElapsedTime, isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import { useMemo } from "react";
 import clsx from "clsx";

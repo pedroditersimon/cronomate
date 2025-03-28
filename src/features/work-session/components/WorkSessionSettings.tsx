@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useState } from "react";
-import { ChevronVerticalIcon, CrossIcon } from "src/shared/assets/Icons";
+import { ChevronVerticalIcon, CrossIcon } from "src/assets/Icons";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import FormField from "src/shared/components/forms/FormField";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";

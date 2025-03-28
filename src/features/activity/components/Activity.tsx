@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
-import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon, UndoIcon } from "src/shared/assets/Icons";
+import { ChevronDownIcon, ChevronRightIcon, PlayIcon, StopIcon, TrashIcon, UndoIcon } from "src/assets/Icons";
 import { isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import { Activity as ActivityType } from "src/features/activity/types/Activity";
 import clsx, { ClassValue } from "clsx";
@@ -203,10 +203,11 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                             // reset title
                             if (e.key === "Escape") {
                                 setTitle(activity.title);
+
                                 // Delay blur to ensure the new state is applied, before calling blur.
                                 // This prevents run blur callback with an outdated state.
                                 const element = e.currentTarget;
-                                setTimeout(() => element.blur, 50); return;
+                                setTimeout(() => element.blur(), 1); return;
                             }
                         }}
                     />
