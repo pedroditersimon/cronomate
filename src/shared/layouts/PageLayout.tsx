@@ -22,8 +22,8 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             icon: <CalendarIcon />
                         },
                         {
-                            to: "/performance",
-                            text: "Rendimiento",
+                            to: "/summary",
+                            text: "Resumen",
                             icon: <ChartNoAxesCombinedIcon />
                         },
                         {
