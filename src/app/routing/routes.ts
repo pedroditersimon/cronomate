@@ -3,7 +3,8 @@ export const ROUTES = {
     PRIVATE: {
         TODAY_SESSION: "/",
         HISTORY: "/history",
-        HISTORY_DETAIL: "/history/:id"
+        HISTORY_DETAIL: "/history/:id",
+        APP_SETTINGS: "/settings"
     },
     ERROR: { NOT_FOUND: "*" },
 } as const;

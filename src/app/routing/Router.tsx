@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ROUTES } from "src/app/routing/routes";
+import AppSettingsPage from "src/features/app-settings/pages/AppSettingsPage";
 import { SessionHistoryDetailPage } from "src/features/sessions-history/pages/SessionHistoryDetailPage";
 import { SessionsHistoryPage } from "src/features/sessions-history/pages/SessionsHistoryPage";
 import TodaySessionPage from "src/features/today-session/pages/TodaySessionPage";
@@ -10,6 +11,7 @@ const router = createBrowserRouter([
     { path: ROUTES.PRIVATE.HISTORY, element: <SessionsHistoryPage /> },
     { path: ROUTES.PRIVATE.HISTORY_DETAIL, element: <SessionHistoryDetailPage /> },
     { path: ROUTES.ERROR.NOT_FOUND, element: <NotFoundPage /> },
+    { path: ROUTES.PRIVATE.APP_SETTINGS, element: <AppSettingsPage /> },
     // {
     //     path: ROUTES.PRIVATE.DASHBOARD,
     //     element: (
