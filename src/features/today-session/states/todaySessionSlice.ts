@@ -8,10 +8,12 @@ import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
 import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
 import { DateTime } from "luxon";
+import { TodaySession } from "src/features/today-session/types/TodaySession";
 
+// TODO: Mover a un mejor lugar
+function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessionSettings): TodaySession {
 
-function getNewDefaultState(previousState?: WorkSession, settings?: TodaySessionSettings): WorkSession {
-
+    const previousSession = previousState?.session;
     const currentDate = DateTime.now();
 
     // Desplazar a la fecha de hoy manteniendo hora, minuto y segundo.
@@ -26,29 +28,32 @@ function getNewDefaultState(previousState?: WorkSession, settings?: TodaySession
     }
 
     // Restaurar overrides del estado anterior
-    const shouldRestoreOverrides = previousState && settings?.saveTimerOverrides;
+    const shouldRestoreOverrides = previousSession && settings?.saveTimerOverrides;
 
     const startOverride = shouldRestoreOverrides
-        ? adjustToCurrentDate(previousState.timer.startOverride)
+        ? adjustToCurrentDate(previousSession.timer.startOverride)
         : null;
 
     const endOverride = shouldRestoreOverrides
-        ? adjustToCurrentDate(previousState.timer.endOverride)
+        ? adjustToCurrentDate(previousSession.timer.endOverride)
         : null;
 
 
     return {
-        id: generateId(),
-        createdTimeStamp: currentDate.toMillis(),
-        timer: {
+        session: {
             id: generateId(),
-            start: currentDate.toMillis(),
-            end: null,
-            status: TimeTrackStatus.STOPPED,
-            startOverride: startOverride,
-            endOverride: endOverride,
+            createdTimeStamp: currentDate.toMillis(),
+            timer: {
+                id: generateId(),
+                start: currentDate.toMillis(),
+                end: null,
+                status: TimeTrackStatus.STOPPED,
+                startOverride: startOverride,
+                endOverride: endOverride,
+            },
+            activities: [],
         },
-        activities: [],
+        endAlertStatus: "waiting",
     };
 }
 
@@ -64,10 +69,9 @@ const todaySessionSlice = createSlice({
 
     // 3. Creamos las acciones (reducers)
     reducers: {
-        save: (state, action: PayloadAction<{ session?: WorkSession }>) => {
-            const { session } = action.payload;
-            localSave.save("todaySession", session || state);
-            console.log("saved: todaySession");
+        save: (state) => {
+            localSave.save("todaySession", state);
+            return state;
         },
         load: (state) => {
             return localSave.load("todaySession", state);
@@ -80,39 +84,64 @@ const todaySessionSlice = createSlice({
             return newState;
         },
 
-        setSession: (_state, action: PayloadAction<{ newSession: WorkSession }>) => {
-            const { newSession } = action.payload;
-            return newSession;
+        setSession: (state, action: PayloadAction<WorkSession>) => {
+            const newSession = action.payload;
+            return {
+                ...state,
+                session: newSession
+            };
         },
 
         // Timer
-        setTimer: (state, action: PayloadAction<{ newTimer: WorkSessionTimer }>) => {
+        setTimer: (state, action: PayloadAction<WorkSessionTimer>) => {
+            const newTimer = action.payload;
             return {
                 ...state,
-                timer: action.payload.newTimer
+                session: {
+                    ...state.session,
+                    timer: newTimer
+                }
             };
         },
 
         // Activities
-        setActivities: (state, action: PayloadAction<{ newActivities: Array<Activity> }>) => {
-            const { newActivities } = action.payload;
+        setActivities: (state, action: PayloadAction<Activity[]>) => {
+            const newActivities = action.payload;
             return {
                 ...state,
-                activities: newActivities
+                session: {
+                    ...state.session,
+                    activities: newActivities
+                }
             };
         },
-        setActivity: (state, action: PayloadAction<{ newActivity: Activity }>) => {
-            const { newActivity } = action.payload;
+        setActivity: (state, action: PayloadAction<Activity>) => {
+            const newActivity = action.payload;
             return {
                 ...state,
-                activities: activityService.set(state.activities, newActivity)
+                session: {
+                    ...state.session,
+                    activities: activityService.set(state.session.activities, newActivity)
+                }
             };
         },
-        addActivity: (state, action: PayloadAction<{ newActivity: Activity }>) => {
-            const { newActivity } = action.payload;
+        addActivity: (state, action: PayloadAction<Activity>) => {
+            const newActivity = action.payload;
             return {
                 ...state,
-                activities: activityService.add(state.activities, newActivity)
+                session: {
+                    ...state.session,
+                    activities: activityService.add(state.session.activities, newActivity)
+                }
+            };
+        },
+
+        // endAlertStatus
+        setEndAlertStatus: (state, action: PayloadAction<TodaySession["endAlertStatus"]>) => {
+            const endAlertStatus = action.payload;
+            return {
+                ...state,
+                endAlertStatus,
             };
         }
     },
@@ -135,6 +164,8 @@ export const {
     setActivities,
     setActivity,
     addActivity,
+
+    setEndAlertStatus,
 
 } = todaySessionSlice.actions;
 
