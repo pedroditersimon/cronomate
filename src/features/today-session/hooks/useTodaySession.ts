@@ -38,6 +38,7 @@ export default function useTodaySession() {
         addActivity: (activity: Activity) => dispatch(addActivity(activity)),
 
         saveInHistoryAndReset,
+        resetToDefaultState: () => dispatch(resetToDefaultState({ settings: todaySessionSettings })),
 
         setEndAlertStatus: (status: TodaySession["endAlertStatus"]) => dispatch(setEndAlertStatus(status))
     };

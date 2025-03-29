@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function TodaySession({ readOnly }: Props) {
-    const { todaySession, save, setSession, saveInHistoryAndReset, setEndAlertStatus } = useTodaySession();
+    const { todaySession, save, setSession, saveInHistoryAndReset, resetToDefaultState, setEndAlertStatus } = useTodaySession();
     const { todaySessionSettings } = useTodaySessionSettigs();
     const { playAudio } = useAudioPlayer({ volume: 0.5 });
 
@@ -27,13 +27,17 @@ export default function TodaySession({ readOnly }: Props) {
     // 2. Save in history if its another day
     useEffect(() => {
         const isPastSession = !isToday(toDate(todaySession.session.createdTimeStamp));
+        const hasActivities = todaySession.session.activities.length > 0;
         if (isPastSession) {
-            saveInHistoryAndReset();
+            if (hasActivities)
+                saveInHistoryAndReset();
+            else
+                resetToDefaultState();
         }
 
         // save in every change
         save();
-    }, [todaySession.session, save, saveInHistoryAndReset]);
+    }, [resetToDefaultState, save, saveInHistoryAndReset, todaySession.session]);
 
 
     // save on window close

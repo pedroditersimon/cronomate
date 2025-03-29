@@ -101,6 +101,7 @@ function updateTimerAndTracks(session: WorkSession) {
     return _session;
 };
 
+
 export default {
     setTimer,
     getTimerWithOverrides,
