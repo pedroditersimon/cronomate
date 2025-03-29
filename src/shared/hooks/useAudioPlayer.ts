@@ -1,13 +1,18 @@
 import { useRef } from "react";
+import useAppSettings from "src/features/app-settings/hooks/useAppSettings";
 
 let globalAudioPlayer: HTMLAudioElement | undefined;
 interface Props {
     globalChannel?: boolean;
     volume?: number;
 }
+
 export function useAudioPlayer({ globalChannel = false, volume = 1 }: Props) {
     const audioRef = useRef<HTMLAudioElement>();
     const audioVolume = useRef(volume);
+
+    // Check if sounds are enabled
+    const { appSettings } = useAppSettings();
 
     const getAudioPlayer = (createNew: boolean = true) => {
         if (globalChannel) {
@@ -23,6 +28,7 @@ export function useAudioPlayer({ globalChannel = false, volume = 1 }: Props) {
     }
 
     const playAudio = (url: string, vol?: number) => {
+        if (!appSettings.soundsEnabled) return;
         const audio = getAudioPlayer(true);
         if (!audio) return;
 
