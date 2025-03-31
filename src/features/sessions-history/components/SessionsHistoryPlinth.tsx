@@ -5,7 +5,7 @@ import { SessionsHistory } from 'src/features/sessions-history/components/Sessio
 import Dropdown from 'src/shared/components/interactable/Dropdown';
 import { SortBy, SortByLabels } from 'src/features/sessions-history/types/SortBy';
 import { useState } from 'react';
-import { SettingsIcon } from 'src/shared/assets/Icons';
+import { SettingsIcon } from 'src/assets/Icons';
 import ContainerOverlay from 'src/shared/layouts/ContainerOverlay';
 import SessionsHistorySettings from 'src/features/sessions-history/components/SessionsHistorySettings';
 

@@ -1,5 +1,5 @@
 import { ReactNode, useMemo, useState } from "react";
-import { ChevronVerticalIcon, CrossIcon } from "src/shared/assets/Icons";
+import { ChevronVerticalIcon, CrossIcon } from "src/assets/Icons";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import FormField from "src/shared/components/forms/FormField";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";
@@ -53,14 +53,13 @@ export default function WorkSessionSettings({
 
     const [archivedActivities, timerDurationStr] = useMemo(() => {
         const archivedActivities = session.activities
-            .filter(act => act.isDeleted || activityService.hasArchivedTracks(act))
-            .map(act => ({ ...act, isCollapsed: !expandArchivedActivities }));
+            .filter(act => act.isDeleted || activityService.hasArchivedTracks(act));
 
         const timerDurationMinutes = workSessionService.getTimerDurationInMinutes(session.timer);
         const timerDurationMillis = timerDurationMinutes * 60 * 1000;
         const timerDurationStr = convertElapsedTimeToText(timerDurationMillis) ?? "-";
         return [archivedActivities, timerDurationStr];
-    }, [expandArchivedActivities, session.timer, session.activities]);
+    }, [session.timer, session.activities]);
 
     const handleChangeTimer = (newTimer: WorkSessionTimer) => {
         onSessionChange({
@@ -193,6 +192,8 @@ export default function WorkSessionSettings({
                                     }
                                 }}
                                 showArchivedTracks
+
+                                isExpanded={expandArchivedActivities}
 
                                 canRestore={canRestore}
                                 canArchive={false}

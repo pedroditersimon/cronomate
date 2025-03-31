@@ -3,12 +3,14 @@ import { configureStore } from "@reduxjs/toolkit";
 // 1. Importamos nuestros reducers
 import { todaySessionReducer } from "src/features/today-session/states/todaySessionSlice";
 import { todaySessionSettingsReducer } from "src/features/today-session/states/todaySessionSettingsSlice";
+import { appSettingsReducer } from "src/features/app-settings/states/appSettingsSlice";
 
 // 2. Configuramos la Store
 const store = configureStore({
     reducer: {
         todaySession: todaySessionReducer,
-        todaySessionSettings: todaySessionSettingsReducer
+        todaySessionSettings: todaySessionSettingsReducer,
+        appSettings: appSettingsReducer,
     }
 });
 

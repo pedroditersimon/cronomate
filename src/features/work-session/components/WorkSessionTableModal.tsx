@@ -4,7 +4,7 @@ import { Modal } from "src/shared/components/Modal";
 import { toDate } from "src/shared/utils/TimeUtils";
 import clsx from "clsx";
 import { toast } from "sonner";
-import { CheckIcon, ClipboardDocumentIcon } from "src/shared/assets/Icons";
+import { CheckIcon, ClipboardDocumentIcon } from "src/assets/Icons";
 import Dropdown from "src/shared/components/interactable/Dropdown";
 import { TimeUnit } from "src/shared/types/TimeUnit";
 import Checkbox from "src/shared/components/interactable/Checkbox";

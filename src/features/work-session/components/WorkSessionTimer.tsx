@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import { ProgressBar } from "src/shared/components/ProgressBar";
-import { PlayIcon, StopIcon } from "src/shared/assets/Icons";
+import { PlayIcon, StopIcon } from "src/assets/Icons";
 
 import { useMemo } from "react";
 import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";

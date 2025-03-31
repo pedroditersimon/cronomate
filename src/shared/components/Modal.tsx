@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { CrossIcon } from "src/shared/assets/Icons";
+import { CrossIcon } from "src/assets/Icons";
 import clsx, { ClassValue } from "clsx";
 import Container from "src/shared/layouts/Container";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";

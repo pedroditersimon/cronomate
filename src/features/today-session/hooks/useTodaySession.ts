@@ -1,11 +1,12 @@
 import { useDispatch } from "react-redux";
-import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState } from "src/features/today-session/states/todaySessionSlice";
+import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState, setEndAlertStatus } from "src/features/today-session/states/todaySessionSlice";
 import { useTypedSelector } from "src/shared/hooks/useTypedSelector";
 import { toast } from "sonner";
 import { WorkSession } from "src/features/work-session/types/WorkSession";
 import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
 import { Activity } from "src/features/activity/types/Activity";
 import sessionStorageService from "src/shared/services/sessionStorageService";
+import { TodaySession } from "src/features/today-session/types/TodaySession";
 
 
 export default function useTodaySession() {
@@ -14,36 +15,8 @@ export default function useTodaySession() {
 
     const dispatch = useDispatch();
 
-    const _save = (session?: WorkSession) => {
-        dispatch(save({ session }));
-    }
-
-    const _load = () => {
-        dispatch(load());
-    }
-
-    const _setSession = (newSession: WorkSession) => {
-        dispatch(setSession({ newSession }));
-    }
-
-    const _setTimer = (newTimer: WorkSessionTimer) => {
-        dispatch(setTimer({ newTimer }));
-    }
-
-    const _setActivities = (newActivities: Array<Activity>) => {
-        dispatch(setActivities({ newActivities }));
-    }
-
-    const _setActivity = (newActivity: Activity) => {
-        dispatch(setActivity({ newActivity }));
-    }
-
-    const _addActivity = (newActivity: Activity) => {
-        dispatch(addActivity({ newActivity }));
-    }
-
     const saveInHistoryAndReset = () => {
-        sessionStorageService.saveItems("History", [todaySession]);
+        sessionStorageService.saveItems("History", [todaySession.session]);
         dispatch(resetToDefaultState({ settings: todaySessionSettings }));
         // Ya que se utiliza la variable local 'todaySession',
         // es posible que esta cambie y al guardar no se este guardando lo ultimo que cambio
@@ -53,17 +26,20 @@ export default function useTodaySession() {
     return {
         todaySession,
 
-        save: _save,
-        load: _load,
+        save: () => dispatch(save()),
+        load: () => dispatch(load()),
 
-        setSession: _setSession,
+        setSession: (session: WorkSession) => dispatch(setSession(session)),
 
-        setTodayTimer: _setTimer,
+        setTodayTimer: (timer: WorkSessionTimer) => dispatch(setTimer(timer)),
 
-        setActivities: _setActivities,
-        setActivity: _setActivity,
-        addActivity: _addActivity,
+        setActivities: (activities: Activity[]) => dispatch(setActivities(activities)),
+        setActivity: (activity: Activity) => dispatch(setActivity(activity)),
+        addActivity: (activity: Activity) => dispatch(addActivity(activity)),
 
-        saveInHistoryAndReset
+        saveInHistoryAndReset,
+        resetToDefaultState: () => dispatch(resetToDefaultState({ settings: todaySessionSettings })),
+
+        setEndAlertStatus: (status: TodaySession["endAlertStatus"]) => dispatch(setEndAlertStatus(status))
     };
 }

@@ -1,6 +1,6 @@
 import { ClassValue } from "clsx";
 import { PropsWithChildren, ReactNode } from "react";
-import { CheckIcon, MinusIcon } from "src/shared/assets/Icons";
+import { CheckIcon, MinusIcon } from "src/assets/Icons";
 import Button from "./Button";
 
 interface Props extends PropsWithChildren {

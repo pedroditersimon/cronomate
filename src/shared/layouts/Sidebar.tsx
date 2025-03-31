@@ -21,7 +21,7 @@ export default function Sidebar({ links }: Props) {
     const basePath = "/" + pathname.slice(1).split('/')[0];
 
     return (
-        <Container className="h-full">
+        <Container width="min-w-56">
             <div className="flex flex-col gap-1">
                 {links.map(link => {
                     const isActive = basePath === link.to;
