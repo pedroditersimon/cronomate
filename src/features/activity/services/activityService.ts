@@ -1,3 +1,4 @@
+import { toLower } from "lodash";
 import { Activity } from "src/features/activity/types/Activity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
 import { TimeTrack } from "src/features/time-track/types/TimeTrack";
@@ -12,12 +13,14 @@ function add(list: Array<Activity>, activity: Activity, fusion: boolean = true):
     }
 
     // activity title already exists, fusion tracks
-    const matchedActivityTitle = list.find(item => item.title === activity.title);
-    if (matchedActivityTitle && fusion) {
+    const matchingActivity = list.find(item =>
+        item.title.toLowerCase().trim() === activity.title.toLowerCase().trim());
+
+    if (matchingActivity && fusion) {
         return set(list, {
-            ...matchedActivityTitle,
+            ...matchingActivity,
             // fusion tracks
-            tracks: [...matchedActivityTitle.tracks, ...activity.tracks]
+            tracks: [...matchingActivity.tracks, ...activity.tracks]
         });
     }
 
