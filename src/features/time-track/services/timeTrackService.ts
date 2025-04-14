@@ -2,6 +2,7 @@ import { orderBy } from "lodash";
 import { TimeTrack, TimeTrackStatus } from "../types/TimeTrack";
 import { getElapsedTime, toDate } from "src/shared/utils/TimeUtils";
 import { err, ok, Result } from "src/shared/types/Result";
+import { Interval } from "luxon";
 
 function add(list: Array<TimeTrack>, timer: TimeTrack): Result<TimeTrack[]> {
     // already exists!
@@ -83,7 +84,7 @@ function orderAllByStartTime(timers: Array<TimeTrack>): Array<TimeTrack> {
     return orderBy(timers, ['start'], ['asc']);
 }
 
-
+// Deprecar
 function getUntrackedPeriods(timers: Array<TimeTrack>, range?: TimeTrack): Array<TimeTrack> {
     // Ordenar los registros por start
     const orderedTimers = orderAllByStartTime(timers);
@@ -146,6 +147,54 @@ function getUntrackedPeriods(timers: Array<TimeTrack>, range?: TimeTrack): Array
 
     return untimeredPeriods;
 }
+
+// New version
+function _getUntrackedPeriods(tracks: Array<TimeTrack>): Array<TimeTrack> {
+
+    const validTracks = tracks.filter(track => {
+        if (track.status === TimeTrackStatus.ARCHIVED) return false; // Archived tracks
+        if (!track.start || !track.end) return false; // Invalid track
+        if (track.start > track.end) return false; // Invalid track
+        return true;
+    });
+
+    // tracks to intervals
+    const intervals = validTracks.map(t => {
+        return Interval.fromDateTimes(
+            toDate(t.start, false)!,
+            toDate(t.end, false)!,
+        );
+    });
+
+    // Merge overlapping intervals 
+    const merged = Interval.merge(intervals);
+
+    // Sort intervals by start
+    const sorted = orderBy(merged, ['start'], ['asc']);
+
+    // Get gaps between intervals
+    const gaps = [];
+    for (let i = 1; i < sorted.length; i++) {
+        const prev = sorted[i - 1];
+        const curr = sorted[i];
+        if (prev.end! < curr.start!) {
+            gaps.push(Interval.fromDateTimes(prev.end!, curr.start!));
+        }
+    }
+
+    // intervals to tracks
+    const untrackedPeriods: Array<TimeTrack> = sorted.map((interval, i) => {
+        return {
+            id: `untracked-${i}`,
+            start: interval.start!.toMillis(),
+            end: interval.end!.toMillis(),
+            status: TimeTrackStatus.STOPPED,
+        } as TimeTrack;
+    });
+
+    return untrackedPeriods;
+}
+
 
 function getArchived(timers: Array<TimeTrack>): Array<TimeTrack> {
     return timers.filter(r => r.status === TimeTrackStatus.ARCHIVED);
