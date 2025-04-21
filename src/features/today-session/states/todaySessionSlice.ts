@@ -42,7 +42,7 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
     return {
         session: {
             id: generateId(),
-            createdTimeStamp: currentDate.toMillis(),
+            createdTimestamp: currentDate.toMillis(),
             timer: {
                 id: generateId(),
                 start: currentDate.toMillis(),
@@ -52,6 +52,7 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
                 endOverride: endOverride,
             },
             activities: [],
+
         },
         endAlertStatus: "waiting",
     };

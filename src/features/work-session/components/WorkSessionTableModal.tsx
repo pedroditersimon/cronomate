@@ -27,8 +27,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
 
     // Untracked Activity
     const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
-    const sessionTimer = workSessionService.getTimerWithOverrides(session.timer);
-    const untrackedActivity = useUntrackedActivity(session.activities, sessionTimer);
+    const untrackedActivity = useUntrackedActivity(session.activities);
     const hasUntrackedActivity = untrackedActivity.tracks.length > 0;
 
     // Pauses Activity
@@ -65,7 +64,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
 
             // this is a row
             return {
-                date: toDate(session.createdTimeStamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
+                date: toDate(session.createdTimestamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
                 title: activity.title,
                 description: activity.description || "",
                 elapsedTime: elapsedTimeTxt,

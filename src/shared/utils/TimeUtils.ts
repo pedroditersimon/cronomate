@@ -36,6 +36,7 @@ export function to24HourFormat(time: Date): string {
   return `${hours}:${formattedMinutes}`;
 };
 
+
 export function getElapsedTime(start: Date | undefined, end: Date | undefined) {
   if (!start || !end) return 0;
 
@@ -61,6 +62,35 @@ export function convertElapsedTimeToText(elapsedMs: number) {
   return `${hoursPart}${minutesPart}`.trim();
 }
 
+export function convert24HourFormatTextToTimeObj(timeTxt: string) {
+  // no contiene numeros
+  if (!/\d/.test(timeTxt)) return undefined;
+
+  // Normalizar el formato: eliminar espacios múltiples y convertir caracteres no numéricos (incluidos espacios) a ":"
+  let normalizedTime = timeTxt.trim().replace(/[^0-9]/g, ":");
+
+  // [!] no separator 
+  if (!normalizedTime.includes(":")) {
+    // step 1. if input is less than 2 digit fill with 0 at the start to ensure hour
+    normalizedTime = normalizedTime.padStart(2, "0");
+    // step 2. add separator ':'
+    normalizedTime = normalizedTime.substring(0, 2) + ":" + normalizedTime.substring(2, normalizedTime.length);
+  }
+
+  // Dividir en horas y minutos
+  const [hoursStr, minutesStr] = normalizedTime.split(":");
+
+  // Asegurarnos de manejar números sin ceros a la izquierda
+  const parsedHours = parseInt(hoursStr, 10) || 0;
+  const parsedMinutes = parseInt(minutesStr, 10) || 0;
+
+  const hours = Math.max(0, Math.min(parsedHours, 23));
+  const minutes = Math.max(0, Math.min(parsedMinutes, 59));
+
+  return { hours, minutes };
+}
+
+// Deprecar
 export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: number): Date | undefined {
   // no contiene numeros
   if (!/\d/.test(timeTxt)) return undefined;

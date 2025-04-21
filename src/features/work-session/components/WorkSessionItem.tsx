@@ -14,7 +14,7 @@ interface Props {
 // Representation of a WorkSession as an item list (clickable/selectable)
 export default function WorkSessionItem({ session, onSelected }: Props) {
 
-    const title = formatDateToText(toDate(session.createdTimeStamp));
+    const title = formatDateToText(toDate(session.createdTimestamp));
 
     const handleClick = () => {
         if (onSelected) onSelected(session);

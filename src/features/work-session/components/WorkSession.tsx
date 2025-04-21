@@ -6,7 +6,7 @@ import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import WorkSessionTimer from "./WorkSessionTimer";
 import WorkSessionSettings from "./WorkSessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
-import { ReactNode, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { SettingsIcon } from "src/assets/Icons";
 import clsx from "clsx";
 import { Activity } from "src/features/activity/types/Activity";
@@ -51,19 +51,23 @@ export default function WorkSession({
     const [showSettings, setShowSettings] = useState(false);
     const [isActivityCreatorFocused, setIsActivityCreatorFocused] = useState(false);
 
-    const title = formatDateToText(toDate(session.createdTimeStamp));
+    const title = formatDateToText(toDate(session.createdTimestamp));
 
     // Filter deleted activities and activities without tracks
     const filteredActivities = session.activities.filter(act => !act.isDeleted && activityService.hasUnarchivedTracks(act));
 
     // Untracked Activity
-    const sessionTimer = workSessionService.getTimerWithOverrides(session.timer);
-    const untrackedActivity = useUntrackedActivity(filteredActivities, sessionTimer);
+    const untrackedActivity = useUntrackedActivity(filteredActivities);
     // local wrapper state for untrackedActivity.isCollapsed
     const [untrackedActIsCollapsed, setUntrackedActIsCollapsed] = useState(untrackedActivity.isCollapsed);
     untrackedActivity.isCollapsed = untrackedActIsCollapsed;
 
-    function addRecordToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
+    const [hasRunningTracks] = useMemo(() => {
+        const hasRunningTracks = filteredActivities.some(act => activityService.hasRunningTracks(act));
+        return [hasRunningTracks];
+    }, [filteredActivities]);
+
+    function addTrackToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
         // get a copy of current
         let _session = currentSession;
 
@@ -107,7 +111,7 @@ export default function WorkSession({
 
         // not first time, add a pause
         if (_session.timer.start && session.timer.end !== null) {
-            _session = addRecordToPauseActivity(_session,
+            _session = addTrackToPauseActivity(_session,
                 {
                     id: generateId(),
                     start: _session.timer.end!,
@@ -193,7 +197,7 @@ export default function WorkSession({
 
     return (
         <Container
-            className={clsx({ "border-red-400": session.timer.status === TimeTrackStatus.RUNNING })}
+            className={clsx({ "border-red-400": hasRunningTracks })}
         >
 
             {/* Settings panel */}
@@ -224,6 +228,7 @@ export default function WorkSession({
                     session={session}
                     readOnly={!canEdit}
                     onSetTimerStatus={handleSetTimerStatusWithState}
+                    onSessionChange={onSessionChange}
                 />}
 
                 icon={<SettingsIcon />}

@@ -84,8 +84,8 @@ function orderAllByStartTime(timers: Array<TimeTrack>): Array<TimeTrack> {
     return orderBy(timers, ['start'], ['asc']);
 }
 
-// Deprecar
-function getUntrackedPeriods(timers: Array<TimeTrack>, range?: TimeTrack): Array<TimeTrack> {
+// [!] Deprecado
+function _getUntrackedPeriods(timers: Array<TimeTrack>, range?: TimeTrack): Array<TimeTrack> {
     // Ordenar los registros por start
     const orderedTimers = orderAllByStartTime(timers);
 
@@ -148,13 +148,17 @@ function getUntrackedPeriods(timers: Array<TimeTrack>, range?: TimeTrack): Array
     return untimeredPeriods;
 }
 
-// New version
-function _getUntrackedPeriods(tracks: Array<TimeTrack>): Array<TimeTrack> {
+function getUntrackedPeriods(tracks: Array<TimeTrack>): Array<TimeTrack> {
 
     const validTracks = tracks.filter(track => {
         if (track.status === TimeTrackStatus.ARCHIVED) return false; // Archived tracks
-        if (!track.start || !track.end) return false; // Invalid track
-        if (track.start > track.end) return false; // Invalid track
+        if (!track.start || !track.end) return false; // Dosnt have start or end
+        if (track.start > track.end) return false; // Start is greater than end
+
+        // Less than 59 seconds 
+        const durationMs = track.end - track.start;
+        if (durationMs < 59 * 1000) return false;
+
         return true;
     });
 
@@ -183,7 +187,7 @@ function _getUntrackedPeriods(tracks: Array<TimeTrack>): Array<TimeTrack> {
     }
 
     // intervals to tracks
-    const untrackedPeriods: Array<TimeTrack> = sorted.map((interval, i) => {
+    const untrackedPeriods: Array<TimeTrack> = gaps.map((interval, i) => {
         return {
             id: `untracked-${i}`,
             start: interval.start!.toMillis(),

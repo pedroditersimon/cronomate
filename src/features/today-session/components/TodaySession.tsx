@@ -26,7 +26,7 @@ export default function TodaySession({ readOnly }: Props) {
     // 1. If session changes, save it
     // 2. Save in history if its another day
     useEffect(() => {
-        const isPastSession = !isToday(toDate(todaySession.session.createdTimeStamp));
+        const isPastSession = !isToday(toDate(todaySession.session.createdTimestamp));
         const hasActivities = todaySession.session.activities.length > 0;
         if (isPastSession) {
             if (hasActivities)

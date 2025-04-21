@@ -31,7 +31,7 @@ columna de nombre de proyecto.
 Hacer una vista de recuento del mes, con graficos y recuento de horas.
 como para comparar en la hoja del laburo
 
-Al establecer que se termine la joranada al llegar a la hora de fin,
+[hecho] Al establecer que se termine la joranada al llegar a la hora de fin,
 si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo el tiempo
 
 Si pones un fin de joranda, se calcula "no categirzada" de toda la jornada futurua.
@@ -40,6 +40,39 @@ Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como 
 Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
 
 Ver posibilidad de cambiar el formato de tiempo almacenado por 'HH:mm:ss' envés de epoch millis
+
+Seccion "Limite de jornada":
+
+-   [x] Que permita poner inicio/fin o duracion
+-   Que por detras se base en duracion para calcualar el limite, progreso y detener timer.
+-   [ ] Si hay limites configurados, recien habilitar las opciones de "guardar limites" y "deterner al superar".
+-   Si va por duracion, no habra inicio real. ASi que calcular en base alos tracks.
+-   [x] Agregar paralelamente al timer, una propiedad 'maxDuration' para tener: inicio, fin y una duracion maxima en millisegundos.
+-   [x] Crear un nuevo tipo de InputTime que maneje time en formato string HH:mm (no epoch).
+-   [x] Adapatar los inputs de inicio y fin a formato string HH:mm y establecer la propiedad 'maxDuration'.
+-   [x] Crear un handler para que al actualizar inicio o fin, se calcule la duracion en millis.
+-   [x] Adaptar el input de duracion para manejar en millis y establecer la propiedad 'maxDuration'.
+-   [ ] Agregar estado default para la duracion maxima de jornada.
+-   [x] Crear input para el umbral de duracion para descartar tiempos entre actividades muy largos.
+-   [x] Agregar propiedad del umbral de duracion de tiempos entre actividades, a la jornada (no global).
+-   [ ] Agregar estado default para el umbral de inactividad.
+-   [x] Sacar play/stop del timer de jornada.
+-   [x] Solo decorar la jornada con estado "running" si hay actividades corriendo.
+-   [x] Crear un boton de pausa en el timer de jornada.
+-   [x] Al darle a play al de boton de pause, corre la actividad "Pausa".
+-   [x] El boton de pausa de la jornada, solo aparece si no se esta corriendo la actividad "Pausa".
+-   [x] Crear una nueva funcion para calcular tiempos entre actividades. Devuelve una lista de tracks.
+
+diferenciar visualmente el estado de editar un titulo de actividad al hover. ahora son lo mismo
+
+Quitar titulo del ActivityCreator y dejar solo como un placeholder
+
+Si hay actividades sin duracion (0h 0m) no mostarlas en la tabla de actividades
+
+En "Actividades archivadas" no mostrar tracks que no estan archivados. SOLO mostrar los archivados.
+
+Que los tracks no categorizados, tengan un boton de accion rapida que las convierte en una pausa
+Al presionar este boton, sale un pequeño modal preguntando confirmacion y pidiendo el rango de la pausa y ya tiene cargado lo que tiene el track
 
 ## Generales
 

@@ -6,18 +6,27 @@ import { TimeTrack } from "src/features/time-track/types/TimeTrack";
 
 
 
-export default function useUntrackedActivity(activities: Array<Activity>, range?: TimeTrack) {
+export default function useUntrackedActivity(activities: Array<Activity>, maxDurationThresholdMs?: number): Activity {
 
     const untrackedActivity = useMemo((): Activity => {
-        const allRecords = activities.reduce<Array<TimeTrack>>((acc, activity) => activity.tracks.concat(acc), []);
-        const untrackedPeriods = timeTrackService.getUntrackedPeriods(allRecords, range);
+        const tracks = activities.reduce<Array<TimeTrack>>((acc, activity) => activity.tracks.concat(acc), []);
+        let untrackedPeriods = timeTrackService.getUntrackedPeriods(tracks);
+
+        if (maxDurationThresholdMs && maxDurationThresholdMs > 0) {
+            untrackedPeriods = untrackedPeriods.filter(t => {
+                if (!t.start || !t.end) return true; // Dosnt have start or end
+
+                const durationMs = t.end - t.start;
+                return durationMs <= maxDurationThresholdMs;
+            });
+        }
 
         return {
             ...untrackedActivityMock,
             tracks: untrackedPeriods
         }
 
-    }, [activities, range]);
+    }, [activities, maxDurationThresholdMs]);
 
     return untrackedActivity;
 }
