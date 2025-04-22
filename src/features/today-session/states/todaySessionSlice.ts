@@ -18,14 +18,14 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
     // Restaurar limites del estado anterior
     const shouldRestoreLimits = previousSession && settings?.saveSessionLimits;
 
-    const maxDuration = (shouldRestoreLimits
+    const durationLimit = (shouldRestoreLimits
         ? {
-            start: previousSession.maxDuration?.start ?? null,
-            end: previousSession.maxDuration?.end ?? null,
-            millis: previousSession.maxDuration?.millis ?? null,
+            start: previousSession.durationLimit?.start ?? null,
+            end: previousSession.durationLimit?.end ?? null,
+            millis: previousSession.durationLimit?.millis ?? null,
         }
         : {}
-    ) as WorkSession["maxDuration"];
+    ) as WorkSession["durationLimit"];
 
 
     return {
@@ -33,8 +33,8 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
             id: generateId(),
             createdTimestamp: currentDate.toMillis(),
             activities: [],
-            maxDuration,
-            idleThresholdMs: previousSession?.idleThresholdMs ?? null,
+            durationLimit,
+            inactivityThresholdMs: previousSession?.inactivityThresholdMs ?? null,
         },
         endAlertStatus: "waiting",
     };

@@ -29,7 +29,7 @@ export default function WorkSessionTimer({ session, onSessionChange, readOnly }:
         const sessionDurationMs = workSessionService.getSessionDurationMs(session);
         const totalElapsedTimeTxt = convertElapsedTimeToText(sessionDurationMs);
 
-        const maxDurationMs = session.maxDuration.millis ?? 0;
+        const maxDurationMs = session.durationLimit.millis ?? 0;
 
         // -1 means has not progress
         const sessionProgress = sessionDurationMs >= 0

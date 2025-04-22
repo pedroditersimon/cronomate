@@ -98,7 +98,7 @@ export default function WorkSessionSettings({
 
 
 
-    const handleSetMaxDuration = (newMaxDuration: typeof session.maxDuration) => {
+    const handleSetMaxDuration = (newMaxDuration: typeof session.durationLimit) => {
         let calculatedMillis = newMaxDuration.millis;
         if (newMaxDuration.start && newMaxDuration.end) {
             const interval = Interval.fromISO(`${newMaxDuration.start}/${newMaxDuration.end}`);
@@ -108,7 +108,7 @@ export default function WorkSessionSettings({
 
         onSessionChange({
             ...session,
-            maxDuration: {
+            durationLimit: {
                 ...newMaxDuration,
                 millis: calculatedMillis
             },
@@ -135,12 +135,12 @@ export default function WorkSessionSettings({
                         className={clsx(
                             "max-w-full",
                             {
-                                "text-gray-500 hover:text-white": !session.maxDuration?.start
+                                "text-gray-500 hover:text-white": !session.durationLimit?.start
                             }
                         )}
-                        timeHHmm={session.maxDuration?.start ?? ""}
+                        timeHHmm={session.durationLimit?.start ?? ""}
                         onChange={newTime => handleSetMaxDuration({
-                            ...session.maxDuration,
+                            ...session.durationLimit,
                             start: newTime
                         })}
                         readOnly={!canEdit}
@@ -152,12 +152,12 @@ export default function WorkSessionSettings({
                         className={clsx(
                             "max-w-full",
                             {
-                                "text-gray-500 hover:text-white": !session.maxDuration?.end
+                                "text-gray-500 hover:text-white": !session.durationLimit?.end
                             }
                         )}
-                        timeHHmm={session.maxDuration?.end ?? ""}
+                        timeHHmm={session.durationLimit?.end ?? ""}
                         onChange={newTime => handleSetMaxDuration({
-                            ...session.maxDuration,
+                            ...session.durationLimit,
                             end: newTime
                         })}
                         readOnly={!canEdit}
@@ -168,12 +168,12 @@ export default function WorkSessionSettings({
                     <TimeDurationInput
                         className={clsx("max-w-full",
                             {
-                                "text-gray-500 hover:text-white": !session.maxDuration?.millis
+                                "text-gray-500 hover:text-white": !session.durationLimit?.millis
                             }
                         )}
-                        millis={session.maxDuration?.millis ?? 0}
+                        millis={session.durationLimit?.millis ?? 0}
                         onChange={newDuration => handleSetMaxDuration({
-                            ...session.maxDuration,
+                            ...session.durationLimit,
                             start: null,
                             end: null,
                             millis: newDuration
@@ -191,10 +191,10 @@ export default function WorkSessionSettings({
             >
                 <TimeDurationInput
                     className={clsx("max-w-full")}
-                    millis={session.idleThresholdMs || 60 * 60 * 1000} // default 1h
+                    millis={session.inactivityThresholdMs || 60 * 60 * 1000} // default 1h
                     onChange={newThreshold => onSessionChange({
                         ...session,
-                        idleThresholdMs: newThreshold
+                        inactivityThresholdMs: newThreshold
                     })}
                 />
             </FormField>

@@ -63,7 +63,7 @@ Seccion "Limite de jornada":
 -   [x] El boton de pausa de la jornada, solo aparece si no se esta corriendo la actividad "Pausa".
 -   [x] Crear una nueva funcion para calcular tiempos entre actividades. Devuelve una lista de tracks.
 -   [x] Deprecar y eliminar la propiedad de timer de la joranda.
--   [ ] Cambiar propeidad 'maxDuration' por 'durationLimit'.
+-   [x] Cambiar propeidad 'maxDuration' por 'durationLimit'.
 
 diferenciar visualmente el estado de editar un titulo de actividad al hover. ahora son lo mismo
 

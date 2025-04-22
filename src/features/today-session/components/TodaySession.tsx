@@ -68,13 +68,13 @@ export default function TodaySession({ readOnly }: Props) {
 
     // if limits changes to future, reset alert and auto-stop
     useEffect(() => {
-        if (!todaySession.session.maxDuration.millis) return;
+        if (!todaySession.session.durationLimit.millis) return;
         const sessionDurationMs = workSessionService.getSessionDurationMs(todaySession.session);
-        if (sessionDurationMs > todaySession.session.maxDuration.millis) {
+        if (sessionDurationMs > todaySession.session.durationLimit.millis) {
             setEndAlertStatus("waiting");
             console.log("Reset sessionEndAlertStatus to waiting");
         }
-    }, [todaySession.session.maxDuration]);
+    }, [todaySession.session.durationLimit]);
 
     // constantly update timer and tracks
     useTimer(() => {
@@ -84,10 +84,10 @@ export default function TodaySession({ readOnly }: Props) {
         _session = workSessionService.updateTimerAndTracks(_session);
 
         // stopOnSessionEnd
-        if (todaySessionSettings.stopOnSessionEnd && todaySession.session.maxDuration.millis) {
+        if (todaySessionSettings.stopOnSessionEnd && todaySession.session.durationLimit.millis) {
             const sessionDurationMs = workSessionService.getSessionDurationMs(todaySession.session);
 
-            const remainingMs = todaySession.session.maxDuration.millis - sessionDurationMs;
+            const remainingMs = todaySession.session.durationLimit.millis - sessionDurationMs;
             console.log("Remaining seconds: ", remainingMs / 1000);
 
             if (!remainingMs && todaySession.endAlertStatus !== "ended") {

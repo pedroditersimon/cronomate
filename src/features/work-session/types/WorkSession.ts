@@ -5,7 +5,7 @@ export interface WorkSession {
     createdTimestamp: number;
     activities: Array<Activity>;
 
-    maxDuration: {
+    durationLimit: {
         /** 
          * Start time (HH:mm format) - Do not use directly. Only for millis calculation 
          * @see millis 
@@ -22,9 +22,6 @@ export interface WorkSession {
         millis: number | null;
     }
 
-    idleThresholdMs: number | null;
-
-    // Deprecated
-    //timer: WorkSessionTimer;
+    inactivityThresholdMs: number | null;
 }
 
