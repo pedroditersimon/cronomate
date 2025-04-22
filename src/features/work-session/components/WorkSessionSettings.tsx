@@ -186,7 +186,7 @@ export default function WorkSessionSettings({
             <FormField
                 title="Umbral de inactividad"
                 tooltip={{
-                    text: "Se excluye de la jornada los lapsos de tiempos sin actividad que superen este umbral.",
+                    text: "Excluir los lapsos sin actividad que superen este umbral.",
                 }}
             >
                 <TimeDurationInput
