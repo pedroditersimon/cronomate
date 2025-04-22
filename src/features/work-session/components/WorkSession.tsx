@@ -1,6 +1,5 @@
 import { WorkSession as WorkSessionType } from "../types/WorkSession";
 import { formatDateToText, toDate } from "src/shared/utils/TimeUtils";
-import { generateId } from "src/shared/utils/generateId";
 import Container from "src/shared/layouts/Container";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import WorkSessionTimer from "./WorkSessionTimer";
@@ -12,7 +11,6 @@ import clsx from "clsx";
 import { Activity } from "src/features/activity/types/Activity";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
 import workSessionService from "src/features/work-session/services/workSessionService";
-import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
 import ActivityComponent from "src/features/activity/components/Activity";
@@ -67,79 +65,6 @@ export default function WorkSession({
         return [hasRunningTracks];
     }, [filteredActivities]);
 
-    function addTrackToPauseActivity(currentSession: WorkSessionType, track: TimeTrack): WorkSessionType {
-        // get a copy of current
-        let _session = currentSession;
-
-        const pauseActivity = _session.activities.find(act => act.id === pauseActivityMock.id);
-
-        // no pauseActivity exists, create new one
-        if (!pauseActivity) {
-            _session = workSessionService.addActivity(_session, {
-                ...pauseActivityMock,
-                tracks: [track]
-            });
-            return _session; // dont continue
-        }
-
-        // edit existing pauseActivity
-        const newPauseActivityResult = activityService.addTrack(pauseActivity, track);
-        if (!newPauseActivityResult.success)
-            return _session;
-
-        _session = workSessionService.setActivity(_session, newPauseActivityResult.data);
-        return _session;
-    };
-
-
-    function handleSetTimerStatus(currentSession: WorkSessionType, status: TimeTrackStatus): WorkSessionType {
-        // already in that state
-        if (currentSession.timer.status === status)
-            return currentSession;
-
-        // get a copy of current
-        let _session = currentSession;
-        const now = toDate().getTime();
-
-        // Stop timer and Stop all activities
-        if (status === TimeTrackStatus.STOPPED) {
-            _session = workSessionService.stopTimerAndActivities(_session);
-            return _session;
-        }
-
-        // Play timer
-
-        // not first time, add a pause
-        if (_session.timer.start && session.timer.end !== null) {
-            _session = addTrackToPauseActivity(_session,
-                {
-                    id: generateId(),
-                    start: _session.timer.end!,
-                    end: now,
-                    status: TimeTrackStatus.STOPPED
-                }
-            );
-        }
-
-        _session = workSessionService.setTimer(_session, {
-            ..._session.timer,
-            start: _session.timer.start || now,
-            end: now,
-            status: TimeTrackStatus.RUNNING,
-        });
-        return _session; // dont continue
-    }
-
-
-    function handleSetTimerStatusWithState(status: TimeTrackStatus) {
-        // prevent edit in readOnly
-        if (!canEdit) return;
-
-        const updatedSession = handleSetTimerStatus(session, status);
-        onSessionChange(updatedSession);
-    }
-
-
     function handleSetActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
 
         // prevent delete pauseActivity
@@ -151,11 +76,6 @@ export default function WorkSession({
 
         // set the given activity
         _session = workSessionService.setActivity(_session, newActivity);
-
-        // play todayTimer if activity is running
-        if (_session.timer.status !== TimeTrackStatus.RUNNING && activityService.hasRunningTracks(newActivity)) {
-            _session = handleSetTimerStatus(_session, TimeTrackStatus.RUNNING);
-        }
 
         return _session;
     }
@@ -174,11 +94,6 @@ export default function WorkSession({
         // get a copy of current
         // stop activites
         let _session = workSessionService.stopActivities(currentSession);
-
-        // play session timer if the newActivity is running
-        if (activityService.hasRunningTracks(newActivity)) {
-            _session = handleSetTimerStatus(_session, TimeTrackStatus.RUNNING);
-        }
 
         _session = workSessionService.addActivity(_session, newActivity);
 
@@ -227,7 +142,6 @@ export default function WorkSession({
                 right={<WorkSessionTimer
                     session={session}
                     readOnly={!canEdit}
-                    onSetTimerStatus={handleSetTimerStatusWithState}
                     onSessionChange={onSessionChange}
                 />}
 

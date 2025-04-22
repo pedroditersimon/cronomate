@@ -50,7 +50,7 @@ export function SessionsHistory({ sessions, onSessionSelected, sortBy, sortOrder
     if (sortBy === SortBy.CREATED_AT)
         sortedSessions = sessions.sort((a, b) => b.createdTimestamp - a.createdTimestamp);
     else if (sortBy === SortBy.DURATION)
-        sortedSessions = sessions.sort((a, b) => workSessionService.getTimerDurationInMinutes(b.timer) - workSessionService.getTimerDurationInMinutes(a.timer));
+        sortedSessions = sessions.sort((a, b) => workSessionService.getSessionDurationMs(b) - workSessionService.getSessionDurationMs(a));
 
     // Reverse order
     if (sortOrder === "asc")

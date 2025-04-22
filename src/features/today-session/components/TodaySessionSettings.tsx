@@ -26,10 +26,10 @@ export default function TodaySessionSettings({ readOnly }: Props) {
                 }}
             >
                 <ToggleTabs falseLabel="Desactivado" trueLabel="Guardar"
-                    value={todaySessionSettings.saveTimerOverrides}
+                    value={todaySessionSettings.saveSessionLimits}
                     onSelected={(value) => handleSetSettings({
                         ...todaySessionSettings,
-                        saveTimerOverrides: value
+                        saveSessionLimits: value
                     })}
                 />
             </FormField>

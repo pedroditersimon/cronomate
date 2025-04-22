@@ -1,4 +1,3 @@
-import { toLower } from "lodash";
 import { Activity } from "src/features/activity/types/Activity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
 import { TimeTrack } from "src/features/time-track/types/TimeTrack";

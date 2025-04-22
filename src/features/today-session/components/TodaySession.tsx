@@ -12,6 +12,7 @@ import { useAudioPlayer } from 'src/shared/hooks/useAudioPlayer';
 import sessionEndAudio from "src/assets/audio/399191__spiceprogram__drip-echo.wav";
 import { DateTime, Interval } from "luxon";
 import { toast } from "sonner";
+import activityService from "src/features/activity/services/activityService";
 
 
 interface Props {
@@ -22,6 +23,9 @@ export default function TodaySession({ readOnly }: Props) {
     const { todaySession, save, setSession, saveInHistoryAndReset, resetToDefaultState, setEndAlertStatus } = useTodaySession();
     const { todaySessionSettings } = useTodaySessionSettigs();
     const { playAudio } = useAudioPlayer({ volume: 0.5 });
+
+    const hasRunningTracks = todaySession.session.activities.some(act => activityService.hasRunningTracks(act));
+
 
     // 1. If session changes, save it
     // 2. Save in history if its another day
@@ -54,7 +58,7 @@ export default function TodaySession({ readOnly }: Props) {
         if (!todaySessionSettings.stopOnClose) return;
         console.log("stop timer on window close");
         const stopActivities = () => {
-            const updatedSession = workSessionService.stopTimerAndActivities(todaySession.session);
+            const updatedSession = workSessionService.stopActivities(todaySession.session);
             setSession(updatedSession);
         }
 
@@ -62,15 +66,15 @@ export default function TodaySession({ readOnly }: Props) {
         return () => window.removeEventListener("beforeunload", stopActivities);
     }, [todaySession.session, todaySessionSettings]);
 
-    // if endOverride changes to future, reset alert and auto-stop
+    // if limits changes to future, reset alert and auto-stop
     useEffect(() => {
-        if (!todaySession.session.timer.endOverride) return;
-        const endDate = DateTime.fromMillis(todaySession.session.timer.endOverride);
-        if (endDate > DateTime.now()) {
+        if (!todaySession.session.maxDuration.millis) return;
+        const sessionDurationMs = workSessionService.getSessionDurationMs(todaySession.session);
+        if (sessionDurationMs > todaySession.session.maxDuration.millis) {
             setEndAlertStatus("waiting");
             console.log("Reset sessionEndAlertStatus to waiting");
         }
-    }, [todaySession.session.timer.endOverride]);
+    }, [todaySession.session.maxDuration]);
 
     // constantly update timer and tracks
     useTimer(() => {
@@ -80,18 +84,19 @@ export default function TodaySession({ readOnly }: Props) {
         _session = workSessionService.updateTimerAndTracks(_session);
 
         // stopOnSessionEnd
-        if (todaySessionSettings.stopOnSessionEnd && todaySession.session.timer.endOverride) {
-            const interval = Interval.fromDateTimes(DateTime.now(), DateTime.fromMillis(todaySession.session.timer.endOverride))
-            const remainingSecs = interval.length("seconds");
-            console.log("Remaining time: ", remainingSecs);
+        if (todaySessionSettings.stopOnSessionEnd && todaySession.session.maxDuration.millis) {
+            const sessionDurationMs = workSessionService.getSessionDurationMs(todaySession.session);
 
-            if (!remainingSecs && todaySession.endAlertStatus !== "ended") {
-                _session = workSessionService.stopTimerAndActivities(_session);
+            const remainingMs = todaySession.session.maxDuration.millis - sessionDurationMs;
+            console.log("Remaining seconds: ", remainingMs / 1000);
+
+            if (!remainingMs && todaySession.endAlertStatus !== "ended") {
+                _session = workSessionService.stopActivities(_session);
                 toast.info("La sesión ha terminado");
                 playAudio(sessionEndAudio);
                 setEndAlertStatus("ended");
             }
-            else if (remainingSecs < 60 * 5 && todaySession.endAlertStatus === "waiting") {
+            else if (remainingMs < 5 * 60 * 1000 && todaySession.endAlertStatus === "waiting") {
                 toast.info("La sesión terminará en menos de 5 minutos");
                 playAudio(sessionEndAudio);
                 setEndAlertStatus("alerted");
@@ -99,7 +104,7 @@ export default function TodaySession({ readOnly }: Props) {
         }
 
         setSession(_session);
-    }, 5000, todaySession.session.timer.status === TimeTrackStatus.RUNNING && !readOnly);
+    }, 5000, hasRunningTracks && !readOnly);
 
 
     return (

@@ -7,7 +7,7 @@ const getNewDefaultState = (): TodaySessionSettings => {
     return {
         stopOnClose: true,
         stopOnSessionEnd: true,
-        saveTimerOverrides: false,
+        saveSessionLimits: false,
     };
 }
 

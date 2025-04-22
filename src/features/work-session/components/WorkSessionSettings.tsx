@@ -54,23 +54,19 @@ export default function WorkSessionSettings({
 
     const sessionHasActivities = session.activities.length > 0;
 
-    const [archivedActivities, timerDurationMillis] = useMemo(() => {
+    const [archivedActivities] = useMemo(() => {
         const archivedActivities = session.activities
             .filter(act => act.isDeleted || activityService.hasArchivedTracks(act));
 
-        const timerDurationMinutes = workSessionService.getTimerDurationInMinutes(session.timer);
-        const timerDurationMillis = timerDurationMinutes * 60 * 1000;
-        //const timerDurationStr = convertElapsedTimeToText(timerDurationMillis) ?? "-";
+        return [archivedActivities];
+    }, [session.activities]);
 
-        return [archivedActivities, timerDurationMillis];
-    }, [session.timer, session.activities]);
-
-    const handleChangeTimer = (newTimer: WorkSessionTimer) => {
-        onSessionChange({
-            ...session,
-            timer: newTimer
-        });
-    }
+    // const handleChangeTimer = (newTimer: WorkSessionTimer) => {
+    //     onSessionChange({
+    //         ...session,
+    //         timer: newTimer
+    //     });
+    // }
 
     const handleRestoreActivity = (activityId: string) => {
         const newActivities = session.activities.map(act => {

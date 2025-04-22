@@ -30,7 +30,7 @@ export default function WorkSessionItem({ session, onSelected }: Props) {
                 <span>{title}</span>
                 <WorkSessionTimer
                     session={session}
-                    onSetTimerStatus={() => { }}
+                    onSessionChange={() => { }}
                     readOnly
                 />
             </Clickable>

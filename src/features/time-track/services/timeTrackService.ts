@@ -66,13 +66,16 @@ function hasAnyEndTime(list: Array<TimeTrack>): boolean {
     return list.some(timer => hasEndTime(timer));
 }
 
+function getTrackElapsedTime(track: TimeTrack) {
+    return getElapsedTime(toDate(track.start, false), toDate(track.end, false));
+}
 
-function getAllElapsedTime(timers: Array<TimeTrack>): number {
-    return timers.reduce((acc, timer) => {
-        // dont include archived timers
-        if (timer.status === TimeTrackStatus.ARCHIVED) return acc;
+function getAllElapsedTime(tracks: Array<TimeTrack>): number {
+    return tracks.reduce((acc, track) => {
+        // dont include archived tracks
+        if (track.status === TimeTrackStatus.ARCHIVED) return acc;
 
-        const elapsedTime = getElapsedTime(toDate(timer.start, false), toDate(timer.end, false));
+        const elapsedTime = getTrackElapsedTime(track);
         return elapsedTime > 0
             ? acc + elapsedTime
             : acc;
@@ -84,69 +87,6 @@ function orderAllByStartTime(timers: Array<TimeTrack>): Array<TimeTrack> {
     return orderBy(timers, ['start'], ['asc']);
 }
 
-// [!] Deprecado
-function _getUntrackedPeriods(timers: Array<TimeTrack>, range?: TimeTrack): Array<TimeTrack> {
-    // Ordenar los registros por start
-    const orderedTimers = orderAllByStartTime(timers);
-
-    const untimeredPeriods: Array<TimeTrack> = [];
-
-    let lastEndTime = 0;
-    const firstTimer = orderedTimers[0];
-
-    // Usar range.start si está definido, si no el primer end
-    if (range?.start) {
-        lastEndTime = range.start;
-    } else if (firstTimer?.end && firstTimer.status !== TimeTrackStatus.ARCHIVED) {
-        lastEndTime = firstTimer.end ?? 0;
-    }
-
-    for (let i = 0; i < orderedTimers.length; i++) {
-        const currentTimer = orderedTimers[i];
-        if (currentTimer.status === TimeTrackStatus.ARCHIVED || !hasEndTime(currentTimer)) continue;
-
-        // Ajustar start y end para que queden dentro del rango inicial y final
-        const currentStartTime = currentTimer.start || 0;
-        const currentEndTime = currentTimer.end || 0;
-
-        if (range && range.end && currentStartTime > range.end) {
-            break; // Salir si el start actual excede finalTime
-        }
-
-        // Comparar lastEndTime con el start actual, asegurándose de que se considere dentro del rango
-        if (lastEndTime < currentStartTime) {
-            const gapStart = Math.max(lastEndTime, range?.start || 0);
-            const gapEnd = Math.min(currentStartTime, range?.end || Number.MAX_SAFE_INTEGER);
-
-            if (gapStart < gapEnd) {
-                untimeredPeriods.push({
-                    id: `gap-${i}`,
-                    start: gapStart,
-                    end: gapEnd,
-                    status: TimeTrackStatus.STOPPED
-                });
-            }
-        }
-
-        // Actualizar lastEndTime, considerando el rango final
-        lastEndTime = Math.max(lastEndTime, currentEndTime);
-        if (range && range.end) {
-            lastEndTime = Math.min(lastEndTime, range?.end);
-        }
-    }
-
-    // Si aún hay tiempo no registrado después del último registro hasta finalTime
-    if (range && range.end && lastEndTime < range?.end) {
-        untimeredPeriods.push({
-            id: `gap-final`,
-            start: lastEndTime,
-            end: range?.end,
-            status: TimeTrackStatus.STOPPED
-        });
-    }
-
-    return untimeredPeriods;
-}
 
 function getUntrackedPeriods(tracks: Array<TimeTrack>): Array<TimeTrack> {
 
@@ -174,7 +114,7 @@ function getUntrackedPeriods(tracks: Array<TimeTrack>): Array<TimeTrack> {
     const merged = Interval.merge(intervals);
 
     // Sort intervals by start
-    const sorted = orderBy(merged, ['start'], ['asc']);
+    const sorted = merged.sort((a, b) => a.start!.toMillis() - b.start!.toMillis());
 
     // Get gaps between intervals
     const gaps = [];
@@ -219,5 +159,5 @@ function updateRun(track: TimeTrack) {
 
 export default {
     add, set, stop, stopAll, hasRunning, hasArchived, hasUnarchived, hasEndTime, hasAnyEndTime,
-    getAllElapsedTime, orderAllByStartTime, getUntrackedPeriods, getArchived, updateRun
+    getTrackElapsedTime, getAllElapsedTime, orderAllByStartTime, getUntrackedPeriods, getArchived, updateRun
 };

@@ -39,7 +39,7 @@ Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como 
 
 Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
 
-Ver posibilidad de cambiar el formato de tiempo almacenado por 'HH:mm:ss' envés de epoch millis
+-   [ ] Cambiar el formato de tiempo almacenado por 'HH:mm:ss' envés de epoch millis
 
 Seccion "Limite de jornada":
 
@@ -62,6 +62,8 @@ Seccion "Limite de jornada":
 -   [x] Al darle a play al de boton de pause, corre la actividad "Pausa".
 -   [x] El boton de pausa de la jornada, solo aparece si no se esta corriendo la actividad "Pausa".
 -   [x] Crear una nueva funcion para calcular tiempos entre actividades. Devuelve una lista de tracks.
+-   [x] Deprecar y eliminar la propiedad de timer de la joranda.
+-   [ ] Cambiar propeidad 'maxDuration' por 'durationLimit'.
 
 diferenciar visualmente el estado de editar un titulo de actividad al hover. ahora son lo mismo
 
