@@ -52,10 +52,10 @@ Seccion "Limite de jornada":
 -   [x] Adapatar los inputs de inicio y fin a formato string HH:mm y establecer la propiedad 'maxDuration'.
 -   [x] Crear un handler para que al actualizar inicio o fin, se calcule la duracion en millis.
 -   [x] Adaptar el input de duracion para manejar en millis y establecer la propiedad 'maxDuration'.
--   [ ] Agregar estado default para la duracion maxima de jornada.
+-   [x] Agregar estado default para la duracion maxima de jornada.
 -   [x] Crear input para el umbral de duracion para descartar tiempos entre actividades muy largos.
 -   [x] Agregar propiedad del umbral de duracion de tiempos entre actividades, a la jornada (no global).
--   [ ] Agregar estado default para el umbral de inactividad.
+-   [x] Agregar estado default para el umbral de inactividad.
 -   [x] Sacar play/stop del timer de jornada.
 -   [x] Solo decorar la jornada con estado "running" si hay actividades corriendo.
 -   [x] Crear un boton de pausa en el timer de jornada.

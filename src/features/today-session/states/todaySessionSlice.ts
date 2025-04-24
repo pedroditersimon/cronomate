@@ -36,7 +36,7 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
             createdTimestamp: currentDate.toMillis(),
             activities: [],
             durationLimit,
-            inactivityThresholdMs: previousSession?.inactivityThresholdMs ?? null,
+            inactivityThresholdMs: previousSession?.inactivityThresholdMs ?? 60 * 60 * 1000, // default 1h
         },
         endAlertStatus: "waiting",
     };
