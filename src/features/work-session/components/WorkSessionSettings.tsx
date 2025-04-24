@@ -196,6 +196,7 @@ export default function WorkSessionSettings({
                         ...session,
                         inactivityThresholdMs: newThreshold
                     })}
+                    readOnly={!canEdit}
                 />
             </FormField>
 
