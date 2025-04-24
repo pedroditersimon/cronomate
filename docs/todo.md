@@ -64,6 +64,7 @@ Seccion "Limite de jornada":
 -   [x] Crear una nueva funcion para calcular tiempos entre actividades. Devuelve una lista de tracks.
 -   [x] Deprecar y eliminar la propiedad de timer de la joranda.
 -   [x] Cambiar propeidad 'maxDuration' por 'durationLimit'.
+-   [ ] Excluir del listado de "no categorizadas" los tracks que superen el umbral de inactividad
 
 diferenciar visualmente el estado de editar un titulo de actividad al hover. ahora son lo mismo
 
@@ -75,6 +76,11 @@ En "Actividades archivadas" no mostrar tracks que no estan archivados. SOLO most
 
 Que los tracks no categorizados, tengan un boton de accion rapida que las convierte en una pausa
 Al presionar este boton, sale un pequeño modal preguntando confirmacion y pidiendo el rango de la pausa y ya tiene cargado lo que tiene el track
+
+Agregar un texto chiquito debajo de algun lado, que diga la version de la app
+
+Hacer una funcion general para validar un track, y si es invalido mostrar un iconito de warning al lado del track
+lo mismo si hay tracks sobrelapados, mostrar un icoonito de warning
 
 ## Generales
 

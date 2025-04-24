@@ -19,11 +19,13 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
     const shouldRestoreLimits = previousSession && settings?.saveSessionLimits;
 
     const durationLimit = (shouldRestoreLimits
+        // restore
         ? {
             start: previousSession.durationLimit?.start ?? null,
             end: previousSession.durationLimit?.end ?? null,
             millis: previousSession.durationLimit?.millis ?? null,
         }
+        // default
         : {}
     ) as WorkSession["durationLimit"];
 
