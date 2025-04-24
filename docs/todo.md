@@ -64,7 +64,7 @@ Seccion "Limite de jornada":
 -   [x] Crear una nueva funcion para calcular tiempos entre actividades. Devuelve una lista de tracks.
 -   [x] Deprecar y eliminar la propiedad de timer de la joranda.
 -   [x] Cambiar propeidad 'maxDuration' por 'durationLimit'.
--   [ ] Excluir del listado de "no categorizadas" los tracks que superen el umbral de inactividad
+-   [ ] Agregar un texto o indicador de "excluido" a el listado de "no categorizadas" para los tracks que superen el umbral de inactividad
 
 diferenciar visualmente el estado de editar un titulo de actividad al hover. ahora son lo mismo
 
