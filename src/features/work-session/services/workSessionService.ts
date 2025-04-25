@@ -32,10 +32,10 @@ function getTimerDurationInMinutes(timer: WorkSessionTimer): number {
 }
 
 
-function addActivity(session: WorkSession, newActivity: Activity) {
+function addActivity(session: WorkSession, newActivity: Activity, fusion: boolean = true) {
     return {
         ...session,
-        activities: activityService.add(session.activities, newActivity)
+        activities: activityService.add(session.activities, newActivity, fusion)
     };
 }
 
@@ -100,6 +100,7 @@ function updateTimerAndTracks(session: WorkSession) {
 
     return _session;
 };
+
 
 export default {
     setTimer,

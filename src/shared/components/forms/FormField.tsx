@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { ClassValue } from "clsx";
 import { PropsWithChildren } from "react";
-import { QuestionIcon } from "src/shared/assets/Icons";
+import { QuestionIcon } from "src/assets/Icons";
 import Tooltip, { TooltipPosition } from "src/shared/components/Tooltip";
 
 

@@ -1,6 +1,6 @@
 
 import { formatDateToText, toDate } from "src/shared/utils/TimeUtils";
-import { CircleIcon } from "src/shared/assets/Icons";
+import { CircleIcon } from "src/assets/Icons";
 import Clickable from "src/shared/components/interactable/Clickable";
 import WorkSessionTimer from "./WorkSessionTimer";
 import { WorkSession } from "src/features/work-session/types/WorkSession";

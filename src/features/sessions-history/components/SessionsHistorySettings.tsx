@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 import { WorkSession } from "src/features/work-session/types/WorkSession";
-import { CrossIcon } from "src/shared/assets/Icons";
+import { CrossIcon } from "src/assets/Icons";
 import FormField from "src/shared/components/forms/FormField";
 import Button from "src/shared/components/interactable/Button";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";

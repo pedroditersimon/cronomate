@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, SettingsIcon, InboxStackIcon, ChartPieIcon, CalendarIcon, PresentationChartLineIcon, LineChartFillIcon, ChartNoAxesCombinedIcon, ChartLineIcon } from "src/shared/assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon, CalendarIcon, ChartNoAxesCombinedIcon } from "src/assets/Icons";
 import Sidebar from "./Sidebar";
+import { ROUTES } from "src/app/routing/routes";
 
 
 export default function PageLayout({ children }: PropsWithChildren) {
@@ -11,7 +12,7 @@ export default function PageLayout({ children }: PropsWithChildren) {
                 <Sidebar
                     links={[
                         {
-                            to: "/",
+                            to: ROUTES.PRIVATE.TODAY_SESSION,
                             icon: <BriefcaseIcon />,
                             text: "Hoy",
                         },
@@ -21,12 +22,12 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             icon: <CalendarIcon />
                         },
                         {
-                            to: "/performance",
-                            text: "Rendimiento",
+                            to: "/summary",
+                            text: "Resumen",
                             icon: <ChartNoAxesCombinedIcon />
                         },
                         {
-                            to: "/history",
+                            to: ROUTES.PRIVATE.HISTORY,
                             icon: <InboxStackIcon />,
                             text: "Historial",
                         },
