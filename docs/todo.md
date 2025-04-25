@@ -1,32 +1,13 @@
 SI CAMBIASTE LAS INTERFACES: Incrementa la versión de la app y agrega una función de conversión en sessionStorageVersionConverter para convertir las propiedades al cargar los objetos con la interfaz vieja.  
 Por ejemplo, si cambiaste "enabled" por "isEnabled", detecta la versión del guardado y la actual y haz la conversion.
 
-ver la organzacion por github proejcts, quiza pueda tener un kanban o algo parecido en el repo
-
 Formato 9am/pm para los TimeInput. Se configura en los ajustes de la app (no jornada)
 El formato se puede pasar como prop opcionalmente, sinó lo toma de la config.
 Así podría seguir funcionando el TimeInputMinutes
 
-Unificar los update de los running activities con un unico tick en el worksession.
-hacer dos funciones, una para actualizar el timer (ya esta) y otra para update de los running.
-despues se puede, o llamar a las dos por separado o hacer una "and" que contenga las dos
-
 El startTime y end de configuracion, no cambia si se la borra muchas veces.
 
-Si el endTime de la joranda esta configurado para hacer stop automaticamente.
-No pasará si no estas en la app, ya que los ticks no se actualizan.
-
-Renombrar worksession por simplemente session
-
-las actividades no registradas no debe tener en cuenta tiempo futuro.
-Por ejemplo si ponemos fin de jornada para mas adelante y todavia es temprano.
-
-si poner un endoverride alas 13, pero tu actividad termino mas adelante como a las 13.10.
-ese 10min, no se muestra en el timer de arriba
-
 las rows de la tabla de actividaes se pueden arrastrar y organizar
-
-columna de nombre de proyecto.
 
 Hacer una vista de recuento del mes, con graficos y recuento de horas.
 como para comparar en la hoja del laburo
@@ -34,12 +15,7 @@ como para comparar en la hoja del laburo
 [hecho] Al establecer que se termine la joranada al llegar a la hora de fin,
 si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo el tiempo
 
-Si pones un fin de joranda, se calcula "no categirzada" de toda la jornada futurua.
-Esta bien para saber cuanto tiempo te queda, pero no esta bien represntado como "no categorizada"
-
 Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
-
--   [ ] Cambiar el formato de tiempo almacenado por 'HH:mm:ss' envés de epoch millis
 
 Seccion "Limite de jornada":
 
@@ -66,18 +42,9 @@ Seccion "Limite de jornada":
 -   [x] Cambiar propeidad 'maxDuration' por 'durationLimit'.
 -   [ ] Agregar un texto o indicador de "excluido" a el listado de "no categorizadas" para los tracks que superen el umbral de inactividad
 
-diferenciar visualmente el estado de editar un titulo de actividad al hover. ahora son lo mismo
+-   [x] Quitar titulo del ActivityCreator y dejar solo como un placeholder
 
-Quitar titulo del ActivityCreator y dejar solo como un placeholder
-
-Si hay actividades sin duracion (0h 0m) no mostarlas en la tabla de actividades
-
-En "Actividades archivadas" no mostrar tracks que no estan archivados. SOLO mostrar los archivados.
-
-Que los tracks no categorizados, tengan un boton de accion rapida que las convierte en una pausa
-Al presionar este boton, sale un pequeño modal preguntando confirmacion y pidiendo el rango de la pausa y ya tiene cargado lo que tiene el track
-
-Agregar un texto chiquito debajo de algun lado, que diga la version de la app
+-   [ ] (con el cambio de modelo, ya no pasa) Si hay actividades sin duracion (0h 0m) no mostarlas en la tabla de actividades
 
 Hacer una funcion general para validar un track, y si es invalido mostrar un iconito de warning al lado del track
 lo mismo si hay tracks sobrelapados, mostrar un icoonito de warning
