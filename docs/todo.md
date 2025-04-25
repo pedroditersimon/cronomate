@@ -12,10 +12,7 @@ las rows de la tabla de actividaes se pueden arrastrar y organizar
 Hacer una vista de recuento del mes, con graficos y recuento de horas.
 como para comparar en la hoja del laburo
 
-[hecho] Al establecer que se termine la joranada al llegar a la hora de fin,
-si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo el tiempo
-
-Agregar sonidos a los toasts de sonner, un sonido para success, otr para error etc.
+-   [x] Al establecer que se termine la joranada al llegar a la hora de fin, si le das a play nuevamente (porque queres seguir trabajando), te lo corta todo el tiempo
 
 Seccion "Limite de jornada":
 
@@ -43,11 +40,6 @@ Seccion "Limite de jornada":
 -   [ ] Agregar un texto o indicador de "excluido" a el listado de "no categorizadas" para los tracks que superen el umbral de inactividad
 
 -   [x] Quitar titulo del ActivityCreator y dejar solo como un placeholder
-
--   [ ] (con el cambio de modelo, ya no pasa) Si hay actividades sin duracion (0h 0m) no mostarlas en la tabla de actividades
-
-Hacer una funcion general para validar un track, y si es invalido mostrar un iconito de warning al lado del track
-lo mismo si hay tracks sobrelapados, mostrar un icoonito de warning
 
 ## Generales
 
