@@ -39,3 +39,14 @@ npm run dev
 Si encuentras errores o tienes sugerencias, abre un [issue](https://github.com/pedroditersimon/cronomate/issues).
 
 Revisa las tareas pendientes en la pestaña [Projects](https://github.com/users/pedroditersimon/projects/2) y envía un pull request con tus mejoras.
+
+### ¿Cómo contruibuir?
+
+1. Crea un fork de este repositorio en tu cuenta de GitHub.
+2. Clona tu fork y instala el proyecto.
+3. Crea una rama donde subir tus cambios y subelos.
+4. Ve a la pestaña de `Pull requests`, crea uno, elige tu fork y la rama, y haz clic en `compare across forks`.
+5. Ponle un título, una descripción y envía tu PR.
+
+Gracias y mucha suerte 🤓
+
