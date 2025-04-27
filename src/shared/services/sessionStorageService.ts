@@ -32,7 +32,7 @@ async function getItems<T extends { id: IdType }>(storeName: string): Promise<T[
     const savedObjects = await getSavedObjectItems<T>(storeName);
 
     // convert each session to actual version
-    return savedObjects.map(savedObject => {
+    const convertedSessions = savedObjects.map(savedObject => {
         // is not a ISavedObject
         if (savedObject.value === null) return savedObject;
 
@@ -42,6 +42,9 @@ async function getItems<T extends { id: IdType }>(storeName: string): Promise<T[
             appVersion
         )
     });
+
+    const nonNullSessions = convertedSessions.filter(s => s !== null);
+    return nonNullSessions;
 }
 
 
