@@ -1,4 +1,4 @@
-# Arquitectura LFD
+# Arquitectura
 
 Esta aplicación utiliza una adaptación práctica de una estructura que combina:
 
@@ -8,8 +8,6 @@ Esta aplicación utiliza una adaptación práctica de una estructura que combina
 
 Está organizado en una jerarquía de 4 capas clave: `app`, `pages`, `features` y `shared`.  
 Los `features` son el eje central que impulsa la lógica de negocio y las funcionalidades de la aplicación.
-
-A este enfoque lo llamo **Layered Feature-Driven Architecture (LFD)** (Arquitectura en Capas Orientada a Features).
 
 ## Capas
 

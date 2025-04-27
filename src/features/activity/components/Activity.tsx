@@ -91,7 +91,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
         if (hasRunningTracks) {
             // set endTime to Now on running tracks
             const newTracks = activity.tracks.map(track => track.status === TimeTrackStatus.RUNNING
-                ? { ...track, endTime: now, status: TimeTrackStatus.STOPPED }
+                ? { ...track, end: now, status: TimeTrackStatus.STOPPED }
                 : track
             );
             onActivityChange({ ...activity, tracks: newTracks });

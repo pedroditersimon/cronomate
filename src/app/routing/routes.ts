@@ -4,7 +4,8 @@ export const ROUTES = {
         TODAY_SESSION: "/",
         HISTORY: "/history",
         HISTORY_DETAIL: "/history/:id",
-        APP_SETTINGS: "/settings"
+        APP_SETTINGS: "/settings",
+        SUMMARY: "/summary",
     },
     ERROR: { NOT_FOUND: "*" },
 } as const;

@@ -1,36 +1,54 @@
+import { Interval } from "luxon";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
-import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import timeTrackService from "src/features/time-track/services/timeTrackService";
+import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
 import { WorkSession } from "src/features/work-session/types/WorkSession";
-import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
-import { getElapsedTime, toDate } from "src/shared/utils/TimeUtils";
 
 
-function setTimer(session: WorkSession, newTimer: WorkSessionTimer): WorkSession {
+function getSessionDurationMs(session: WorkSession): number {
+
+    const tracks = session.activities
+        // exclude pause activity
+        .filter(act => {
+            if (act.id === pauseActivityMock.id) return false;
+            if (act.isDeleted) return false;
+            return true;
+        })
+        // get tracks
+        .flatMap(activity => activity.tracks);
+
+    const untrackedPeriods = timeTrackService.getUntrackedPeriods(tracks);
+
+    // Filter untracked periods using session duration limit
+    const filteredUntrackedPeriods = !session.inactivityThresholdMs
+        ? untrackedPeriods // <- no limit
+        : untrackedPeriods.filter(track => {
+            const maxMs = session.inactivityThresholdMs!;
+            return timeTrackService.getTrackElapsedTime(track) <= maxMs;
+        });
+
+    const allTracks = tracks.concat(filteredUntrackedPeriods);
+
+    return timeTrackService.getAllElapsedTime(allTracks);
+}
+
+
+function calculateDurationLimit(durationLimit: WorkSession["durationLimit"]) {
+    if (!durationLimit.start || !durationLimit.end)
+        return durationLimit;
+
+    const interval = Interval.fromISO(`${durationLimit.start}/${durationLimit.end}`);
+
+    const calculatedMillis = interval.isValid
+        ? interval.length("milliseconds")
+        : null;
+
     return {
-        ...session,
-        timer: { ...newTimer }
+        ...durationLimit,
+        millis: calculatedMillis
     };
 };
-
-function getTimerWithOverrides(timer: WorkSessionTimer): TimeTrack {
-    return {
-        id: timer.id,
-        start: timer.startOverride ?? timer.start,
-        end: timer.endOverride ?? timer.end,
-        status: timer.status
-    }
-}
-
-function getTimerDurationInMinutes(timer: WorkSessionTimer): number {
-    const start = timer.startOverride || timer.start;
-    const end = timer.endOverride || timer.end;
-
-    if (!start || !end) return 0;
-
-    return getElapsedTime(toDate(start), toDate(end)) / 60000;
-}
-
 
 function addActivity(session: WorkSession, newActivity: Activity, fusion: boolean = true) {
     return {
@@ -53,25 +71,6 @@ function setActivities(session: WorkSession, newActivities: Array<Activity>) {
     };
 };
 
-function stopTimerAndActivities(session: WorkSession): WorkSession {
-    let _session = session;
-    const now = toDate().getTime();
-
-    // 1. Stop all activities
-    _session = stopActivities(session);
-
-    // 2. Stop timer
-    _session.timer = {
-        ..._session.timer,
-        end: _session.timer.status === TimeTrackStatus.RUNNING
-            ? now : _session.timer.end, // now if running, otherwise keep same
-        status: TimeTrackStatus.STOPPED
-    };
-
-    return _session;
-}
-
-
 function stopActivities(session: WorkSession) {
     // Stop all activities
     const newActivities = activityService.stopAll(session.activities);
@@ -83,15 +82,15 @@ function stopActivities(session: WorkSession) {
 }
 
 function updateTimerAndTracks(session: WorkSession) {
-    const now = toDate().getTime();
+    // const now = toDate().getTime();
     let _session = session;
 
     // Session timer
-    _session = setTimer(_session, {
-        ...session.timer,
-        start: session.timer.start || now,
-        end: now,
-    });
+    // _session = setTimer(_session, {
+    //     ...session.timer,
+    //     start: session.timer.start || now,
+    //     end: now,
+    // });
 
     // Tracks
     _session = setActivities(_session,
@@ -103,15 +102,13 @@ function updateTimerAndTracks(session: WorkSession) {
 
 
 export default {
-    setTimer,
-    getTimerWithOverrides,
-    getTimerDurationInMinutes,
+    getSessionDurationMs,
+    calculateDurationLimit,
 
     addActivity,
     setActivity,
     setActivities,
 
     stopActivities,
-    stopTimerAndActivities,
     updateTimerAndTracks
 };

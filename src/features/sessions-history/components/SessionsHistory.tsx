@@ -13,7 +13,7 @@ function groupByMonth(sessions: WorkSession[]): GroupedSessions {
 
     sessions.forEach(session => {
 
-        const date = DateTime.fromMillis(session.createdTimeStamp);
+        const date = DateTime.fromMillis(session.createdTimestamp);
         if (!date.isValid) return;
 
         const inCurrentMonth = date.hasSame(DateTime.now(), "month")
@@ -48,9 +48,9 @@ export function SessionsHistory({ sessions, onSessionSelected, sortBy, sortOrder
     let sortedSessions = [...sessions];
 
     if (sortBy === SortBy.CREATED_AT)
-        sortedSessions = sessions.sort((a, b) => b.createdTimeStamp - a.createdTimeStamp);
+        sortedSessions = sessions.sort((a, b) => b.createdTimestamp - a.createdTimestamp);
     else if (sortBy === SortBy.DURATION)
-        sortedSessions = sessions.sort((a, b) => workSessionService.getTimerDurationInMinutes(b.timer) - workSessionService.getTimerDurationInMinutes(a.timer));
+        sortedSessions = sessions.sort((a, b) => workSessionService.getSessionDurationMs(b) - workSessionService.getSessionDurationMs(a));
 
     // Reverse order
     if (sortOrder === "asc")

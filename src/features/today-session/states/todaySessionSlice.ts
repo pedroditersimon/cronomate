@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
-import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import { WorkSession } from "src/features/work-session/types/WorkSession";
 import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
 import localSave from "src/shared/services/localSave";
@@ -16,42 +15,28 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
     const previousSession = previousState?.session;
     const currentDate = DateTime.now();
 
-    // Desplazar a la fecha de hoy manteniendo hora, minuto y segundo.
-    function adjustToCurrentDate(timestamp: number | null) {
-        if (timestamp === null) return null;
+    // Restaurar limites del estado anterior
+    const shouldRestoreLimits = previousSession && settings?.saveSessionLimits;
 
-        const originalDate = DateTime.fromMillis(timestamp);
-        if (!originalDate.isValid) return null;
-
-        const { hour, minute, second } = originalDate;
-        return currentDate.set({ hour, minute, second }).toMillis();
-    }
-
-    // Restaurar overrides del estado anterior
-    const shouldRestoreOverrides = previousSession && settings?.saveTimerOverrides;
-
-    const startOverride = shouldRestoreOverrides
-        ? adjustToCurrentDate(previousSession.timer.startOverride)
-        : null;
-
-    const endOverride = shouldRestoreOverrides
-        ? adjustToCurrentDate(previousSession.timer.endOverride)
-        : null;
+    const durationLimit = (shouldRestoreLimits
+        // restore
+        ? {
+            start: previousSession.durationLimit?.start ?? null,
+            end: previousSession.durationLimit?.end ?? null,
+            millis: previousSession.durationLimit?.millis ?? null,
+        }
+        // default
+        : {}
+    ) as WorkSession["durationLimit"];
 
 
     return {
         session: {
             id: generateId(),
-            createdTimeStamp: currentDate.toMillis(),
-            timer: {
-                id: generateId(),
-                start: currentDate.toMillis(),
-                end: null,
-                status: TimeTrackStatus.STOPPED,
-                startOverride: startOverride,
-                endOverride: endOverride,
-            },
+            createdTimestamp: currentDate.toMillis(),
             activities: [],
+            durationLimit,
+            inactivityThresholdMs: previousSession?.inactivityThresholdMs ?? 60 * 60 * 1000, // default 1h
         },
         endAlertStatus: "waiting",
     };

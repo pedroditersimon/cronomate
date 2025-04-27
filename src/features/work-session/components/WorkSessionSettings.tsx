@@ -16,6 +16,9 @@ import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTr
 import Activity from "src/features/activity/components/Activity";
 import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import activityService from "src/features/activity/services/activityService";
+import { TimeDurationInput } from "src/shared/components/interactable/TimeDurationInput";
+import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
+import { Duration, Interval } from "luxon";
 
 
 interface Props {
@@ -51,22 +54,19 @@ export default function WorkSessionSettings({
 
     const sessionHasActivities = session.activities.length > 0;
 
-    const [archivedActivities, timerDurationStr] = useMemo(() => {
+    const [archivedActivities] = useMemo(() => {
         const archivedActivities = session.activities
             .filter(act => act.isDeleted || activityService.hasArchivedTracks(act));
 
-        const timerDurationMinutes = workSessionService.getTimerDurationInMinutes(session.timer);
-        const timerDurationMillis = timerDurationMinutes * 60 * 1000;
-        const timerDurationStr = convertElapsedTimeToText(timerDurationMillis) ?? "-";
-        return [archivedActivities, timerDurationStr];
-    }, [session.timer, session.activities]);
+        return [archivedActivities];
+    }, [session.activities]);
 
-    const handleChangeTimer = (newTimer: WorkSessionTimer) => {
-        onSessionChange({
-            ...session,
-            timer: newTimer
-        });
-    }
+    // const handleChangeTimer = (newTimer: WorkSessionTimer) => {
+    //     onSessionChange({
+    //         ...session,
+    //         timer: newTimer
+    //     });
+    // }
 
     const handleRestoreActivity = (activityId: string) => {
         const newActivities = session.activities.map(act => {
@@ -96,6 +96,17 @@ export default function WorkSessionSettings({
         });
     };
 
+
+
+    const handleSetMaxDuration = (newLimit: typeof session.durationLimit) => {
+        const durationLimit = workSessionService.calculateDurationLimit(newLimit);
+
+        onSessionChange({
+            ...session,
+            durationLimit
+        });
+    };
+
     return (
         <>
             {/* Topbar */}
@@ -112,36 +123,74 @@ export default function WorkSessionSettings({
 
             <div className="flex flex-row gap-5">
                 <FormField title="Inicio" className="text-center">
-                    <TimeInput
-                        className="max-w-full"
-                        time={session.timer.startOverride || (session.timer.start ? session.timer.start + 1 : undefined)}
-                        // si es undefined tambien el override lo es
-                        onChange={newStartTime => handleChangeTimer({
-                            ...session.timer,
-                            startOverride: newStartTime
+                    <TimeInputHHmm
+                        className={clsx(
+                            "max-w-full",
+                            {
+                                "text-gray-500 hover:text-white": !session.durationLimit?.start
+                            }
+                        )}
+                        timeHHmm={session.durationLimit?.start ?? ""}
+                        onChange={newTime => handleSetMaxDuration({
+                            ...session.durationLimit,
+                            start: newTime
                         })}
                         readOnly={!canEdit}
                     />
                 </FormField>
 
                 <FormField title="Fin" className="text-center">
-                    <TimeInput
-                        className={clsx("max-w-full",
-                            { "text-red-400": session.timer.status === TimeTrackStatus.RUNNING && !session.timer.endOverride }
+                    <TimeInputHHmm
+                        className={clsx(
+                            "max-w-full",
+                            {
+                                "text-gray-500 hover:text-white": !session.durationLimit?.end
+                            }
                         )}
-                        time={session.timer.endOverride || session.timer.end || undefined}
-                        onChange={newEndTime => handleChangeTimer({
-                            ...session.timer,
-                            endOverride: newEndTime
+                        timeHHmm={session.durationLimit?.end ?? ""}
+                        onChange={newTime => handleSetMaxDuration({
+                            ...session.durationLimit,
+                            end: newTime
                         })}
                         readOnly={!canEdit}
                     />
                 </FormField>
 
                 <FormField title="Duración" className="text-center">
-                    <span>{timerDurationStr}</span>
+                    <TimeDurationInput
+                        className={clsx("max-w-full",
+                            {
+                                "text-gray-500 hover:text-white": !session.durationLimit?.millis
+                            }
+                        )}
+                        millis={session.durationLimit?.millis ?? 0}
+                        onChange={newDuration => handleSetMaxDuration({
+                            ...session.durationLimit,
+                            start: null,
+                            end: null,
+                            millis: newDuration
+                        })}
+                        readOnly={!canEdit}
+                    />
                 </FormField>
             </div>
+
+            <FormField
+                title="Umbral de inactividad"
+                tooltip={{
+                    text: "Excluir los lapsos sin actividad que superen este umbral.",
+                }}
+            >
+                <TimeDurationInput
+                    className={clsx("max-w-full")}
+                    millis={session.inactivityThresholdMs || 60 * 60 * 1000} // default 1h
+                    onChange={newThreshold => onSessionChange({
+                        ...session,
+                        inactivityThresholdMs: newThreshold
+                    })}
+                    readOnly={!canEdit}
+                />
+            </FormField>
 
 
             <FormField
