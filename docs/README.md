@@ -45,8 +45,9 @@ Revisa las tareas pendientes en la pestaña [Projects](https://github.com/users/
 1. Crea un fork de este repositorio en tu cuenta de GitHub.
 2. Clona tu fork y instala el proyecto.
 3. Crea una rama donde subir tus cambios y subelos.
-4. Ve a la pestaña de `Pull requests`, crea uno, elige tu fork y la rama, y haz clic en `compare across forks`.
-5. Ponle un título, una descripción y envía tu PR.
+4. Ve a la pestaña de `Pull requests`, crea uno, haz clic en `compare across forks`.
+5. Elige la rama `dev` del repositorio original (este) y luego elige tu fork.
+6. Ponle un título, una descripción y envía tu PR.
 
 Gracias y mucha suerte 🤓
 
