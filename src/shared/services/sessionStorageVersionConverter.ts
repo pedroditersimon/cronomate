@@ -14,6 +14,7 @@ function convertSession(session: any, fromVersion: string, toVersion: string): a
     while (convertedSession.newVersion !== toVersion) {
         const previousVersion = convertedSession.newVersion;
         convertedSession = convertSessionToNext(convertedSession.value, convertedSession.newVersion);
+
         // Cant convert anymore, return the session value
         if (convertedSession.newVersion === previousVersion) {
             break;
@@ -21,8 +22,10 @@ function convertSession(session: any, fromVersion: string, toVersion: string): a
     }
 
     // cant convert
-    if (convertedSession.newVersion !== toVersion)
+    if (convertedSession.newVersion !== toVersion) {
+        console.warn(`Cant convert session from v${fromVersion} to v${toVersion}`, session);
         return null
+    }
 
     return convertedSession.value;
 }
