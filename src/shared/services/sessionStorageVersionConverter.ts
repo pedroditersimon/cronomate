@@ -4,7 +4,7 @@ import { WorkSession } from "src/features/work-session/types/WorkSession";
 
 // [!] DONT use spread operator here
 
-function convertSession(session: any, fromVersion: string, toVersion: string) {
+function convertSession(session: any, fromVersion: string, toVersion: string): any | null {
     let convertedSession = { value: session, newVersion: fromVersion };
 
     // already in target version
@@ -19,6 +19,10 @@ function convertSession(session: any, fromVersion: string, toVersion: string) {
             break;
         }
     }
+
+    // cant convert
+    if (convertedSession.newVersion !== toVersion)
+        return null
 
     return convertedSession.value;
 }
