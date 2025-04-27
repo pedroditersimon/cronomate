@@ -59,7 +59,7 @@ function v0_2_0_to_v0_3_0(session: any) {
     // 6. created 'inactivityThresholdMs'
 
     // [!] Guard: Ensure the session is from the correct version by checking it
-    if (session.timer === null) return session;
+    if (!session.timer) return session;
 
     const startDate = DateTime.fromMillis(session.timer.startOverride ?? 0);
     const convertedStart = startDate.toFormat("HH:mm");
