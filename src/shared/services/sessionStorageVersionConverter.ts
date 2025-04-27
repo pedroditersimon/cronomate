@@ -61,10 +61,10 @@ function v0_2_0_to_v0_3_0(session: any) {
     // [!] Guard: Ensure the session is from the correct version by checking it
     if (session.timer === null) return session;
 
-    const startDate = DateTime.fromMillis(session.timer.startOverride);
+    const startDate = DateTime.fromMillis(session.timer.startOverride ?? 0);
     const convertedStart = startDate.toFormat("HH:mm");
 
-    const endDate = DateTime.fromMillis(session.timer.endOverride);
+    const endDate = DateTime.fromMillis(session.timer.endOverride ?? 0);
     const convertedEnd = endDate.toFormat("HH:mm");
 
     let durationLimit: any = {
