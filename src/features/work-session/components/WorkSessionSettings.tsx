@@ -98,20 +98,12 @@ export default function WorkSessionSettings({
 
 
 
-    const handleSetMaxDuration = (newMaxDuration: typeof session.durationLimit) => {
-        let calculatedMillis = newMaxDuration.millis;
-        if (newMaxDuration.start && newMaxDuration.end) {
-            const interval = Interval.fromISO(`${newMaxDuration.start}/${newMaxDuration.end}`);
-            calculatedMillis = interval.isValid
-                ? interval.length("milliseconds") : null;
-        }
+    const handleSetMaxDuration = (newLimit: typeof session.durationLimit) => {
+        const durationLimit = workSessionService.calculateDurationLimit(newLimit);
 
         onSessionChange({
             ...session,
-            durationLimit: {
-                ...newMaxDuration,
-                millis: calculatedMillis
-            },
+            durationLimit
         });
     };
 
