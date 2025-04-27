@@ -1,3 +1,4 @@
+import { Interval } from "luxon";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
@@ -32,6 +33,22 @@ function getSessionDurationMs(session: WorkSession): number {
     return timeTrackService.getAllElapsedTime(allTracks);
 }
 
+
+function calculateDurationLimit(durationLimit: WorkSession["durationLimit"]) {
+    if (!durationLimit.start || !durationLimit.end)
+        return durationLimit;
+
+    const interval = Interval.fromISO(`${durationLimit.start}/${durationLimit.end}`);
+
+    const calculatedMillis = interval.isValid
+        ? interval.length("milliseconds")
+        : null;
+
+    return {
+        ...durationLimit,
+        millis: calculatedMillis
+    };
+};
 
 function addActivity(session: WorkSession, newActivity: Activity, fusion: boolean = true) {
     return {
@@ -86,6 +103,7 @@ function updateTimerAndTracks(session: WorkSession) {
 
 export default {
     getSessionDurationMs,
+    calculateDurationLimit,
 
     addActivity,
     setActivity,
