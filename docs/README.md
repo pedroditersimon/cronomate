@@ -1,67 +1,53 @@
 # Cronomate
-"Cronomate" combina "crono", refiriendose a el tiempo, y "mate", tanto a la tradicional bebida de yerba mate, como al concepto de compañero en inglés.  
+
 Es una aplicación de gestión del tiempo, diseñada para asistir en actividades y jornadas cronometradas, como estudiar o trabajar.
 
+"Cronomate" combina "crono", refiriendose a el tiempo, y "mate", tanto a la tradicional bebida argentina de la yerba mate, como al concepto de compañero en inglés.  
 
-## Registro y Gestión de Tareas
-- Registrar cada tarea.
-- Botón que enlace con una tarea en ClickUp (o cualquier link).
-- Timer independiente para cada tarea con funciones de `play` y `stop`.
+## 🔗 Enlaces
 
-## Gestión del Tiempo de Jornada
-- Timer general para la jornada laboral (ej.: de 9:00 a 13:00).
-- El timer sigue corriendo incluso sin tareas activas, salvo cuando se pausa manualmente (por actividades como almuerzo).
-- Registrar automáticamente las horas adicionales (sin tareas) como "Sin registrar", "StandBy" o "Jornada".
+-   **Producción**: [cronomate.vercel.app](https://cronomate.vercel.app)
+-   **Entorno de desarrollo**: [dev-cronomate.vercel.app](https://dev-cronomate.vercel.app/)
 
-## Exportación de Datos
-- Generar una tabla simple copiable y poder exportarla a Excel.
-- Servir las horas en formato unidad de hora (minutos/60).
+## 💻 Instalación local
 
+1. Clona el repositorio
 
-# Personalización de Jornada
+```bash
+git clone https://github.com/pedroditersimon/cronomate
+```
 
-## Configuración de Horarios
-- Definir la duración de la jornada laboral por dia.
-- En el dia se mostrara un progreso de jornada.
-- Resaltar en rojo el tiempo excedido del límite establecido, indicando cuánto tiempo fue excedido.
+2. Instala dependencias
 
-## Descansos
-- Configurar descansos (para comer, recrearse, etc).
-- Alertas popup con sonido, con opción de pausar los timers.
+```bash
+cd cronomate
+npm install
+```
 
+3. Ejecuta
 
-# Visualización y Resúmenes
+```bash
+npm run dev
+```
 
-## Registros Detallados
-- Registro diario con tareas realizadas, tiempos registrados.
-- Visualización de resúmenes semanales y mensuales.
+4. Abre `http://localhost:5555` en tu navegador.
 
-## Resumen para Daily
-- Resumen de las tareas completadas el día anterior para facilitar la revisión en reuniones diarias.
+## 🤝 Contribución
 
-## Estilos y personalidad
-- Poder configurar un set de temas de colores.
-- Utilizar daisyui.
-- Que se note que es argentino y haga justicia a su nombre "cronomate" con un mate o un tema verde.
+¡Este proyecto es open source y esta abierto a la colaboracion!
 
+Si encuentras errores o tienes sugerencias, abre un [issue](https://github.com/pedroditersimon/cronomate/issues).
 
-## Intregacion con ClickUp
-- Opcional: Conexión con ClickUp para completar y seleccionar tareas automáticamente.
-- Alternativa: Generar enlaces que incluyan parámetros para marcar tareas como completas en el clickup del usuario.
+Revisa las tareas pendientes en la pestaña [Projects](https://github.com/users/pedroditersimon/projects/2) y envía un pull request con tus mejoras.
 
+### ¿Cómo contruibuir?
 
-# Funciones Adicionales
+1. Crea un fork de este repositorio en tu cuenta de GitHub.
+2. Clona tu fork y instala el proyecto.
+3. Crea una rama donde subir tus cambios y subelos.
+4. Ve a la pestaña de `Pull requests`, crea uno, haz clic en `compare across forks`.
+5. Elige la rama `dev` del repositorio original (este) y luego elige tu fork.
+6. Ponle un título, una descripción y envía tu PR.
 
-## Notas Personales
-- Sección dedicada para notas personales.
+Gracias y mucha suerte 🤓
 
-## ABC de Salud Laboral
-- Consejos y tips relacionados con la salud laboral.
-
-## Facturacion
-- Calculo de remuneracion por horas laborales.
-- Si se configura integrarlo en los resumenes
-
-## Timer
-- Opcion para pausar todos los timers y reanudarlos donde quedaron
-- Opcion simple de agregar una entrada eligiendo la hora, sin darle a play a un Activity
