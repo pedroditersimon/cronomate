@@ -11,7 +11,7 @@ import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import ActivityTrack from "src/features/activity/components/ActivityTrack";
-import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 
 export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 

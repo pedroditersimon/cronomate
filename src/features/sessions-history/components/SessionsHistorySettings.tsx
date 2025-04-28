@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import { Session } from "src/features/session/types/Session";
 import { CrossIcon } from "src/assets/Icons";
 import FormField from "src/shared/components/forms/FormField";
 import Button from "src/shared/components/interactable/Button";
@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 
 interface Props {
-    sessions: Array<WorkSession>;
+    sessions: Array<Session>;
     onClose: () => void;
 }
 

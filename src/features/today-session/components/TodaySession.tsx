@@ -3,10 +3,10 @@ import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import TodaySessionSettings from "src/features/today-session/components/TodaySessionSettings";
 import useTodaySession from "src/features/today-session/hooks/useTodaySession";
 import useTodaySessionSettigs from "src/features/today-session/hooks/useTodaySessionSettigs";
-import workSessionService from "src/features/work-session/services/workSessionService";
+import sessionService from "src/features/session/services/sessionService";
 import useTimer from "src/shared/hooks/useTimer";
 import { isToday, toDate } from "src/shared/utils/TimeUtils";
-import WorkSessionComponent from "src/features/work-session/components/WorkSession";
+import WorkSessionComponent from "src/features/session/components/Session";
 
 import { useAudioPlayer } from 'src/shared/hooks/useAudioPlayer';
 import sessionEndAudio from "src/assets/audio/399191__spiceprogram__drip-echo.wav";
@@ -58,7 +58,7 @@ export default function TodaySession({ readOnly }: Props) {
         if (!todaySessionSettings.stopOnClose) return;
         console.log("stop timer on window close");
         const stopActivities = () => {
-            const updatedSession = workSessionService.stopActivities(todaySession.session);
+            const updatedSession = sessionService.stopActivities(todaySession.session);
             setSession(updatedSession);
         }
 
@@ -69,7 +69,7 @@ export default function TodaySession({ readOnly }: Props) {
     // if limits changes to future, reset alert and auto-stop
     useEffect(() => {
         if (!todaySession.session.durationLimit.millis) return;
-        const sessionDurationMs = workSessionService.getSessionDurationMs(todaySession.session);
+        const sessionDurationMs = sessionService.getSessionDurationMs(todaySession.session);
         if (sessionDurationMs > todaySession.session.durationLimit.millis) {
             setEndAlertStatus("waiting");
             console.log("Reset sessionEndAlertStatus to waiting");
@@ -81,17 +81,17 @@ export default function TodaySession({ readOnly }: Props) {
         console.log("Update today timer and tracks");
         let _session = todaySession.session;
 
-        _session = workSessionService.updateTimerAndTracks(_session);
+        _session = sessionService.updateTimerAndTracks(_session);
 
         // stopOnSessionEnd
         if (todaySessionSettings.stopOnSessionEnd && todaySession.session.durationLimit.millis) {
-            const sessionDurationMs = workSessionService.getSessionDurationMs(todaySession.session);
+            const sessionDurationMs = sessionService.getSessionDurationMs(todaySession.session);
 
             const remainingMs = todaySession.session.durationLimit.millis - sessionDurationMs;
             console.log("Remaining seconds: ", remainingMs / 1000);
 
             if (!remainingMs && todaySession.endAlertStatus !== "ended") {
-                _session = workSessionService.stopActivities(_session);
+                _session = sessionService.stopActivities(_session);
                 toast.info("La sesión ha terminado");
                 playAudio(sessionEndAudio);
                 setEndAlertStatus("ended");

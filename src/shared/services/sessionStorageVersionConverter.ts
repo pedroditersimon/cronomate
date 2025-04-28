@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
-import workSessionService from "src/features/work-session/services/workSessionService";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import sessionService from "src/features/session/services/sessionService";
+import { Session } from "src/features/session/types/Session";
 
 // [!] DONT use spread operator here
 
@@ -30,7 +30,7 @@ function convertSession(session: any, fromVersion: string, toVersion: string): a
     return convertedSession.value;
 }
 
-function convertSessionToNext(session: WorkSession, fromVersion: string) {
+function convertSessionToNext(session: Session, fromVersion: string) {
     // 0.0.0 -> 0.1.0
     if (fromVersion === '0.0.0') {
         return {
@@ -58,7 +58,7 @@ function convertSessionToNext(session: WorkSession, fromVersion: string) {
 // Convert session from v0.2.0 to v0.3.0
 function v0_2_0_to_v0_3_0(session: any) {
     // Changes:
-    // 1. removed 'timer: WorkSessionTimer' prop
+    // 1. removed 'timer: SessionTimer' prop
     // 2. renamed 'createdTimeStamp' to 'createdTimestamp'
     // 3. created 'durationLimit'
     // 4. moved timer.startOverride (epoch ms) -> durationLimit.start (HH:mm)
@@ -81,7 +81,7 @@ function v0_2_0_to_v0_3_0(session: any) {
     };
 
     if (convertedStart && convertedEnd) {
-        durationLimit = workSessionService.calculateDurationLimit(durationLimit);
+        durationLimit = sessionService.calculateDurationLimit(durationLimit);
     }
 
     return {

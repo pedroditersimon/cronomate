@@ -1,4 +1,4 @@
-import { WorkSession } from 'src/features/work-session/types/WorkSession';
+import { Session } from 'src/features/session/types/Session';
 import Container from 'src/shared/layouts/Container';
 import ContainerTopbar from 'src/shared/layouts/ContainerTopbar';
 import { SessionsHistory } from 'src/features/sessions-history/components/SessionsHistory';
@@ -10,8 +10,8 @@ import ContainerOverlay from 'src/shared/layouts/ContainerOverlay';
 import SessionsHistorySettings from 'src/features/sessions-history/components/SessionsHistorySettings';
 
 interface Props {
-    sessions: WorkSession[];
-    onSessionSelected: (session: WorkSession) => void;
+    sessions: Session[];
+    onSessionSelected: (session: Session) => void;
 }
 
 
