@@ -1,9 +1,13 @@
-import { ReactNode } from "react";
+import { version } from '../../../package.json';
+const appVersion = version;
+
+import { ReactNode } from 'react';
 import Container from "./Container";
 import clsx from "clsx";
 import { Link as LinkType } from "src/shared/types/Link";
 import LinkBtn from "src/shared/components/interactable/LinkBtn";
 import { useLocation } from "react-router";
+
 
 interface LinkBtnType extends LinkType {
     text?: string,
@@ -22,6 +26,7 @@ export default function Sidebar({ links }: Props) {
 
     return (
         <Container width="min-w-56">
+
             <div className="flex flex-col gap-1">
                 {links.map(link => {
                     const isActive = basePath === link.to;
@@ -64,6 +69,10 @@ export default function Sidebar({ links }: Props) {
                     )
                 })}
             </div>
+
+            <span className='mt-auto text-center text-sm font-semibold text-slate-600'>
+                Cronomate v{appVersion}
+            </span>
 
         </Container >
     );
