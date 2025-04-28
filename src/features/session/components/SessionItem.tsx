@@ -2,17 +2,17 @@
 import { formatDateToText, toDate } from "src/shared/utils/TimeUtils";
 import { CircleIcon } from "src/assets/Icons";
 import Clickable from "src/shared/components/interactable/Clickable";
-import WorkSessionTimer from "./WorkSessionTimer";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import SessionTimer from "./SessionTimer";
+import { Session } from "src/features/session/types/Session";
 
 
 interface Props {
-    session: WorkSession;
-    onSelected?: (session: WorkSession) => void;
+    session: Session;
+    onSelected?: (session: Session) => void;
 }
 
-// Representation of a WorkSession as an item list (clickable/selectable)
-export default function WorkSessionItem({ session, onSelected }: Props) {
+// Representation of a Session as an item list (clickable/selectable)
+export default function SessionItem({ session, onSelected }: Props) {
 
     const title = formatDateToText(toDate(session.createdTimestamp));
 
@@ -28,7 +28,7 @@ export default function WorkSessionItem({ session, onSelected }: Props) {
                 onClick={handleClick}
             >
                 <span>{title}</span>
-                <WorkSessionTimer
+                <SessionTimer
                     session={session}
                     onSessionChange={() => { }}
                     readOnly

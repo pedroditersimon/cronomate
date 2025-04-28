@@ -1,6 +1,6 @@
 import { Activity } from "src/features/activity/types/Activity";
 
-export interface WorkSession {
+export interface Session {
     id: string;
     createdTimestamp: number;
     activities: Array<Activity>;

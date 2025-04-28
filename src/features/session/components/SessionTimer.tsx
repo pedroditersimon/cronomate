@@ -5,28 +5,28 @@ import { PauseIcon, StopIcon } from "src/assets/Icons";
 import { useMemo } from "react";
 import { convertElapsedTimeToText, toDate } from "src/shared/utils/TimeUtils";
 import Clickable from "src/shared/components/interactable/Clickable";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import { Session } from "src/features/session/types/Session";
 import activityService from "src/features/activity/services/activityService";
-import workSessionService from "src/features/work-session/services/workSessionService";
+import sessionService from "src/features/session/services/sessionService";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
-import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import { generateId } from "src/shared/utils/generateId";
 
 
 
 interface Props {
-    session: WorkSession;
-    onSessionChange: (session: WorkSession) => void;
+    session: Session;
+    onSessionChange: (session: Session) => void;
     readOnly?: boolean;
 }
 
 
-export default function WorkSessionTimer({ session, onSessionChange, readOnly }: Props) {
+export default function SessionTimer({ session, onSessionChange, readOnly }: Props) {
 
     // calculated states
     const [totalElapsedTimeTxt, sessionProgress, hasRunningTracks, isPauseActivityRunning] = useMemo(() => {
 
-        const sessionDurationMs = workSessionService.getSessionDurationMs(session);
+        const sessionDurationMs = sessionService.getSessionDurationMs(session);
         const totalElapsedTimeTxt = convertElapsedTimeToText(sessionDurationMs);
 
         const maxDurationMs = session.durationLimit.millis ?? 0;
@@ -60,11 +60,11 @@ export default function WorkSessionTimer({ session, onSessionChange, readOnly }:
         const pauseActivity = _session.activities.find(act => act.id === pauseActivityMock.id);
 
         // stop all activities before adding a pause
-        _session = workSessionService.stopActivities(session);
+        _session = sessionService.stopActivities(session);
 
         // no pauseActivity exists, create new one
         if (!pauseActivity) {
-            _session = workSessionService.addActivity(_session, {
+            _session = sessionService.addActivity(_session, {
                 ...pauseActivityMock,
                 tracks: [newTrack]
             });
@@ -77,12 +77,12 @@ export default function WorkSessionTimer({ session, onSessionChange, readOnly }:
         if (!newPauseActivityResult.success)
             return _session;
 
-        _session = workSessionService.setActivity(_session, newPauseActivityResult.data);
+        _session = sessionService.setActivity(_session, newPauseActivityResult.data);
         onSessionChange(_session);
     }
 
     function handleStopAllActivities() {
-        const _session = workSessionService.stopActivities(session);
+        const _session = sessionService.stopActivities(session);
         onSessionChange(_session);
     }
 

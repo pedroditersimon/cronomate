@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import { Session } from "src/features/session/types/Session";
 import sessionStorageService from "src/shared/services/sessionStorageService";
 
 
 export default function useSessionsHistory() {
-    const [history, setHistory] = useState<Array<WorkSession>>([]);
+    const [history, setHistory] = useState<Array<Session>>([]);
 
     useEffect(() => {
-        sessionStorageService.getItems<WorkSession>("History")
+        sessionStorageService.getItems<Session>("History")
             .then((results) => setHistory(results));
     }, []);
 

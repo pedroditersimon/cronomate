@@ -7,11 +7,11 @@ import HSeparator from "src/shared/layouts/HSeparator";
 import Clickable from "src/shared/components/interactable/Clickable";
 import Button from "src/shared/components/interactable/Button";
 import { showModal } from "src/shared/components/Modal";
-import WorkSessionTableModal from "./WorkSessionTableModal";
+import SessionTableModal from "./SessionTableModal";
 import clsx from "clsx";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
-import workSessionService from "src/features/work-session/services/workSessionService";
-import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
+import { Session } from "src/features/session/types/Session";
+import sessionService from "src/features/session/services/sessionService";
+import { SessionTimer } from "src/features/session/types/SessionTimer";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import Activity from "src/features/activity/components/Activity";
 import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
@@ -22,8 +22,8 @@ import { Duration, Interval } from "luxon";
 
 
 interface Props {
-    session: WorkSession;
-    onSessionChange: (newSession: WorkSession) => void;
+    session: Session;
+    onSessionChange: (newSession: Session) => void;
 
     onClose: () => void;
 
@@ -37,7 +37,7 @@ interface Props {
 }
 
 
-export default function WorkSessionSettings({
+export default function SessionSettings({
     session,
     onSessionChange,
     onClose,
@@ -61,7 +61,7 @@ export default function WorkSessionSettings({
         return [archivedActivities];
     }, [session.activities]);
 
-    // const handleChangeTimer = (newTimer: WorkSessionTimer) => {
+    // const handleChangeTimer = (newTimer: SessionTimer) => {
     //     onSessionChange({
     //         ...session,
     //         timer: newTimer
@@ -99,7 +99,7 @@ export default function WorkSessionSettings({
 
 
     const handleSetMaxDuration = (newLimit: typeof session.durationLimit) => {
-        const durationLimit = workSessionService.calculateDurationLimit(newLimit);
+        const durationLimit = sessionService.calculateDurationLimit(newLimit);
 
         onSessionChange({
             ...session,
@@ -207,7 +207,7 @@ export default function WorkSessionSettings({
                 </Button>
             </FormField>
 
-            <WorkSessionTableModal id="table" session={session} />
+            <SessionTableModal id="table" session={session} />
 
 
             {/* Actividades eliminadas */}

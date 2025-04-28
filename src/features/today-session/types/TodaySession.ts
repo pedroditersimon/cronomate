@@ -1,6 +1,6 @@
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import { Session } from "src/features/session/types/Session";
 
 export interface TodaySession {
-    session: WorkSession;
+    session: Session;
     endAlertStatus: "waiting" | "alerted" | "ended";
 }

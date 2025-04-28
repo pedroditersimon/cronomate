@@ -1,14 +1,14 @@
 import { DateTime } from 'luxon';
 import { SortBy, SortOrder } from 'src/features/sessions-history/types/SortBy';
-import WorkSessionItem from 'src/features/work-session/components/WorkSessionItem';
-import workSessionService from 'src/features/work-session/services/workSessionService';
-import { WorkSession } from 'src/features/work-session/types/WorkSession';
+import SessionItem from 'src/features/session/components/SessionItem';
+import sessionService from 'src/features/session/services/sessionService';
+import { Session } from 'src/features/session/types/Session';
 import HSeparator from 'src/shared/layouts/HSeparator';
 
 
-type GroupedSessions = Array<{ groupName: string, sessions: WorkSession[] }>;
+type GroupedSessions = Array<{ groupName: string, sessions: Session[] }>;
 
-function groupByMonth(sessions: WorkSession[]): GroupedSessions {
+function groupByMonth(sessions: Session[]): GroupedSessions {
     const groupedSessions: GroupedSessions = [];
 
     sessions.forEach(session => {
@@ -36,8 +36,8 @@ function groupByMonth(sessions: WorkSession[]): GroupedSessions {
 
 
 interface Props {
-    sessions: WorkSession[];
-    onSessionSelected: (session: WorkSession) => void;
+    sessions: Session[];
+    onSessionSelected: (session: Session) => void;
     sortBy?: SortBy;
     sortOrder?: SortOrder;
 }
@@ -50,7 +50,7 @@ export function SessionsHistory({ sessions, onSessionSelected, sortBy, sortOrder
     if (sortBy === SortBy.CREATED_AT)
         sortedSessions = sessions.sort((a, b) => b.createdTimestamp - a.createdTimestamp);
     else if (sortBy === SortBy.DURATION)
-        sortedSessions = sessions.sort((a, b) => workSessionService.getSessionDurationMs(b) - workSessionService.getSessionDurationMs(a));
+        sortedSessions = sessions.sort((a, b) => sessionService.getSessionDurationMs(b) - sessionService.getSessionDurationMs(a));
 
     // Reverse order
     if (sortOrder === "asc")
@@ -79,7 +79,7 @@ export function SessionsHistory({ sessions, onSessionSelected, sortBy, sortOrder
 
                     {/* Sessions */}
                     {group.sessions.map(session =>
-                        <WorkSessionItem
+                        <SessionItem
                             key={session.id}
                             session={session}
                             onSelected={onSessionSelected}

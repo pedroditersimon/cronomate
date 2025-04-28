@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
-import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
+import { Session } from "src/features/session/types/Session";
+import { SessionTimer } from "src/features/session/types/SessionTimer";
 import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
 import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
@@ -27,7 +27,7 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
         }
         // default
         : {}
-    ) as WorkSession["durationLimit"];
+    ) as Session["durationLimit"];
 
 
     return {
@@ -69,7 +69,7 @@ const todaySessionSlice = createSlice({
             return newState;
         },
 
-        setSession: (state, action: PayloadAction<WorkSession>) => {
+        setSession: (state, action: PayloadAction<Session>) => {
             const newSession = action.payload;
             return {
                 ...state,
@@ -78,7 +78,7 @@ const todaySessionSlice = createSlice({
         },
 
         // Timer
-        setTimer: (state, action: PayloadAction<WorkSessionTimer>) => {
+        setTimer: (state, action: PayloadAction<SessionTimer>) => {
             const newTimer = action.payload;
             return {
                 ...state,
