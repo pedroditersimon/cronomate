@@ -6,7 +6,7 @@ export const newActivityMock: Activity = {
     title: "Nueva actividad",
     tracks: [{
         id: "recordMock",
-        start: 0,
+        start: null,
         end: null,
         status: TimeTrackStatus.STOPPED
     }],

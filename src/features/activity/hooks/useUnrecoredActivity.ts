@@ -17,7 +17,7 @@ export default function useUntrackedActivity(activities: Array<Activity>, maxDur
             untrackedPeriods = untrackedPeriods.filter(t => {
                 if (!t.start || !t.end) return true; // Dosnt have start or end
 
-                const durationMs = t.end - t.start;
+                const durationMs = timeTrackService.getElapsedMs(t);
                 return durationMs <= maxDurationThresholdMs;
             });
         }

@@ -7,6 +7,7 @@ import ActivityComponent, { ActivityHandle } from "src/features/activity/compone
 import activityService from "src/features/activity/services/activityService";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import { newActivityMock } from "src/features/activity/mocks/newActivityMock";
+import { DateTime } from "luxon";
 
 interface Props {
     onCreate: (newActivity: Activity) => void;
@@ -62,7 +63,7 @@ export default function ActivityCreator({ onCreate, onFocusChange }: Props) {
         if (!activityService.hasChanges(newActivity, newActivityMock))
             return;
 
-        const now = toDate().getTime();
+        const hhmm_now = DateTime.now().toFormat("HH:mm");
 
         // Get first record
         const firstTrack = newActivity.tracks[0];
@@ -77,8 +78,8 @@ export default function ActivityCreator({ onCreate, onFocusChange }: Props) {
             title: newActivity.title,
             tracks: [{
                 id: generateId(),
-                start: setStartTimeToNow ? now : firstTrack.start, // Keep existing if not starting now
-                end: mustRun ? now : firstTrack.end, // Keep existing if not running
+                start: setStartTimeToNow ? hhmm_now : firstTrack.start, // Keep existing if not starting now
+                end: mustRun ? hhmm_now : firstTrack.end, // Keep existing if not running
                 status: mustRun ? TimeTrackStatus.RUNNING : TimeTrackStatus.STOPPED,
             }]
         };

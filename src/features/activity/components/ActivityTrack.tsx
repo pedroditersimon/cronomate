@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import timeTrackService from "src/features/time-track/services/timeTrackService";
 
 
 interface Props {
@@ -30,7 +31,7 @@ export default function ActivityTrack({
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
-        const elapsedTime = getElapsedTime(toDate(track.start, false), toDate(track.end, false));
+        const elapsedTime = timeTrackService.getElapsedMs(track);
         return convertElapsedTimeToText(elapsedTime);
     }, [track]);
 
