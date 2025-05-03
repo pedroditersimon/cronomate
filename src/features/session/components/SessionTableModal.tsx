@@ -54,7 +54,7 @@ export default function SessionTableModal({ id, session }: Props) {
         };
 
         return _session.activities.map(activity => {
-            const elapsedTimeMs = timeTrackService.getAllElapsedTime(activity.tracks);
+            const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
             const elapsedTime = elapsedTimeUnit === TimeUnit.HOUR
                 ? elapsedTimeMs / 3.6e+6
                 : elapsedTimeMs / 60000;

@@ -5,16 +5,12 @@
 export interface TimeTrack {
     id: string;
 
-    /** UTC timestamp in milliseconds */
-    start: number;
+    /** Time in 24-hour 'HH:mm' format (e.g. “15:10”). */
+    start: string | null;
 
-    /** 
-     * UTC timestamp in milliseconds
-     * @remarks If `null`, the track is running.
-     */
-    end: number | null;
+    /** Time in 24-hour 'HH:mm' format (e.g. “15:10”). */
+    end: string | null;
 
-    /** Track lifecycle state */
     status: TimeTrackStatus;
 }
 

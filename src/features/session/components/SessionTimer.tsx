@@ -8,9 +8,10 @@ import Clickable from "src/shared/components/interactable/Clickable";
 import { Session } from "src/features/session/types/Session";
 import activityService from "src/features/activity/services/activityService";
 import sessionService from "src/features/session/services/sessionService";
-import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import { generateId } from "src/shared/utils/generateId";
+import { DateTime } from "luxon";
 
 
 
@@ -48,14 +49,14 @@ export default function SessionTimer({ session, onSessionChange, readOnly }: Pro
     function handleAddPause() {
         // get a copy of current
         let _session = session;
-        const now = toDate().getTime();
+        const hhmm_now = DateTime.now().toFormat("HH:mm");
 
         const newTrack = {
             id: generateId(),
-            start: now,
-            end: now,
+            start: hhmm_now,
+            end: hhmm_now,
             status: TimeTrackStatus.RUNNING
-        };
+        } as TimeTrack;
 
         const pauseActivity = _session.activities.find(act => act.id === pauseActivityMock.id);
 
