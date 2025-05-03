@@ -77,7 +77,11 @@ export default function TodaySession({ readOnly }: Props) {
     }, [todaySession.session.durationLimit]);
 
     // constantly update timer and tracks
-    useTimer(() => {
+    useTimer({
+        timerMs: 5000,
+        isRunning: hasRunningTracks && !readOnly,
+        pauseOnPageNotVisible: false
+    }, () => {
         console.log("Update today timer and tracks");
         let _session = todaySession.session;
 
@@ -104,7 +108,7 @@ export default function TodaySession({ readOnly }: Props) {
         }
 
         setSession(_session);
-    }, 5000, hasRunningTracks && !readOnly);
+    });
 
 
     return (

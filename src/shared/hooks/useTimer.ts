@@ -1,7 +1,16 @@
 import { useEffect } from "react";
 import usePageVisibility from "./usePageVisibility";
 
-export default function useTimer(callback: () => void, timerMs: number, isRunning?: boolean | undefined) {
+interface Props {
+    timerMs: number;
+    isRunning?: boolean;
+    pauseOnPageNotVisible: boolean;
+}
+
+export default function useTimer(
+    { timerMs, isRunning, pauseOnPageNotVisible = true }: Props,
+    callback: () => void,
+) {
 
     const isPageVisible = usePageVisibility((visibility) => {
         if (!isRunning) return;
@@ -9,7 +18,7 @@ export default function useTimer(callback: () => void, timerMs: number, isRunnin
     });
 
     useEffect(() => {
-        if (!isRunning || !isPageVisible) return;
+        if (!isRunning || (pauseOnPageNotVisible && !isPageVisible)) return;
 
         // Establece un intervalo que actualiza el estado cada segundo
         const intervalId = setInterval(callback, timerMs);
