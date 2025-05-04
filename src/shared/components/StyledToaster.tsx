@@ -12,6 +12,7 @@ export default function StyledToaster() {
                     warning: 'text-yellow-500',
                     info: 'text-blue-500',
                 },
+                duration: 60 * 1000 // 60s (in millis)
             }}
         />
     );
