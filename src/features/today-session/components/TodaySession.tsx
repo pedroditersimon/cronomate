@@ -114,7 +114,7 @@ export default function TodaySession({ readOnly }: Props) {
     return (
         <WorkSessionComponent
             session={todaySession.session}
-            onSessionChange={s => { setSession(s); console.log(s) }}
+            onSessionChange={setSession}
             inBelowSettings={<TodaySessionSettings />}
         />
     );
