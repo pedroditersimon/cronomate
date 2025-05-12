@@ -74,6 +74,11 @@ export default function Session({
         // get a copy of current
         let _session = currentSession;
 
+        // stop activites if new activity is running
+        const isRunning = activityService.hasRunningTracks(newActivity);
+        if (isRunning)
+            _session = sessionService.stopActivities(_session);
+
         // set the given activity
         _session = sessionService.setActivity(_session, newActivity);
 
