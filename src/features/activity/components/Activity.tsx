@@ -70,6 +70,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
 
     // sync title if activity changes
     useEffect(() => {
+        if (focused) return; // dont change title if focused
         setTitle(activity.title);
     }, [activity]);
 
