@@ -3,10 +3,8 @@ const appVersion = version;
 
 import { ReactNode } from 'react';
 import Container from "./Container";
-import clsx from "clsx";
 import { Link as LinkType } from "src/shared/types/Link";
-import LinkBtn from "src/shared/components/interactable/LinkBtn";
-import { useLocation } from "react-router";
+import SidebarLink from 'src/shared/layouts/SidebarLink';
 
 
 interface LinkBtnType extends LinkType {
@@ -14,66 +12,31 @@ interface LinkBtnType extends LinkType {
     icon?: ReactNode
 }
 interface Props {
-    links: Array<LinkBtnType>
+    linksTop: Array<LinkBtnType>,
+    linksBottom: Array<LinkBtnType>
 }
 
-export default function Sidebar({ links }: Props) {
-    const { pathname } = useLocation();
-
-    // Ejemplo: '/history/1' → '/history'
-    // Ejemplo: '/' → '/'
-    const basePath = "/" + pathname.slice(1).split('/')[0];
+export default function Sidebar({ linksTop, linksBottom }: Props) {
 
     return (
         <Container width="min-w-56">
 
-            <div className="flex flex-col gap-1">
-                {links.map(link => {
-                    const isActive = basePath === link.to;
+            <span className='text-center text-2xl font-bold font-["Mulish"]'>
+                <span className='text-slate-200 '>crono</span>
+                <span className='text-green-300 '>mate</span>
+            </span>
 
-                    return (
-                        <LinkBtn
-                            {...link}
-                            key={link.to}
-                            className={clsx("group h-7 w-full justify-center rounded-lg hover:text-white hover:bg-gray-700 hover:shadow",
-                                {
-                                    "bg-gray-700 shadow": isActive,
-                                    "text-gray-400": !isActive
-                                }
-                            )}
-                        >
-                            {link.icon &&
-                                <div
-                                    className={clsx("h-full w-5 group-hover:w-6 flex justify-center items-center",
-                                        {
-                                            "m-auto": !link.text,
-                                            "w-6": isActive
-                                        }
-                                    )}
-                                >
-                                    {link.icon}
-                                </div>
-                            }
-                            {link.text && (
-                                <span
-                                    className={clsx("mr-auto my-auto group-hover:text-base",
-                                        {
-                                            "text-base": isActive,
-                                            "text-sm": !isActive
-                                        }
-                                    )}
-                                    children={link.text}
-                                />
-                            )}
-                        </LinkBtn>
-                    )
-                })}
+            <div className="flex flex-col flex-1 gap-1">
+                {linksTop.map((link, index) => <SidebarLink key={link.to || index} link={link} />)}
+                <div className='flex-1'></div>
+                {linksBottom.map((link, index) => <SidebarLink key={link.to || index} link={link} />)}
             </div>
 
-            <span className='mt-auto text-center text-sm font-semibold text-slate-600'>
-                Cronomate v{appVersion}
+            <span className='text-center text-sm font-semibold text-slate-600'>
+                v{appVersion}
             </span>
 
         </Container >
     );
 }
+

@@ -10,7 +10,7 @@ export default function PageLayout({ children }: PropsWithChildren) {
 
             <div className='h-full w-60'>
                 <Sidebar
-                    links={[
+                    linksTop={[
                         {
                             to: ROUTES.PRIVATE.TODAY_SESSION,
                             icon: <BriefcaseIcon />,
@@ -26,6 +26,10 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             text: "Resumen",
                             icon: <ChartNoAxesCombinedIcon />
                         },
+                    ]}
+
+                    linksBottom={[
+
                         {
                             to: ROUTES.PRIVATE.HISTORY,
                             icon: <InboxStackIcon />,
