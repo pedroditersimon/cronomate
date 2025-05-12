@@ -27,9 +27,9 @@ export default function Sidebar({ linksTop, linksBottom }: Props) {
             </span>
 
             <div className="flex flex-col flex-1 gap-1">
-                {linksTop.map(link => <SidebarLink link={link} />)}
+                {linksTop.map((link, index) => <SidebarLink key={link.to || index} link={link} />)}
                 <div className='flex-1'></div>
-                {linksBottom.map(link => <SidebarLink link={link} />)}
+                {linksBottom.map((link, index) => <SidebarLink key={link.to || index} link={link} />)}
             </div>
 
             <span className='text-center text-sm font-semibold text-slate-600'>
