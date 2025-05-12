@@ -2,11 +2,11 @@ import { Interval } from "luxon";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
-import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
+import { Session } from "src/features/session/types/Session";
 
 
-function getSessionDurationMs(session: WorkSession): number {
+function getSessionDurationMs(session: Session): number {
 
     const tracks = session.activities
         // exclude pause activity
@@ -25,16 +25,16 @@ function getSessionDurationMs(session: WorkSession): number {
         ? untrackedPeriods // <- no limit
         : untrackedPeriods.filter(track => {
             const maxMs = session.inactivityThresholdMs!;
-            return timeTrackService.getTrackElapsedTime(track) <= maxMs;
+            return timeTrackService.getElapsedMs(track) <= maxMs;
         });
 
     const allTracks = tracks.concat(filteredUntrackedPeriods);
 
-    return timeTrackService.getAllElapsedTime(allTracks);
+    return timeTrackService.getAllElapsedMs(allTracks);
 }
 
 
-function calculateDurationLimit(durationLimit: WorkSession["durationLimit"]) {
+function calculateDurationLimit(durationLimit: Session["durationLimit"]) {
     if (!durationLimit.start || !durationLimit.end)
         return durationLimit;
 
@@ -50,38 +50,38 @@ function calculateDurationLimit(durationLimit: WorkSession["durationLimit"]) {
     };
 };
 
-function addActivity(session: WorkSession, newActivity: Activity, fusion: boolean = true) {
+function addActivity(session: Session, newActivity: Activity, fusion: boolean = true) {
     return {
         ...session,
         activities: activityService.add(session.activities, newActivity, fusion)
     };
 }
 
-function setActivity(session: WorkSession, newActivity: Activity) {
+function setActivity(session: Session, newActivity: Activity) {
     return {
         ...session,
         activities: activityService.set(session.activities, newActivity)
     };
 };
 
-function setActivities(session: WorkSession, newActivities: Array<Activity>) {
+function setActivities(session: Session, newActivities: Array<Activity>) {
     return {
         ...session,
         activities: newActivities
     };
 };
 
-function stopActivities(session: WorkSession) {
+function stopActivities(session: Session) {
     // Stop all activities
     const newActivities = activityService.stopAll(session.activities);
 
     return {
         ...session,
         activities: newActivities
-    } as WorkSession;
+    } as Session;
 }
 
-function updateTimerAndTracks(session: WorkSession) {
+function updateTimerAndTracks(session: Session) {
     // const now = toDate().getTime();
     let _session = session;
 

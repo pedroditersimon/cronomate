@@ -1,7 +1,9 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 html,
 body,
@@ -11,6 +13,8 @@ body,
 
     background-color: #161616;
     color: white;
+
+    font-family: system-ui;
 }
 
 [aria-live="polite"] {
@@ -20,15 +24,13 @@ body,
     /* Asegúrate de que sea fijo */
 }
 
-
-
 @layer utilities {
     .strike-div {
         position: relative;
     }
 
     .strike-div::after {
-        content: '';
+        content: "";
         position: absolute;
         width: 0;
         top: 50%;

@@ -8,18 +8,18 @@ import { CheckIcon, ClipboardDocumentIcon } from "src/assets/Icons";
 import Dropdown from "src/shared/components/interactable/Dropdown";
 import { TimeUnit } from "src/shared/types/TimeUnit";
 import Checkbox from "src/shared/components/interactable/Checkbox";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
-import workSessionService from "src/features/work-session/services/workSessionService";
+import { Session } from "src/features/session/types/Session";
+import sessionService from "src/features/session/services/sessionService";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
-import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 
 interface Props {
     id: string;
-    session: WorkSession;
+    session: Session;
 }
 
-export default function WorkSessionTableModal({ id, session }: Props) {
+export default function SessionTableModal({ id, session }: Props) {
     const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnit>(TimeUnit.HOUR);
     const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
 
@@ -40,7 +40,7 @@ export default function WorkSessionTableModal({ id, session }: Props) {
         // row is -> | date | title | description | time |
 
         let _session = includeUnrecordedActivity && hasUntrackedActivity
-            ? workSessionService.addActivity(session, untrackedActivity)
+            ? sessionService.addActivity(session, untrackedActivity)
             : session; // otherwise, keep the same
 
         // Filter
@@ -49,12 +49,15 @@ export default function WorkSessionTableModal({ id, session }: Props) {
             activities: _session.activities.filter(activity => {
                 // Exclude pauses
                 if (!includePausesActivity && activity.id === pauseActivityMock.id) return false;
+                // Exclude no elapsed time
+                const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
+                if (elapsedTimeMs <= 0) return false;
                 return true;
             })
         };
 
         return _session.activities.map(activity => {
-            const elapsedTimeMs = timeTrackService.getAllElapsedTime(activity.tracks);
+            const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
             const elapsedTime = elapsedTimeUnit === TimeUnit.HOUR
                 ? elapsedTimeMs / 3.6e+6
                 : elapsedTimeMs / 60000;

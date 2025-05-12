@@ -11,7 +11,8 @@ import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import ActivityTrack from "src/features/activity/components/ActivityTrack";
-import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
+import { DateTime, Interval } from "luxon";
 
 export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
@@ -69,6 +70,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
 
     // sync title if activity changes
     useEffect(() => {
+        if (focused) return; // dont change title if focused
         setTitle(activity.title);
     }, [activity]);
 
@@ -76,7 +78,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     // calculated states
     const [hasRunningTracks, totalElapsedTimeTxt] = useMemo(() => {
 
-        const totalElapsedTime = timeTrackService.getAllElapsedTime(activity.tracks);
+        const totalElapsedTime = timeTrackService.getAllElapsedMs(activity.tracks);
         const totalElapsedTimeTxt = convertElapsedTimeToText(totalElapsedTime);
 
         const hasRunningTracks = activityService.hasRunningTracks(activity);
@@ -86,20 +88,33 @@ const Activity = forwardRef<ActivityHandle, Props>(({
 
 
     const handleRun = () => {
-        const now = toDate().getTime();
+        const hhmm_now = DateTime.now().toFormat("HH:mm");
 
         if (hasRunningTracks) {
             // set endTime to Now on running tracks
             const newTracks = activity.tracks.map(track => track.status === TimeTrackStatus.RUNNING
-                ? { ...track, end: now, status: TimeTrackStatus.STOPPED }
+                ? { ...track, end: hhmm_now, status: TimeTrackStatus.STOPPED }
                 : track
             );
             onActivityChange({ ...activity, tracks: newTracks });
             return; // dont do more
         }
 
-        // Find the last resumable record (within 2 seconds of current time) 
-        const lastResumableRecord = findLast(activity.tracks, track => isNow(track.end ?? undefined, 60));
+        function isResumable(track: TimeTrack, threholdMs: number) {
+            if (!track.end) return true;
+
+            const now = DateTime.now();
+            const endTime = DateTime.fromFormat(track.end, "HH:mm");
+
+            const interval = Interval.fromDateTimes(endTime, now);
+            if (!interval.isValid) return true;
+
+            const durationMs = interval.length("milliseconds");
+            return durationMs <= threholdMs;
+        }
+
+        // Find the last resumable track (within one minute of current time) 
+        const lastResumableRecord = findLast(activity.tracks, track => isResumable(track, 59 * 1000));
 
         // Resume running the last record if found
         if (lastResumableRecord) {
@@ -113,8 +128,8 @@ const Activity = forwardRef<ActivityHandle, Props>(({
         // add a new running track
         const newActivityResult = activityService.addTrack(activity, {
             id: generateId(),
-            start: now,
-            end: now,
+            start: hhmm_now,
+            end: hhmm_now,
             status: TimeTrackStatus.RUNNING,
         });
         if (!newActivityResult.success)

@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import WorkSessionComponent from 'src/features/work-session/components/WorkSession';
+import WorkSessionComponent from 'src/features/session/components/Session';
 import { useParams } from 'react-router-dom';
 import PageLayout from 'src/shared/layouts/PageLayout';
 import { NotFoundPage } from 'src/shared/pages/NotFoundPage';

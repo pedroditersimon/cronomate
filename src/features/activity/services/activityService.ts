@@ -69,7 +69,7 @@ function getAllElapsedTime(activities: Array<Activity>) {
         // dont include deleted activity
         if (activity.isDeleted) return acc;
 
-        const elapsedTime = timeTrackService.getAllElapsedTime(activity.tracks);
+        const elapsedTime = timeTrackService.getAllElapsedMs(activity.tracks);
         return elapsedTime > 0
             ? acc + elapsedTime
             : acc;

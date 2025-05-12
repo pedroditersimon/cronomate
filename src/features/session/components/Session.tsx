@@ -1,20 +1,20 @@
-import { WorkSession as WorkSessionType } from "../types/WorkSession";
+import { Session as WorkSessionType } from "../types/Session";
 import { formatDateToText, toDate } from "src/shared/utils/TimeUtils";
 import Container from "src/shared/layouts/Container";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
-import WorkSessionTimer from "./WorkSessionTimer";
-import WorkSessionSettings from "./WorkSessionSettings";
+import SessionTimer from "./SessionTimer";
+import SessionSettings from "./SessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
 import { ReactNode, useMemo, useState } from "react";
 import { SettingsIcon } from "src/assets/Icons";
 import clsx from "clsx";
 import { Activity } from "src/features/activity/types/Activity";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
-import workSessionService from "src/features/work-session/services/workSessionService";
+import sessionService from "src/features/session/services/sessionService";
 import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
 import ActivityComponent from "src/features/activity/components/Activity";
-import { pauseActivityMock } from "src/features/work-session/mocks/pauseActivityMock";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 
 export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
@@ -34,7 +34,7 @@ interface Props {
 }
 
 
-export default function WorkSession({
+export default function Session({
     session,
     onSessionChange,
     inAboveSettings,
@@ -74,8 +74,13 @@ export default function WorkSession({
         // get a copy of current
         let _session = currentSession;
 
+        // stop activites if new activity is running
+        const isRunning = activityService.hasRunningTracks(newActivity);
+        if (isRunning)
+            _session = sessionService.stopActivities(_session);
+
         // set the given activity
-        _session = workSessionService.setActivity(_session, newActivity);
+        _session = sessionService.setActivity(_session, newActivity);
 
         return _session;
     }
@@ -93,9 +98,9 @@ export default function WorkSession({
     function handleCreateNewActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
         // get a copy of current
         // stop activites
-        let _session = workSessionService.stopActivities(currentSession);
+        let _session = sessionService.stopActivities(currentSession);
 
-        _session = workSessionService.addActivity(_session, newActivity);
+        _session = sessionService.addActivity(_session, newActivity);
 
         return _session;
     }
@@ -117,7 +122,7 @@ export default function WorkSession({
 
             {/* Settings panel */}
             <ContainerOverlay show={showSettings} >
-                <WorkSessionSettings
+                <SessionSettings
                     session={session}
                     onSessionChange={onSessionChange}
                     onClose={() => setShowSettings(false)}
@@ -139,7 +144,7 @@ export default function WorkSession({
                 title={title}
 
                 // Timer
-                right={<WorkSessionTimer
+                right={<SessionTimer
                     session={session}
                     readOnly={!canEdit}
                     onSessionChange={onSessionChange}

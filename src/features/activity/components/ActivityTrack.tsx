@@ -5,6 +5,9 @@ import clsx from "clsx";
 import { TimeInput } from "src/shared/components/interactable/TimeInput";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import timeTrackService from "src/features/time-track/services/timeTrackService";
+import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
+import { DateTime } from "luxon";
 
 
 interface Props {
@@ -30,7 +33,7 @@ export default function ActivityTrack({
 
     // calculate elapsed time in text format
     const elapsedTimeTxt = useMemo(() => {
-        const elapsedTime = getElapsedTime(toDate(track.start, false), toDate(track.end, false));
+        const elapsedTime = timeTrackService.getElapsedMs(track);
         return convertElapsedTimeToText(elapsedTime);
     }, [track]);
 
@@ -71,8 +74,8 @@ export default function ActivityTrack({
             />
 
 
-            <TimeInput
-                time={track.start}
+            <TimeInputHHmm
+                timeHHmm={track.start}
                 className={clsx({ "opacity-50": track.status === TimeTrackStatus.ARCHIVED })}
                 onChange={newStartTime => onChange({
                     ...track,
@@ -81,12 +84,17 @@ export default function ActivityTrack({
                 readOnly={!canEdit || track.status === TimeTrackStatus.ARCHIVED}
             />
             -
-            <TimeInput
-                time={track.end ?? undefined}
-                className={clsx({ "opacity-50": track.status === TimeTrackStatus.ARCHIVED })}
-                onChange={newEndTime => {
-                    const updatedEndTime = newEndTime ?? track.end;
-                    const shouldStop = newEndTime !== null && !isNow(newEndTime);
+            <TimeInputHHmm
+                timeHHmm={track.end}
+                className={clsx({
+                    "opacity-50": track.status === TimeTrackStatus.ARCHIVED,
+                    "text-red-400": track.status === TimeTrackStatus.RUNNING
+                })}
+                onChange={newEnd => {
+                    const updatedEndTime = newEnd ?? track.end;
+                    const newEndDate = DateTime.fromFormat(newEnd ?? "", "HH:mm");
+                    const diffMs = newEndDate.diffNow().toMillis();
+                    const shouldStop = newEnd !== null && diffMs <= 59 * 1000; // 59s
 
                     onChange({
                         ...track,
@@ -94,7 +102,6 @@ export default function ActivityTrack({
                         status: shouldStop ? TimeTrackStatus.STOPPED : track.status
                     });
                 }}
-                running={track.status === TimeTrackStatus.RUNNING}
                 readOnly={!canEdit || track.status === TimeTrackStatus.ARCHIVED}
             />
 

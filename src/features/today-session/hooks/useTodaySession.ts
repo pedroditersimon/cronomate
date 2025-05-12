@@ -2,8 +2,8 @@ import { useDispatch } from "react-redux";
 import { setTimer, addActivity, setActivities, setActivity, save, load, setSession, resetToDefaultState, setEndAlertStatus } from "src/features/today-session/states/todaySessionSlice";
 import { useTypedSelector } from "src/shared/hooks/useTypedSelector";
 import { toast } from "sonner";
-import { WorkSession } from "src/features/work-session/types/WorkSession";
-import { WorkSessionTimer } from "src/features/work-session/types/WorkSessionTimer";
+import { Session } from "src/features/session/types/Session";
+import { SessionTimer } from "src/features/session/types/SessionTimer";
 import { Activity } from "src/features/activity/types/Activity";
 import sessionStorageService from "src/shared/services/sessionStorageService";
 import { TodaySession } from "src/features/today-session/types/TodaySession";
@@ -29,9 +29,9 @@ export default function useTodaySession() {
         save: () => dispatch(save()),
         load: () => dispatch(load()),
 
-        setSession: (session: WorkSession) => dispatch(setSession(session)),
+        setSession: (session: Session) => dispatch(setSession(session)),
 
-        setTodayTimer: (timer: WorkSessionTimer) => dispatch(setTimer(timer)),
+        setTodayTimer: (timer: SessionTimer) => dispatch(setTimer(timer)),
 
         setActivities: (activities: Activity[]) => dispatch(setActivities(activities)),
         setActivity: (activity: Activity) => dispatch(setActivity(activity)),
