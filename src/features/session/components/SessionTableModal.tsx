@@ -49,6 +49,9 @@ export default function SessionTableModal({ id, session }: Props) {
             activities: _session.activities.filter(activity => {
                 // Exclude pauses
                 if (!includePausesActivity && activity.id === pauseActivityMock.id) return false;
+                // Exclude no elapsed time
+                const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
+                if (elapsedTimeMs <= 0) return false;
                 return true;
             })
         };
