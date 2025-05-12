@@ -56,7 +56,14 @@ export default function SessionSettings({
 
     const [archivedActivities] = useMemo(() => {
         const archivedActivities = session.activities
-            .filter(act => act.isDeleted || activityService.hasArchivedTracks(act));
+            .map(act => {
+                if (!act.isDeleted && !activityService.hasArchivedTracks(act)) return null;
+                return {
+                    ...act,
+                    tracks: act.tracks.filter(track => track.status === TimeTrackStatus.ARCHIVED)
+                };
+            })
+            .filter(act => act !== null);
 
         return [archivedActivities];
     }, [session.activities]);
