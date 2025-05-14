@@ -50,11 +50,13 @@ function getInitialState(): TodaySession {
     const saved = localSave.getSaveObject<TodaySession>("todaySession");
     if (!saved) return getNewDefaultState();
 
-    const { session, ...rest } = saved.value;
+    const convertedSession = sessionStorageVersionConverter
+        .convertSession(saved.value.session, saved.app_version, appVersion) as Session | null;
+    if (!convertedSession) return getNewDefaultState();
+
     return {
-        ...rest,
-        session: sessionStorageVersionConverter
-            .convertSession(session, saved.app_version, appVersion) as Session,
+        ...saved.value,
+        session: convertedSession
     };
 }
 
