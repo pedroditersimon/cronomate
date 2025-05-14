@@ -33,10 +33,8 @@ export default function TodaySession({ readOnly }: Props) {
         const isPastSession = !isToday(toDate(todaySession.session.createdTimestamp));
         const hasActivities = todaySession.session.activities.length > 0;
         if (isPastSession) {
-            if (hasActivities)
-                saveInHistoryAndReset();
-            else
-                resetToDefaultState();
+            if (hasActivities) saveInHistoryAndReset();
+            else resetToDefaultState();
         }
 
         // save in every change

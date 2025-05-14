@@ -67,7 +67,10 @@ function hasAnyEndTime(list: Array<TimeTrack>): boolean {
 }
 
 function toInterval(track: TimeTrack) {
-    if (!track || !track.start || !track.end) return Interval.invalid("invalid start or end");
+    if (!track || !track.start || !track.end
+        || typeof track.start !== "string"
+        || typeof track.end !== "string")
+        return Interval.invalid("invalid start or end");
 
     const startDate = DateTime.fromFormat(track.start, "HH:mm");
     const endDate = DateTime.fromFormat(track.end, "HH:mm");
