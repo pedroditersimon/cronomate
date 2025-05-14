@@ -7,7 +7,10 @@ import localSave from "src/shared/services/localSave";
 import { generateId } from "src/shared/utils/generateId";
 import { TodaySessionSettings } from "src/features/today-session/types/TodaySessionSettings";
 import { DateTime } from "luxon";
+import sessionStorageVersionConverter from "src/shared/services/sessionStorageVersionConverter";
 import { TodaySession } from "src/features/today-session/types/TodaySession";
+import { version } from '../../../../package.json';
+const appVersion = version;
 
 // TODO: Mover a un mejor lugar
 function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessionSettings): TodaySession {
@@ -43,9 +46,21 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
 }
 
 // 1. Estado incial
-const defaultState = getNewDefaultState();
+function getInitialState(): TodaySession {
+    const saved = localSave.getSaveObject<TodaySession>("todaySession");
+    if (!saved) return getNewDefaultState();
 
-const initialState = localSave.load("todaySession", defaultState);
+    const convertedSession = sessionStorageVersionConverter
+        .convertSession(saved.value.session, saved.app_version, appVersion) as Session | null;
+    if (!convertedSession) return getNewDefaultState();
+
+    return {
+        ...saved.value,
+        session: convertedSession
+    };
+}
+
+const initialState = getInitialState();
 
 // 2. Creamos el slice
 const todaySessionSlice = createSlice({
