@@ -94,7 +94,7 @@ export default function TodaySession({ readOnly }: Props) {
 
             if (!remainingMs && todaySession.endAlertStatus !== "ended") {
                 _session = sessionService.stopActivities(_session);
-                toast.info("La sesión ha terminado");
+                toast.warning("La sesión ha terminado");
                 playAudio(sessionEndAudio);
                 setEndAlertStatus("ended");
             }
