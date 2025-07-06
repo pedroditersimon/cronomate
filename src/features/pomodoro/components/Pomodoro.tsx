@@ -7,8 +7,9 @@ import { useAudioPlayer } from "src/shared/hooks/useAudioPlayer";
 import useTimer from "src/shared/hooks/useTimer";
 import pomodoroEndAudio from "src/assets/audio/pomodoro-end.wav";
 import pomodoroAboutEndAudio from "src/assets/audio/pomodoro-end.wav";
+import { StopIcon, PlayIcon } from "src/assets/Icons";
 
-enum PomodoroState { FOCUS, REST }
+enum PomodoroState { STOPPED, FOCUS, REST }
 
 function getDurationByState(state: PomodoroState) {
     return state === PomodoroState.FOCUS
@@ -23,12 +24,36 @@ function getRemainingTime(startTime: number, state: PomodoroState) {
     return durationMs - elapsedMs;
 }
 
+function getStateLabel(state: PomodoroState) {
+    switch (state) {
+        case PomodoroState.FOCUS:
+            return "Foco";
+        case PomodoroState.REST:
+            return "Descanso";
+        case PomodoroState.STOPPED:
+        default:
+            return "Parado";
+    }
+}
+
+function getChangeStateLabel(state: PomodoroState) {
+    switch (state) {
+        case PomodoroState.FOCUS:
+            return "Descansar";
+        case PomodoroState.REST:
+            return "Focus";
+        case PomodoroState.STOPPED:
+        default:
+            return "Iniciar";
+    }
+}
+
 interface Props {
 }
 
 export function Pomodoro({ }: Props) {
     const { playAudio } = useAudioPlayer({ volume: 0.5 });
-    const [pomodoroState, setPomodoroState] = useState<PomodoroState>(PomodoroState.REST);
+    const [pomodoroState, setPomodoroState] = useState<PomodoroState>(PomodoroState.STOPPED);
     const [startTime, setStartTime] = useState<number | null>();
     const [remainingMs, setRemainingMs] = useState(0);
     const [endAlertStatus, setEndAlertStatus] = useState<"waiting" | "alerted" | "ended">("waiting");
@@ -42,6 +67,9 @@ export function Pomodoro({ }: Props) {
 
         const newRemainingMs = getRemainingTime(startTime, pomodoroState);
         setRemainingMs(newRemainingMs);
+
+        const stateLabel = getStateLabel(pomodoroState);
+        window.document.title = `${stateLabel} - ${DateTime.fromMillis(newRemainingMs).toFormat("mm:ss")}`;
 
         // End alert
         if (newRemainingMs < 1000 && endAlertStatus === "alerted") {
@@ -73,11 +101,15 @@ export function Pomodoro({ }: Props) {
         setEndAlertStatus("waiting");
     }
 
+    function handleStop() {
+        setStartTime(null);
+        setPomodoroState(PomodoroState.STOPPED);
+    }
+
     const overtime = remainingMs < 1000;
-    const stateLabel = pomodoroState === PomodoroState.FOCUS ? "Focus" : "Descanso";
-    const changeStateLabel = pomodoroState === PomodoroState.FOCUS ? "Descansar" : "Focus"
-    const formattedRemaining = overtime ? "00:00"
-        : DateTime.fromMillis(remainingMs).toFormat("mm:ss");
+    const stateLabel = getStateLabel(pomodoroState);
+    const changeStateLabel = getChangeStateLabel(pomodoroState);
+    const formattedRemaining = overtime ? "00:00" : DateTime.fromMillis(remainingMs).toFormat("mm:ss");
 
     return (
         <div className='flex flex-col gap-5'>
@@ -88,11 +120,18 @@ export function Pomodoro({ }: Props) {
                 <span>{stateLabel}</span>
             </div>
 
-            <Button
-                children={changeStateLabel}
-                onClick={handleChangeState}
-            />
-
+            <div className="flex flex-row gap-2 justify-center">
+                {pomodoroState !== PomodoroState.STOPPED &&
+                    <Button
+                        icon={<StopIcon className="w-5 group-hover:text-red-400" />}
+                        onClick={handleStop}
+                    />
+                }
+                <Button
+                    children={changeStateLabel}
+                    onClick={handleChangeState}
+                />
+            </div>
         </div>
     );
 };
