@@ -25,5 +25,5 @@ export default function useTimer(
 
         // Limpia el intervalo cuando el componente se desmonta
         return () => clearInterval(intervalId);
-    }, [callback, timerMs, isRunning, isPageVisible]);
+    }, [callback, timerMs, isRunning, isPageVisible, pauseOnPageNotVisible]);
 }
