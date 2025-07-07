@@ -1,33 +1,20 @@
 import clsx from "clsx";
 import { DateTime } from "luxon";
-import { useState } from "react";
 import { toast } from "sonner";
 import Button from "src/shared/components/interactable/Button";
 import { useAudioPlayer } from "src/shared/hooks/useAudioPlayer";
 import useTimer from "src/shared/hooks/useTimer";
 import pomodoroEndAudio from "src/assets/audio/pomodoro-end.wav";
 import pomodoroAboutEndAudio from "src/assets/audio/pomodoro-end.wav";
-import { StopIcon, PlayIcon } from "src/assets/Icons";
+import { StopIcon, } from "src/assets/Icons";
+import { PomodoroState } from "src/features/pomodoro/types/Pomodoro";
+import { usePomodoro } from "src/features/pomodoro/hooks/usePomodoro";
 
-enum PomodoroState { STOPPED, FOCUS, REST }
-
-function getDurationByState(state: PomodoroState) {
-    return state === PomodoroState.FOCUS
-        ? 45 * 60 * 1000 // 25 minutes for focus
-        : 10 * 60 * 1000; // 5 minutes for rest
-}
-
-function getRemainingTime(startTime: number, state: PomodoroState) {
-    const startDate = DateTime.fromMillis(startTime);
-    const elapsedMs = DateTime.now().diff(startDate).as("milliseconds");
-    const durationMs = getDurationByState(state);
-    return durationMs - elapsedMs;
-}
 
 function getStateLabel(state: PomodoroState) {
     switch (state) {
         case PomodoroState.FOCUS:
-            return "Foco";
+            return "Focus";
         case PomodoroState.REST:
             return "Descanso";
         case PomodoroState.STOPPED:
@@ -48,68 +35,47 @@ function getChangeStateLabel(state: PomodoroState) {
     }
 }
 
-interface Props {
-}
+// interface Props {}
 
-export function Pomodoro({ }: Props) {
+export function Pomodoro() {
+    const pomodoro = usePomodoro();
     const { playAudio } = useAudioPlayer({ volume: 0.5 });
-    const [pomodoroState, setPomodoroState] = useState<PomodoroState>(PomodoroState.STOPPED);
-    const [startTime, setStartTime] = useState<number | null>();
-    const [remainingMs, setRemainingMs] = useState(0);
-    const [endAlertStatus, setEndAlertStatus] = useState<"waiting" | "alerted" | "ended">("waiting");
+
+    const overtime = pomodoro.remainingMs < 1000;
+    const runTimer = pomodoro.startTime !== null
+        && pomodoro.endAlertStatus !== "ended";
 
     useTimer({
         timerMs: 500,
         pauseOnPageNotVisible: false,
-        isRunning: startTime !== null,
+        isRunning: runTimer,
     }, () => {
-        if (!startTime) return;
 
-        const newRemainingMs = getRemainingTime(startTime, pomodoroState);
-        setRemainingMs(newRemainingMs);
+        // TODO: move to centralized tittle management
+        const stateLabel = getStateLabel(pomodoro.state);
+        window.document.title = `${stateLabel} ${DateTime.fromMillis(pomodoro.remainingMs).toFormat("mm:ss")}`;
 
-        const stateLabel = getStateLabel(pomodoroState);
-        window.document.title = `${stateLabel} - ${DateTime.fromMillis(newRemainingMs).toFormat("mm:ss")}`;
+        pomodoro.update();
 
         // End alert
-        if (newRemainingMs < 1000 && endAlertStatus === "alerted") {
+        if (pomodoro.remainingMs < 1000 && pomodoro.endAlertStatus === "alerted") {
             playAudio(pomodoroEndAudio);
             toast.warning("Pomodoro finalizado!");
-            setEndAlertStatus("ended");
+            pomodoro.setEndAlertStatus("ended");
         }
-        else if (newRemainingMs < 15 * 1000 && endAlertStatus === "waiting") {
+        // 30s alert
+        else if (pomodoro.remainingMs < 30 * 1000 && pomodoro.endAlertStatus === "waiting") {
             playAudio(pomodoroAboutEndAudio);
             toast.info("Pomodoro esta cerca de finalizar!");
-            setEndAlertStatus("alerted");
+            pomodoro.setEndAlertStatus("alerted");
         }
     });
 
 
-
-    function handleChangeState() {
-        const newState = pomodoroState === PomodoroState.FOCUS
-            ? PomodoroState.REST
-            : PomodoroState.FOCUS;
-        setPomodoroState(newState);
-
-        const nowMs = DateTime.now().toMillis();
-        setStartTime(nowMs);
-
-        const newRemainingMs = getRemainingTime(nowMs, newState);
-        setRemainingMs(newRemainingMs - 1000);
-
-        setEndAlertStatus("waiting");
-    }
-
-    function handleStop() {
-        setStartTime(null);
-        setPomodoroState(PomodoroState.STOPPED);
-    }
-
-    const overtime = remainingMs < 1000;
-    const stateLabel = getStateLabel(pomodoroState);
-    const changeStateLabel = getChangeStateLabel(pomodoroState);
-    const formattedRemaining = overtime ? "00:00" : DateTime.fromMillis(remainingMs).toFormat("mm:ss");
+    const stateLabel = getStateLabel(pomodoro.state);
+    const changeStateLabel = getChangeStateLabel(pomodoro.state);
+    const formattedRemaining = overtime ? "00:00"
+        : DateTime.fromMillis(pomodoro.remainingMs).toFormat("mm:ss");
 
     return (
         <div className='flex flex-col gap-5'>
@@ -121,15 +87,15 @@ export function Pomodoro({ }: Props) {
             </div>
 
             <div className="flex flex-row gap-2 justify-center">
-                {pomodoroState !== PomodoroState.STOPPED &&
+                {pomodoro.state !== PomodoroState.STOPPED &&
                     <Button
                         icon={<StopIcon className="w-5 group-hover:text-red-400" />}
-                        onClick={handleStop}
+                        onClick={pomodoro.stop}
                     />
                 }
                 <Button
                     children={changeStateLabel}
-                    onClick={handleChangeState}
+                    onClick={pomodoro.changeToNextState}
                 />
             </div>
         </div>
