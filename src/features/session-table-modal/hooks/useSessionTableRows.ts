@@ -57,6 +57,7 @@ export function useSessionTableRows({
 
             // this is a row
             return {
+                key: activity.id,
                 date: toDate(session.createdTimestamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
                 title: activity.title,
                 description: activity.description || "",
