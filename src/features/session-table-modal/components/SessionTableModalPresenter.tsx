@@ -1,106 +1,44 @@
-import { useMemo, useState } from "react";
 import Button from "src/shared/components/interactable/Button";
 import { Modal } from "src/shared/components/Modal";
-import { toDate } from "src/shared/utils/TimeUtils";
 import clsx from "clsx";
-import { toast } from "sonner";
 import { CheckIcon, ClipboardDocumentIcon } from "src/assets/Icons";
 import Dropdown from "src/shared/components/interactable/Dropdown";
 import { TimeUnit } from "src/shared/types/TimeUnit";
 import Checkbox from "src/shared/components/interactable/Checkbox";
-import { Session } from "src/features/session/types/Session";
-import sessionService from "src/features/session/services/sessionService";
-import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
-import timeTrackService from "src/features/time-track/services/timeTrackService";
-import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
+import { SessionTableModalRow } from "src/features/session-table-modal/types/SessionTableModal";
+
 
 interface Props {
-    id: string;
-    session: Session;
+    id?: string;
+    rows: SessionTableModalRow[];
+    disableCopyBtn: boolean;
+    handleCopyTable: () => void;
+    includeDateCol: boolean;
+    setIncludeDateCol: (value: boolean) => void;
+    elapsedTimeUnit: TimeUnit;
+    setElapsedTimeUnit: (value: TimeUnit) => void;
+    includeUnrecordedActivity: boolean;
+    setIncludeUnrecordedActivity: (value: boolean) => void;
+    includePausesActivity: boolean;
+    setIncludePausesActivity: (value: boolean) => void;
+    hasUntrackedActivity: boolean;
+    hasPausesActivity: boolean;
+    tableCopiedEffect: boolean;
 }
 
-export default function SessionTableModal({ id, session }: Props) {
-    const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnit>(TimeUnit.HOUR);
-    const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
 
-    const [includeDateCol, setIncludeDateCol] = useState(true);
-
-    // Untracked Activity
-    const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
-    const untrackedActivity = useUntrackedActivity(session.activities);
-    const hasUntrackedActivity = untrackedActivity.tracks.length > 0;
-
-    // Pauses Activity
-    const [includePausesActivity, setIncludePausesActivity] = useState(true);
-    const hasPausesActivity = session.activities.some(act => act.id === "pauses");
-
-
-
-    const rows = useMemo(() => {
-        // row is -> | date | title | description | time |
-
-        let _session = includeUnrecordedActivity && hasUntrackedActivity
-            ? sessionService.addActivity(session, untrackedActivity)
-            : session; // otherwise, keep the same
-
-        // Filter
-        _session = {
-            ..._session,
-            activities: _session.activities.filter(activity => {
-                // Exclude pauses
-                if (!includePausesActivity && activity.id === pauseActivityMock.id) return false;
-                // Exclude no elapsed time
-                const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
-                if (elapsedTimeMs <= 0) return false;
-                return true;
-            })
-        };
-
-        return _session.activities.map(activity => {
-            const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
-            const elapsedTime = elapsedTimeUnit === TimeUnit.HOUR
-                ? elapsedTimeMs / 3.6e+6
-                : elapsedTimeMs / 60000;
-            // Ceil
-            const elapsedTimeTxt = Math.ceil(elapsedTime * 100) / 100;
-
-
-            // this is a row
-            return {
-                date: toDate(session.createdTimestamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
-                title: activity.title,
-                description: activity.description || "",
-                elapsedTime: elapsedTimeTxt,
-            };
-        });
-
-    }, [includeUnrecordedActivity, hasUntrackedActivity, session, untrackedActivity, elapsedTimeUnit]);
-
-
-    const handleCopyTable = () => {
-
-        setTableCopiedEffect(true);
-        // come back to normal icon
-        setTimeout(() => setTableCopiedEffect(false), 3000);
-
-        // Convertir la tabla en texto con columna opcional de fecha
-        const tableText = rows
-            .map(row => [
-                ...(includeDateCol ? [row.date] : []),  // Columna condicional
-                row.title,
-                row.description,
-                row.elapsedTime
-            ].join("\t"))
-            .join("\n");
-
-        // Copiar el texto al portapapeles
-        navigator.clipboard
-            .writeText(tableText)
-            .then(() => {
-                toast.success("¡La tabla ha sido copiada al portapapeles!");
-            });
-    };
-
+export default function SessionTableModalPresenter({
+    id = "session-table-modal",
+    rows,
+    disableCopyBtn, handleCopyTable,
+    includeDateCol, setIncludeDateCol,
+    elapsedTimeUnit, setElapsedTimeUnit,
+    includeUnrecordedActivity, setIncludeUnrecordedActivity,
+    includePausesActivity, setIncludePausesActivity,
+    hasUntrackedActivity,
+    hasPausesActivity,
+    tableCopiedEffect
+}: Props) {
 
     return (
         <Modal
@@ -130,6 +68,7 @@ export default function SessionTableModal({ id, session }: Props) {
                     <tbody>
                         {rows.map((row, index) => (
                             <tr
+                                key={row.title}
                                 className={clsx("text-neutral-400 whitespace-normal break-words break-all",
                                     { "border-b border-neutral-800": index < rows.length - 1 }
                                 )}
@@ -180,6 +119,7 @@ export default function SessionTableModal({ id, session }: Props) {
                     icon={tableCopiedEffect
                         ? <CheckIcon className="size-5" />
                         : <ClipboardDocumentIcon className="size-5" />}
+                    disabled={disableCopyBtn}
                     children="Copiar"
                 />
             </div>
