@@ -1,4 +1,5 @@
 import { Activity } from "src/features/activity/types/Activity";
+import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
 import { TimeTrack } from "src/features/time-track/types/TimeTrack";
 import { Result, ok } from "src/shared/types/Result";
@@ -76,6 +77,10 @@ function getAllElapsedTime(activities: Array<Activity>) {
     }, 0);
 }
 
+function isPauseActivity(activity: Activity): boolean {
+    return activity.title.trim().toLowerCase() === pauseActivityMock.title.toLowerCase();
+}
+
 //#region Handle tracks
 
 function setTrack(activity: Activity, track: TimeTrack): Activity {
@@ -138,6 +143,7 @@ export default {
     stop,
     stopAll,
     hasChanges,
+    isPauseActivity,
 
     // Handle tracks
     setTrack,

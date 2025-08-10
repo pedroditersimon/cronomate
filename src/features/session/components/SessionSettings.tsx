@@ -7,7 +7,6 @@ import HSeparator from "src/shared/layouts/HSeparator";
 import Clickable from "src/shared/components/interactable/Clickable";
 import Button from "src/shared/components/interactable/Button";
 import { showModal } from "src/shared/components/Modal";
-import SessionTableModal from "./SessionTableModal";
 import clsx from "clsx";
 import { Session } from "src/features/session/types/Session";
 import sessionService from "src/features/session/services/sessionService";
@@ -19,6 +18,7 @@ import activityService from "src/features/activity/services/activityService";
 import { TimeDurationInput } from "src/shared/components/interactable/TimeDurationInput";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
 import { Duration, Interval } from "luxon";
+import SessionTableModal from "src/features/session-table-modal/components/SessionTableModal";
 
 
 interface Props {

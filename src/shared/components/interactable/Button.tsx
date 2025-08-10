@@ -15,7 +15,8 @@ export default function Button({ icon, onClick, disabled, className, children }:
         <button
             className={clsx("flex flex-row gap-1 py-1 px-2 rounded-lg text-center border-2 border-gray-700",
                 "bg-transparent font-semibold text-gray-500",
-                "transition-colors hover:bg-gray-700 hover:text-blue-300 hover:shadow",     // hover
+                { "transition-colors hover:bg-gray-700 hover:text-blue-300 hover:shadow": !disabled }, // <- hover
+                { "transition-colors opacity-50 hover:text-blue-300": disabled },
                 className,
             )}
             disabled={disabled}
