@@ -68,7 +68,7 @@ export default function SessionTableModalPresenter({
                     <tbody>
                         {rows.map((row, index) => (
                             <tr
-                                key={row.title}
+                                key={row.key}
                                 className={clsx("text-neutral-400 whitespace-normal break-words break-all",
                                     { "border-b border-neutral-800": index < rows.length - 1 }
                                 )}
