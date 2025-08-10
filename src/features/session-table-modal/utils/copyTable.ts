@@ -14,5 +14,8 @@ export function copyTable(rows: SessionTableModalRow[], includeDateCol: boolean)
     navigator.clipboard.writeText(tableText)
         .then(() => {
             toast.success("¡La tabla ha sido copiada al portapapeles!");
+        })
+        .catch(() => {
+            toast.error("No se pudo copiar la tabla al portapapeles. Por favor, inténtalo de nuevo.");
         });
 }
