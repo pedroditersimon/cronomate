@@ -1,12 +1,12 @@
-import { DateTime } from "luxon";
 import { Session } from "src/features/session/types/Session";
-import { CrossIcon } from "src/assets/Icons";
+import { CrossIcon, ExportIcon, ImportIcon, TrashIcon } from "src/assets/Icons";
 import FormField from "src/shared/components/forms/FormField";
 import Button from "src/shared/components/interactable/Button";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
-import { version } from '../../../../package.json';
-import { SavedObject } from "src/shared/types/SavedObject";
 import { toast } from "sonner";
+import sessionHistoryService from "src/features/sessions-history/services/sessionHistoryService";
+import { ConfirmDestructiveActionModal } from "src/shared/components/ConfirmDestructiveActionModal";
+import { showModal } from "src/shared/components/Modal";
 
 
 interface Props {
@@ -15,38 +15,48 @@ interface Props {
 }
 
 export default function SessionsHistorySettings({ sessions, onClose }: Props) {
-
-    const handleDownloadHistory = () => {
-        // 1. Create a saved object
-        const savedObject: SavedObject<typeof sessions> = {
-            app_version: version,
-            generated_date: new Date().getTime(),
-            value: sessions
-        };
-
-        // 2. Create a blob to download it
-        const data = JSON.stringify(savedObject, null, 2);
-        const blob = new Blob([data], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-
-        // 3. Create the file name
-        const formattedDate = DateTime.now().toFormat('yyyy-MM-dd');
-        const fileName = `cronomate-history-${formattedDate}`;
-
-        // 4. Download the file
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${fileName}.json`;
-        a.click();
-        URL.revokeObjectURL(url);
+    const handleExport = () => {
+        const { fileName } = sessionHistoryService.exportHistoryWithDownload(sessions);
 
         toast.success("¡Descarga exitosa!", {
-            description: (<span>Archivo "{fileName}.json"</span>)
+            description: (<span>Archivo "{fileName}"</span>)
         });
+    }
+
+    const handleImport = () => {
+        sessionHistoryService.importHistory();
+
+        toast.success("¡Importación exitosa!", {
+            description: "El historial se ha importado correctamente."
+        });
+    }
+
+    const handleDelete = () => {
+        sessionHistoryService
+            .deleteHistory()
+            .catch(() => {
+                toast.error("Error al eliminar el historial", {
+                    description: "No se pudo eliminar el historial de sesiones."
+                });
+            })
+            .then(() => {
+                toast.success("¡Historial eliminado!", {
+                    description: "El historial de sesiones ha sido eliminado."
+                });
+                showModal("confirm-delete-history", false);
+            });
     }
 
     return (
         <>
+            <ConfirmDestructiveActionModal
+                id="confirm-delete-history"
+                title="Eliminar historial"
+                description="Se eliminará todo el historial de sesiones. Esta acción es irreversible."
+                confirmText="eliminar historial"
+                onConfirm={() => handleDelete()}
+            />
+
             {/* Topbar */}
             <ContainerTopbar
                 className="group"
@@ -56,13 +66,36 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                 onIconClick={onClose}
             />
 
-            {/* Download history */}
-            <FormField title="Descargar historial">
+            {/* Export/Import history */}
+            <FormField title="Transferir">
+                <div className="w-full flex flex-row gap-2">
+                    <Button
+                        className="flex-1"
+                        onClick={handleImport}
+                        icon={<ImportIcon className="size-5" />}
+                    >
+                        Importar
+                    </Button>
+
+                    <Button
+                        className="flex-1"
+                        onClick={handleExport}
+                        disabled={sessions.length === 0}
+                        icon={<ExportIcon className="size-5" />}
+                    >
+                        Exportar
+                    </Button>
+                </div>
+            </FormField>
+
+            {/* Delete history */}
+            <FormField title="">
                 <Button
-                    onClick={handleDownloadHistory}
-                    disabled={sessions.length === 0}
+                    className="flex-1"
+                    onClick={() => showModal("confirm-delete-history", true)}
+                    icon={<TrashIcon className="size-5" />}
                 >
-                    Descargar
+                    Eliminar
                 </Button>
             </FormField>
         </>
