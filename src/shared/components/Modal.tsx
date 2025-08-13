@@ -19,18 +19,26 @@ interface Props extends PropsWithChildren {
     title: string;
     closeOnClickOut?: boolean;
     hideCloseBtn?: boolean;
+
     className?: ClassValue;
+    containerClassName?: ClassValue;
 }
 
-export function Modal({ id, title, closeOnClickOut, hideCloseBtn, className, children }: Props) {
+export function Modal({ id, title, closeOnClickOut, hideCloseBtn, className, containerClassName, children }: Props) {
     const { handleMouseEnter, handleMouseLeave } = useClickOut(
         () => showModal(id, false), closeOnClickOut
     );
 
     return (
-        <dialog id={id} className="w-full h-full bg-transparent backdrop:bg-black backdrop:bg-opacity-75">
+        <dialog
+            id={id}
+            className={clsx(
+                "w-full h-full bg-transparent backdrop:bg-black backdrop:bg-opacity-75",
+                className
+            )}
+        >
             <Container
-                className={clsx("m-auto size-fit", className)}
+                className={clsx("m-auto size-fit", containerClassName)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >
