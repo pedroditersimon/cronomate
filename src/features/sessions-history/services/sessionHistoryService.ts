@@ -3,10 +3,11 @@ import { Session } from "src/features/session/types/Session";
 import { SavedObject } from "src/shared/types/SavedObject";
 import { version } from '../../../../package.json';
 import indexedDBSave from "src/shared/services/indexedDBSave";
+import sessionStorageService from "src/shared/services/sessionStorageService";
 
-function exportHistoryWithDownload(sessions: Session[]): { fileName: string } {
+function exportHistoryWithFileDownload(sessions: Session[]): { fileName: string } {
     // 1. Create a saved object
-    const savedObject: SavedObject<typeof sessions> = {
+    const savedObject: SavedObject<Session[]> = {
         app_version: version,
         generated_date: new Date().getTime(),
         value: sessions
@@ -33,14 +34,26 @@ function exportHistoryWithDownload(sessions: Session[]): { fileName: string } {
     };
 }
 
-function importHistory() { }
+async function importHistoryFromFile(file: File) {
+    const content = await file.text();
+
+    const parsed: SavedObject<Session[]> = JSON.parse(content);
+    if (!parsed.value || !Array.isArray(parsed.value))
+        throw new Error("El archivo no contiene un historial válido.");
+
+    const history = parsed.value;
+    if (history.length === 0) return;
+
+    // [!] If there are sessions with the same ID, they will be overwritten.
+    sessionStorageService.saveItems<Session>("History", history);
+}
 
 async function deleteHistory() {
     return await indexedDBSave.deleteStore("History");
 }
 
 export default {
-    exportHistoryWithDownload,
-    importHistory,
+    exportHistoryWithFileDownload,
+    importHistoryFromFile,
     deleteHistory
 };
