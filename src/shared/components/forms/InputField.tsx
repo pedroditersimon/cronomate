@@ -21,6 +21,7 @@ export default function InputField({ value, onChange, disabled, placeholder, cla
             value={value}
             onChange={(e) => onChange(e.target.value)}
             placeholder={placeholder}
+            disabled={disabled}
         />
     );
 }
