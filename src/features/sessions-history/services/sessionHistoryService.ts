@@ -37,7 +37,12 @@ function exportHistoryWithFileDownload(sessions: Session[]): { fileName: string 
 async function importHistoryFromFile(file: File) {
     const content = await file.text();
 
-    const parsed: SavedObject<Session[]> = JSON.parse(content);
+    let parsed: SavedObject<Session[]>;
+    try {
+        parsed = JSON.parse(content);
+    } catch (e) {
+        throw new Error("El archivo no contiene un historial válido (JSON malformado).");
+    }
     if (!parsed.value || !Array.isArray(parsed.value))
         throw new Error("El archivo no contiene un historial válido.");
 
