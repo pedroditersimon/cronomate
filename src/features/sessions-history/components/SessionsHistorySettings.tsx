@@ -42,6 +42,7 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                 toast.error("Error al importar", {
                     description: "No se pudo importar el historial de sesiones."
                 });
+                return Promise.reject();
             })
             .then(() => {
                 toast.success("¡Importación exitosa!", {
@@ -58,6 +59,7 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                 toast.error("Error al eliminar el historial", {
                     description: "No se pudo eliminar el historial de sesiones."
                 });
+                return Promise.reject();
             })
             .then(() => {
                 toast.success("¡Historial eliminado!", {
