@@ -20,13 +20,21 @@ interface Props extends PropsWithChildren {
     closeOnClickOut?: boolean;
     hideCloseBtn?: boolean;
 
+    onClose?: () => void;
+
     className?: ClassValue;
     containerClassName?: ClassValue;
 }
 
-export function Modal({ id, title, closeOnClickOut, hideCloseBtn, className, containerClassName, children }: Props) {
+export function Modal({ id, title, closeOnClickOut, hideCloseBtn, onClose, className, containerClassName, children }: Props) {
+
+    const handleClose = () => {
+        showModal(id, false);
+        if (onClose) onClose();
+    };
+
     const { handleMouseEnter, handleMouseLeave } = useClickOut(
-        () => showModal(id, false), closeOnClickOut
+        () => handleClose(), closeOnClickOut
     );
 
     return (
@@ -49,7 +57,7 @@ export function Modal({ id, title, closeOnClickOut, hideCloseBtn, className, con
                     title={title}
 
                     icon={!hideCloseBtn && <CrossIcon />}
-                    onIconClick={() => showModal(id, false)}
+                    onIconClick={() => handleClose()}
                 />
 
                 {children}
