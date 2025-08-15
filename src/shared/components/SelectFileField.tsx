@@ -35,7 +35,7 @@ export default function SelectFileField({ maxFiles, files, onSelect }: Props) {
 
     const handleClearFiles = () => {
         handleSetFiles(null);
-    }
+    };
 
     const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
