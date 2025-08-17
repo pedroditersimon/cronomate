@@ -9,33 +9,8 @@ import pomodoroAboutEndAudio from "src/assets/audio/pomodoro-end.wav";
 import { StopIcon, } from "src/assets/Icons";
 import { PomodoroState } from "src/features/pomodoro/types/Pomodoro";
 import { usePomodoro } from "src/features/pomodoro/hooks/usePomodoro";
-
-
-function getStateLabel(state: PomodoroState) {
-    switch (state) {
-        case PomodoroState.FOCUS:
-            return "Focus";
-        case PomodoroState.REST:
-            return "Descanso";
-        case PomodoroState.STOPPED:
-        default:
-            return "Parado";
-    }
-}
-
-function getChangeStateLabel(state: PomodoroState) {
-    switch (state) {
-        case PomodoroState.FOCUS:
-            return "Descansar";
-        case PomodoroState.REST:
-            return "Focus";
-        case PomodoroState.STOPPED:
-        default:
-            return "Iniciar";
-    }
-}
-
-// interface Props {}
+import { getChangeStateLabel } from "src/features/pomodoro/utils/getChangeStateLabel";
+import { getStateLabel } from "src/features/pomodoro/utils/getStateLabel";
 
 export function Pomodoro() {
     const pomodoro = usePomodoro();
@@ -43,7 +18,7 @@ export function Pomodoro() {
 
     const overtime = pomodoro.remainingMs < 1000;
     const runTimer = pomodoro.startTime !== null
-        && pomodoro.endAlertStatus !== "ended";
+        && (pomodoro.endAlertStatus !== "ended" || pomodoro.settings.continueOnEnd);
 
     useTimer({
         timerMs: 500,
@@ -51,20 +26,22 @@ export function Pomodoro() {
         isRunning: runTimer,
     }, () => {
 
-        // TODO: move to centralized tittle management
+        // TODO: move to centralized app tittle management
         const stateLabel = getStateLabel(pomodoro.state);
         window.document.title = `${stateLabel} ${DateTime.fromMillis(pomodoro.remainingMs).toFormat("mm:ss")}`;
 
         pomodoro.update();
 
         // End alert
-        if (pomodoro.remainingMs < 1000 && pomodoro.endAlertStatus === "alerted") {
+        if (pomodoro.endAlertStatus === "alerted" && pomodoro.remainingMs < 1000) {
             playAudio(pomodoroEndAudio);
-            toast.warning("Pomodoro finalizado!");
+            toast.success("Pomodoro finalizado!");
             pomodoro.setEndAlertStatus("ended");
         }
-        // 30s alert
-        else if (pomodoro.remainingMs < 30 * 1000 && pomodoro.endAlertStatus === "waiting") {
+        // About to end alert
+        else if (pomodoro.endAlertStatus === "waiting" &&
+            pomodoro.settings.alertOnRemainingMs && // <- Alert is enabled
+            pomodoro.remainingMs < pomodoro.settings.alertOnRemainingMs) {
             playAudio(pomodoroAboutEndAudio);
             toast.info("Pomodoro esta cerca de finalizar!");
             pomodoro.setEndAlertStatus("alerted");
