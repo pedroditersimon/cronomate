@@ -8,6 +8,7 @@ import sessionStorageVersionConverter from './sessionStorageVersionConverter';
 
 
 // Función para guardar un array de objetos genéricos en IndexedDB
+/** [!] If there are sessions with the same ID, they will be overwritten. */
 async function saveItems<T extends { id: IdType }>(storeName: string, items: T[]): Promise<void> {
     const itemsToSave: Array<SavedObjectWithId<T, IdType>> = items.map(item => (
         {
