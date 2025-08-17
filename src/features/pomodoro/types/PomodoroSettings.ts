@@ -1,5 +1,3 @@
-export enum PomodoroState { STOPPED, FOCUS, REST }
-
 
 export interface PomodoroSettings {
     focusDurationMs: number;
