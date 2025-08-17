@@ -5,8 +5,7 @@ import localSave from "src/shared/services/localSave";
 function getNewDefaultState(): PomodoroSettings {
     return {
         focusDurationMs: 25 * 60 * 1000, // 25 minutes
-        // restDurationMs: 5 * 60 * 1000, // 5 minutes
-        restDurationMs: 3 * 1000, // 5 minutes
+        restDurationMs: 5 * 60 * 1000, // 5 minutes
         continueOnEnd: false,
         alertOnRemainingMs: 60 * 1000, // 1 minute
     };
