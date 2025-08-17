@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DateTime } from "luxon";
+import pomodoroService from "src/features/pomodoro/services/pomodoroService";
 import { Pomodoro, PomodoroState } from "src/features/pomodoro/types/Pomodoro";
+import { PomodoroSettings } from "src/features/pomodoro/types/PomodoroSettings";
 import { getRemainingTime } from "src/features/pomodoro/utils/getRemainingTime";
 import localSave from "src/shared/services/localSave";
 
@@ -33,21 +34,8 @@ const pomodoroSlice = createSlice({
             return getNewDefaultState();
         },
 
-        changeToNextState: (pomodoro) => {
-            const newState = pomodoro.state === PomodoroState.FOCUS
-                ? PomodoroState.REST
-                : PomodoroState.FOCUS;
-
-            const nowMs = DateTime.now().toMillis();
-            const newRemainingMs = getRemainingTime(nowMs, newState) - 1000;
-
-            return {
-                ...pomodoro,
-                state: newState,
-                startTime: nowMs,
-                remainingMs: newRemainingMs,
-                endAlertStatus: "waiting",
-            };
+        changeToNextState: (pomodoro, action: PayloadAction<PomodoroSettings>) => {
+            return pomodoroService.changeToNextState(pomodoro, action.payload);
         },
 
         setEndAlertStatus: (pomodoro, action: PayloadAction<Pomodoro["endAlertStatus"]>) => {
@@ -57,9 +45,26 @@ const pomodoroSlice = createSlice({
             };
         },
 
-        update: (pomodoro) => {
+        update: (pomodoro, action: PayloadAction<PomodoroSettings>) => {
             if (!pomodoro.startTime) return;
-            const newRemainingMs = getRemainingTime(pomodoro.startTime, pomodoro.state);
+
+            // get settings
+            const {
+                focusDurationMs, restDurationMs,
+                continueOnEnd
+            } = action.payload;
+
+            const maxDurationMs = pomodoro.state === PomodoroState.FOCUS
+                ? focusDurationMs
+                : restDurationMs;
+
+            const newRemainingMs = getRemainingTime(pomodoro.startTime, maxDurationMs);
+
+            // move to next state if settings says so
+            if (continueOnEnd && newRemainingMs < 0) {
+                return pomodoroService.changeToNextState(pomodoro, action.payload);
+            }
+
             return {
                 ...pomodoro,
                 remainingMs: newRemainingMs,
