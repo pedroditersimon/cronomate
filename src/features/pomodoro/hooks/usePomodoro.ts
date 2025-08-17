@@ -33,7 +33,6 @@ export function usePomodoro() {
 
     function _setSettings(newSettings: PomodoroSettings) {
         dispatch(setSettings(newSettings));
-        dispatch(save());
     }
 
     return {
