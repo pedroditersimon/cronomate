@@ -56,6 +56,14 @@ function convertSessionToNext(session: Session, fromVersion: string) {
         }
     }
 
+    // 0.4.0 -> 0.5.0
+    if (fromVersion === '0.4.0') {
+        return {
+            value: session, // no changes
+            newVersion: '0.5.0'
+        }
+    }
+
     // keep same
     return {
         value: session,
