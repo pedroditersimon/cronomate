@@ -97,4 +97,25 @@ async function deleteItems(storeName: string, ids: IdType[]): Promise<void> {
     });
 }
 
-export default { saveItems, getItems, deleteItems };
+// Función para eliminar un store completo
+async function deleteStore(storeName: string): Promise<void> {
+
+    const db = await openDatabase(storeName, 1);
+    const transaction = db.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
+
+    // Eliminar todos los objetos del store
+    store.clear();
+
+    await new Promise<void>((resolve, reject) => {
+        transaction.oncomplete = () => {
+            resolve();
+        };
+
+        transaction.onerror = (event: Event) => {
+            reject((event.target as IDBRequest<Array<{ id: string | number }>>).error);
+        };
+    });
+}
+
+export default { saveItems, getItems, deleteItems, deleteStore };
