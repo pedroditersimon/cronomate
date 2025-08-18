@@ -9,13 +9,13 @@ import { pomodoroSettingsReducer } from "src/features/pomodoro/states/pomodoroSe
 
 // 2. Configuramos la Store
 const store = configureStore({
-        reducer: {
-                todaySession: todaySessionReducer,
-                todaySessionSettings: todaySessionSettingsReducer,
-                appSettings: appSettingsReducer,
-                pomodoro: pomodoroReducer,
-                pomodoroSettings: pomodoroSettingsReducer
-        }
+    reducer: {
+        todaySession: todaySessionReducer,
+        todaySessionSettings: todaySessionSettingsReducer,
+        appSettings: appSettingsReducer,
+        pomodoro: pomodoroReducer,
+        pomodoroSettings: pomodoroSettingsReducer
+    }
 });
 
 // 3. Exportamos la store para usarlo en el Provider
