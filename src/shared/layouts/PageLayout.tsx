@@ -44,7 +44,7 @@ export default function PageLayout({ children }: PropsWithChildren) {
                 />
             </div>
 
-            <div className="flex-grow flex flex-row h-full gap-5 items-center justify-center">
+            <div className="flex-grow flex flex-row h-full gap-5 items-center justify-center overflow-auto">
                 {children}
             </div>
         </div>
