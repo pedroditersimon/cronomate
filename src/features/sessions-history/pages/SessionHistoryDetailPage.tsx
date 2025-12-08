@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import PageLayout from 'src/shared/layouts/PageLayout';
 import { NotFoundPage } from 'src/shared/pages/NotFoundPage';
 import useSessionsHistory from 'src/features/sessions-history/hooks/useSessionsHistory';
+import NoteAndChecklistPlinth from 'src/features/notes/components/NoteAndChecklistPlinth';
 
 
 export function SessionHistoryDetailPage() {
@@ -18,6 +19,9 @@ export function SessionHistoryDetailPage() {
     if (!selectedSession)
         return <NotFoundPage />;
 
+    const note = selectedSession.note;
+    const checklist = selectedSession.checklist;
+
     return (
         <PageLayout>
             <WorkSessionComponent
@@ -29,6 +33,12 @@ export function SessionHistoryDetailPage() {
                 canCreate={false}
                 canArchive={false}
                 canRestore={false}
+            />
+
+            <NoteAndChecklistPlinth
+                className="h-[26rem]"
+                note={note}
+                checklist={checklist}
             />
         </PageLayout>
     );

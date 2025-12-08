@@ -12,6 +12,8 @@ import { TodaySession } from "src/features/today-session/types/TodaySession";
 export default function useTodaySession() {
     const todaySession = useTypedSelector(state => state.todaySession);
     const todaySessionSettings = useTypedSelector(state => state.todaySessionSettings);
+    const note = todaySession.session.note;
+    const checklist = todaySession.session.checklist;
 
     const dispatch = useDispatch();
 
@@ -25,6 +27,7 @@ export default function useTodaySession() {
 
     return {
         todaySession,
+        note, checklist,
 
         save: () => dispatch(save()),
         load: () => dispatch(load()),
