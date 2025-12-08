@@ -3,6 +3,6 @@ export interface Note {
 
     content: string;
 
-    /** format yyyy-MM-dd HH:mm:ss */
+    /** format dd/MM/yyyy HH:mm */
     createdAt: string;
 }
