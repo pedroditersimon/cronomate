@@ -93,7 +93,7 @@ function v0_5_0_to_v0_6_0(session: any) {
         durationLimit: session.durationLimit,
         inactivityThresholdMs: session.inactivityThresholdMs,
         note: {
-            id: 'note-' + session.id,
+            id: `note-${session.id}`,
             content: '',
             createdAt: DateTime.fromMillis(session.createdTimestamp).toFormat('dd/MM/yyyy HH:mm'),
         },
