@@ -139,6 +139,20 @@ export function convertDurationTextToTimeObj(timeTxt: string) {
   return { hours, minutes, seconds };
 }
 
+export function parseTimeKeywords(text: string): Date | undefined {
+  if (!text) return undefined;
+  const lower = text.trim().toLowerCase();
+
+  const keywords = ["ahora", "ya", "now"];
+  if (keywords.includes(lower)) {
+    const now = new Date();
+    now.setSeconds(0, 0);
+    return now;
+  }
+
+  return undefined;
+}
+
 // Deprecar
 export function convert24HourFormatTextToTime(timeTxt: string, baseTime?: number): Date | undefined {
   // no contiene numeros
