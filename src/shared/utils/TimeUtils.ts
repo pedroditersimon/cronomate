@@ -47,19 +47,22 @@ export function getElapsedTime(start: Date | undefined, end: Date | undefined) {
   return endTime.getTime() - startTime.getTime();
 }
 
-// Ejemplo: 10h 30m
+// Ejemplo: 10h 30m 15s
 export function convertElapsedTimeToText(elapsedMs: number) {
   if (elapsedMs <= 0) return undefined;
 
-  const totalMinutes = Math.floor(elapsedMs / (1000 * 60));
+  const totalSeconds = Math.floor(elapsedMs / 1000);
+  const totalMinutes = Math.floor(totalSeconds / 60);
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
+  const seconds = totalSeconds % 60;
 
   // Construir el formato
   const hoursPart = hours > 0 ? `${hours}h ` : '';
   const minutesPart = minutes > 0 ? `${minutes}m` : '';
+  const secondsPart = (seconds > 0 || (hours === 0 && minutes === 0 && seconds > 0)) ? `${seconds}s` : '';
 
-  return `${hoursPart}${minutesPart}`.trim();
+  return `${hoursPart}${minutesPart} ${secondsPart}`.trim();
 }
 
 export function convert24HourFormatTextToTimeObj(timeTxt: string) {
@@ -77,6 +80,7 @@ export function convert24HourFormatTextToTimeObj(timeTxt: string) {
     normalizedTime = normalizedTime.substring(0, 2) + ":" + normalizedTime.substring(2, normalizedTime.length);
   }
 
+
   // Dividir en horas y minutos
   const [hoursStr, minutesStr] = normalizedTime.split(":");
 
@@ -88,6 +92,51 @@ export function convert24HourFormatTextToTimeObj(timeTxt: string) {
   const minutes = Math.max(0, Math.min(parsedMinutes, 59));
 
   return { hours, minutes };
+}
+
+export function convertDurationTextToTimeObj(timeTxt: string) {
+  if (!timeTxt) return undefined;
+  const lowerTxt = timeTxt.toLowerCase().trim();
+
+  // Caso 1: Formato explícito con "h", "m" o "s"
+  const hasSuffix = /[hms]/.test(lowerTxt);
+
+  if (hasSuffix) {
+    let hours = 0;
+    let minutes = 0;
+    let seconds = 0;
+
+    const hoursMatch = lowerTxt.match(/(\d+)\s*h/);
+    if (hoursMatch) {
+      hours = parseInt(hoursMatch[1], 10);
+    }
+
+    const minutesMatch = lowerTxt.match(/(\d+)\s*m/);
+    if (minutesMatch) {
+      minutes = parseInt(minutesMatch[1], 10);
+    }
+
+    const secondsMatch = lowerTxt.match(/(\d+)\s*s/);
+    if (secondsMatch) {
+      seconds = parseInt(secondsMatch[1], 10);
+    }
+
+    return { hours, minutes, seconds };
+  }
+
+  let normalizedTime = lowerTxt.replace(/[^0-9]/g, ":");
+
+  if (!normalizedTime.includes(":")) {
+    normalizedTime = normalizedTime.padStart(2, "0");
+    normalizedTime = normalizedTime.substring(0, 2) + ":" + normalizedTime.substring(2);
+  }
+
+  const [hoursStr, minutesStr] = normalizedTime.split(":");
+  const hours = parseInt(hoursStr, 10) || 0;
+  const minutes = parseInt(minutesStr, 10) || 0;
+  const seconds = 0;
+
+  return { hours, minutes, seconds };
 }
 
 // Deprecar
