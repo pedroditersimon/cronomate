@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import clsx, { ClassValue } from "clsx";
 import { DateTime, Duration } from "luxon";
-import { convert24HourFormatTextToTimeObj, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
+import { convert24HourFormatTextToTimeObj, convertDurationTextToTimeObj, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 
 
 interface Props {
@@ -41,13 +41,14 @@ export function TimeDurationInput({ millis, onChange, running, readOnly, classNa
             return;
         }
 
-        const newTimeObj = convert24HourFormatTextToTimeObj(inputTime);
+        const newTimeObj = convertDurationTextToTimeObj(inputTime);
         if (!newTimeObj) {
             setInputTime(durationText); return;
         }
         const newDuration = Duration.fromObject({
             hours: newTimeObj.hours,
-            minutes: newTimeObj.minutes
+            minutes: newTimeObj.minutes,
+            seconds: newTimeObj.seconds
         });
         if (!newDuration.isValid) {
             setInputTime(durationText); return;
