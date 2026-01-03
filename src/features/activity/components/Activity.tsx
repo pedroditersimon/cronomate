@@ -175,12 +175,15 @@ const Activity = forwardRef<ActivityHandle, Props>(({
 
                 {/* Title input */}
                 <div
-                    className={clsx("group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-all duration-300", {
-                        "bg-red-400": hasRunningTracks,
-                        "bg-gray-700": focused,
-                        "hover:bg-gray-700": canEdit && !hasRunningTracks,
-                        "strike-div": activity.isDeleted
-                    })}
+                    className={clsx(
+                        "group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-all duration-300",
+                        {
+                            "strike-div": activity.isDeleted,
+                            "bg-red-400": hasRunningTracks,
+                            "bg-gray-700": !hasRunningTracks && focused,
+                            "hover:bg-gray-800": !hasRunningTracks && !focused && canEdit,
+                        }
+                    )}
                 >
                     <input
                         ref={inputRef}
