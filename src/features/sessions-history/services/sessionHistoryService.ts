@@ -50,7 +50,7 @@ async function importHistoryFromFile(file: File) {
     if (history.length === 0) return;
 
     // [!] If there are sessions with the same ID, they will be overwritten.
-    sessionStorageService.saveItems<Session>("History", history);
+    sessionStorageService.importItems<Session>("History", parsed);
 }
 
 async function deleteHistory() {

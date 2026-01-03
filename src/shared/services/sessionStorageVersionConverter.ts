@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { Activity } from "src/features/activity/types/Activity";
+import { CheckItem } from "src/features/notes/types/CheckItem";
 import sessionService from "src/features/session/services/sessionService";
 import { Session } from "src/features/session/types/Session";
 
@@ -97,7 +98,7 @@ function v0_5_0_to_v0_6_0(session: any) {
             content: '',
             createdAt: DateTime.fromMillis(session.createdTimestamp).toFormat('dd/MM/yyyy HH:mm'),
         },
-        checklist: [],
+        checklist: [] as CheckItem[],
     }
 }
 
