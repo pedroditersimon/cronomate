@@ -25,7 +25,7 @@ export default function SessionTableModal({ id, session }: Props) {
     const hasUntrackedActivity = untrackedActivity.tracks.length > 0;
 
     // Pauses Activity
-    const [includePausesActivity, setIncludePausesActivity] = useState(true);
+    const [includePausesActivity, setIncludePausesActivity] = useState(false);
     const hasPausesActivity = session.activities.some(activityService.isPauseActivity);
 
     const rows = useSessionTableRows({

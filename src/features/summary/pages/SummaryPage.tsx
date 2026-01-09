@@ -8,13 +8,14 @@ import { capitalize } from "lodash";
 import { useMemo, useState } from "react";
 import useSessionsHistory from "src/features/sessions-history/hooks/useSessionsHistory";
 import { Session } from "src/features/session/types/Session";
+import sessionService from "src/features/session/services/sessionService";
 
 function calculateHoursForMonth(history: Array<Session>, month: string) {
     const monthIndex = DateTime.fromFormat(month, "LLLL").month;
     const totalHours = history.reduce((sum, session) => {
         const sessionDate = DateTime.fromMillis(session.createdTimestamp);
         if (sessionDate.month === monthIndex) {
-            return sum + (session.durationLimit.millis || 0) / (1000 * 60 * 60); // Convert ms to hours
+            return sum + (sessionService.getSessionDurationMs(session) || 0) / (1000 * 60 * 60); // Convert ms to hours
         }
         return sum;
     }, 0);

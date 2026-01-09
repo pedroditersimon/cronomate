@@ -68,7 +68,7 @@ export default function Session({
     function handleSetActivity(currentSession: WorkSessionType, newActivity: Activity): WorkSessionType {
 
         // prevent delete pauseActivity
-        if (newActivity.id === pauseActivityMock.id && newActivity.isDeleted)
+        if (activityService.isPauseActivity(newActivity) && newActivity.isDeleted)
             return currentSession;
 
         // get a copy of current
