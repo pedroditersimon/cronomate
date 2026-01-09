@@ -60,7 +60,7 @@ export function convertElapsedTimeToText(elapsedMs: number) {
   // Construir el formato
   const hoursPart = hours > 0 ? `${hours}h ` : '';
   const minutesPart = minutes > 0 ? `${minutes}m` : '';
-  const secondsPart = (seconds > 0 || (hours === 0 && minutes === 0 && seconds > 0)) ? `${seconds}s` : '';
+  const secondsPart = seconds > 0 ? `${seconds}s` : '';
 
   return `${hoursPart}${minutesPart} ${secondsPart}`.trim();
 }

@@ -18,7 +18,6 @@ interface Props {
 
 export default function CheckItem({ item, onChange, onEnterPressed, onDelete, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
 
-    // TODO (done): Add due date input
     // TODO: Add due date color indicator (yellow for upcoming, red for overdue)
     // TODO: Add drag and drop 
 
