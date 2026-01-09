@@ -38,7 +38,7 @@ export default function SessionTimer({ session, onSessionChange, readOnly }: Pro
             : -1;
 
         const isPauseActivityRunning = session.activities.some(act =>
-            act.id === pauseActivityMock.id && activityService.hasRunningTracks(act));
+            activityService.isPauseActivity(act) && activityService.hasRunningTracks(act));
 
         const hasRunningTracks = session.activities.some(act => activityService.hasRunningTracks(act));
 
@@ -58,7 +58,7 @@ export default function SessionTimer({ session, onSessionChange, readOnly }: Pro
             status: TimeTrackStatus.RUNNING
         } as TimeTrack;
 
-        const pauseActivity = _session.activities.find(act => act.id === pauseActivityMock.id);
+        const pauseActivity = _session.activities.find(act => activityService.isPauseActivity(act));
 
         // stop all activities before adding a pause
         _session = sessionService.stopActivities(session);

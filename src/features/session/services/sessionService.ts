@@ -10,17 +10,13 @@ import { generateId } from "src/shared/utils/generateId";
 
 function getSessionDurationMs(session: Session): number {
 
-    const tracks = session.activities
-        // exclude pause activity
-        .filter(act => {
-            if (act.id === pauseActivityMock.id) return false;
-            if (act.isDeleted) return false;
-            return true;
-        })
-        // get tracks
+    // 1. Get ALL tracks (including pauses) to calculate gaps/untracked periods correctly
+    const allEventTracks = session.activities
+        .filter(act => !act.isDeleted)
         .flatMap(activity => activity.tracks);
 
-    const untrackedPeriods = timeTrackService.getUntrackedPeriods(tracks);
+    // Calculate untracked periods based on the continuous timeline of all events
+    const untrackedPeriods = timeTrackService.getUntrackedPeriods(allEventTracks);
 
     // Filter untracked periods using session duration limit
     const filteredUntrackedPeriods = !session.inactivityThresholdMs
@@ -30,7 +26,17 @@ function getSessionDurationMs(session: Session): number {
             return timeTrackService.getElapsedMs(track) <= maxMs;
         });
 
-    const allTracks = tracks.concat(filteredUntrackedPeriods);
+    // 2. Get WORK tracks (excluding pauses) for the final sum
+    const workTracks = session.activities
+        .filter(act => {
+            if (activityService.isPauseActivity(act)) return false;
+            if (act.isDeleted) return false;
+            return true;
+        })
+        .flatMap(activity => activity.tracks);
+
+    // 3. Combine Work Tracks + Untracked Periods
+    const allTracks = workTracks.concat(filteredUntrackedPeriods);
 
     return timeTrackService.getAllElapsedMs(allTracks);
 }
