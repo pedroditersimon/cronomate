@@ -23,10 +23,11 @@ function getSessionDurationMs(session: Session): number {
     const untrackedPeriods = timeTrackService.getUntrackedPeriods(tracks);
 
     // Filter untracked periods using session duration limit
-    const filteredUntrackedPeriods = !session.inactivityThresholdMs
+    const threshold = session.inactivityThresholdMs;
+    const filteredUntrackedPeriods = !threshold
         ? untrackedPeriods // <- no limit
         : untrackedPeriods.filter(track => {
-            const maxMs = session.inactivityThresholdMs!;
+            const maxMs = threshold - 1000;
             return timeTrackService.getElapsedMs(track) <= maxMs;
         });
 
