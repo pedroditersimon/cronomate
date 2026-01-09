@@ -40,6 +40,12 @@ function getNewDefaultState(previousState?: TodaySession, settings?: TodaySessio
             activities: [],
             durationLimit,
             inactivityThresholdMs: previousSession?.inactivityThresholdMs ?? 60 * 60 * 1000, // default 1h
+            note: {
+                id: generateId(),
+                content: "",
+                createdAt: DateTime.now().toFormat("dd/MM/yyyy HH:mm"),
+            },
+            checklist: [],
         },
         endAlertStatus: "waiting",
     };

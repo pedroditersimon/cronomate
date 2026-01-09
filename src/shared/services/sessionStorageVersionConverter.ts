@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { Activity } from "src/features/activity/types/Activity";
+import { CheckItem } from "src/features/notes/types/CheckItem";
 import sessionService from "src/features/session/services/sessionService";
 import { Session } from "src/features/session/types/Session";
 
@@ -64,11 +65,41 @@ function convertSessionToNext(session: Session, fromVersion: string) {
         }
     }
 
+    // 0.5.0 -> 0.6.0
+    if (fromVersion === '0.5.0') {
+        return {
+            value: v0_5_0_to_v0_6_0(session),
+            newVersion: '0.6.0'
+        }
+    }
+
     // keep same
     return {
         value: session,
         newVersion: fromVersion
     };
+}
+
+
+// Convert session from v0.5.0 to v0.6.0
+function v0_5_0_to_v0_6_0(session: any) {
+    // Changes:
+    // 1. Added note to session
+    // 2. Added checklist to session
+
+    return {
+        id: session.id,
+        activities: session.activities,
+        createdTimestamp: session.createdTimestamp,
+        durationLimit: session.durationLimit,
+        inactivityThresholdMs: session.inactivityThresholdMs,
+        note: {
+            id: `note-${session.id}`,
+            content: '',
+            createdAt: DateTime.fromMillis(session.createdTimestamp).toFormat('dd/MM/yyyy HH:mm'),
+        },
+        checklist: [] as CheckItem[],
+    }
 }
 
 // Convert session from v0.3.0 to v0.4.0

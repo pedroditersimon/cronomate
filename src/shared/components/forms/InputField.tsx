@@ -3,12 +3,13 @@ import clsx, { ClassValue } from "clsx";
 interface Props {
     value: string;
     onChange: (newValue: string) => void;
+    onEnterPressed?: () => void;
     disabled?: boolean;
     placeholder?: string;
     className?: ClassValue;
 }
 
-export default function InputField({ value, onChange, disabled, placeholder, className }: Props) {
+export default function InputField({ value, onChange, onEnterPressed, disabled, placeholder, className }: Props) {
     return (
         <input
             className={clsx("py-1 px-2 rounded-lg border-2 border-gray-700 outline-none",
@@ -20,6 +21,10 @@ export default function InputField({ value, onChange, disabled, placeholder, cla
             )}
             value={value}
             onChange={(e) => onChange(e.target.value)}
+            onKeyUp={e => {
+                if (onEnterPressed && e.code.toLowerCase() === "enter")
+                    onEnterPressed();
+            }}
             placeholder={placeholder}
             disabled={disabled}
         />

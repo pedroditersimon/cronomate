@@ -1,4 +1,6 @@
 import { Activity } from "src/features/activity/types/Activity";
+import { CheckItem } from "src/features/notes/types/CheckItem";
+import { Note } from "src/features/notes/types/Note";
 
 export interface Session {
     id: string;
@@ -23,5 +25,8 @@ export interface Session {
     }
 
     inactivityThresholdMs: number | null;
+
+    note: Note;
+    checklist: CheckItem[];
 }
 

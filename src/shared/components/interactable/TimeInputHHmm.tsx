@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import clsx, { ClassValue } from "clsx";
 import { DateTime } from "luxon";
-import { convert24HourFormatTextToTimeObj } from "src/shared/utils/TimeUtils";
+import { convert24HourFormatTextToTimeObj, parseTimeKeywords } from "src/shared/utils/TimeUtils";
 
 interface Props {
     timeHHmm: string | null; // time in HH:mm format
@@ -29,6 +29,15 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
         if (!inputTime?.trim()) {
             setInputTime("");
             if (onChange) onChange(null);
+            return;
+        }
+
+        const keywordTime = parseTimeKeywords(inputTime);
+
+        if (keywordTime) {
+            const newFormattedTime = DateTime.fromJSDate(keywordTime).toFormat("HH:mm");
+            setInputTime(newFormattedTime);
+            if (onChange) onChange(newFormattedTime);
             return;
         }
 

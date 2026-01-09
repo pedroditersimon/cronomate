@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { convert24HourFormatTextToTime, to24HourFormat, toDate } from "src/shared/utils/TimeUtils";
+import { convert24HourFormatTextToTime, parseTimeKeywords, to24HourFormat, toDate } from "src/shared/utils/TimeUtils";
 import clsx, { ClassValue } from "clsx";
 
 
@@ -34,7 +34,8 @@ export function TimeInput({ time, onChange, running, readOnly, className }: Prop
 
     // convert text input to date and call 'onTimeChange'
     const handleConfirmTime = useCallback(() => {
-        const newTime = convert24HourFormatTextToTime(inputTime, time);
+        const keywordTime = parseTimeKeywords(inputTime);
+        const newTime = keywordTime || convert24HourFormatTextToTime(inputTime, time);
         const newInput = newTime ? to24HourFormat(newTime) : "-";
         const inputHasChanged = newInput !== inputTime;
 

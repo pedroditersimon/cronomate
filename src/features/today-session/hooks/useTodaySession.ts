@@ -12,19 +12,20 @@ import { TodaySession } from "src/features/today-session/types/TodaySession";
 export default function useTodaySession() {
     const todaySession = useTypedSelector(state => state.todaySession);
     const todaySessionSettings = useTypedSelector(state => state.todaySessionSettings);
+    const note = todaySession.session.note;
+    const checklist = todaySession.session.checklist;
 
     const dispatch = useDispatch();
 
     const saveInHistoryAndReset = () => {
         sessionStorageService.saveItems("History", [todaySession.session]);
         dispatch(resetToDefaultState({ settings: todaySessionSettings }));
-        // Ya que se utiliza la variable local 'todaySession',
-        // es posible que esta cambie y al guardar no se este guardando lo ultimo que cambio
-        toast.success("Sesion guardada en history! Ver comentarios");
+        toast.success("La última sesion fue guardada en el historial");
     }
 
     return {
         todaySession,
+        note, checklist,
 
         save: () => dispatch(save()),
         load: () => dispatch(load()),

@@ -39,6 +39,8 @@ export function useSessionTableRows({
             activities: _session.activities.filter(activity => {
                 // Exclude pauses
                 if (!includePausesActivity && activityService.isPauseActivity(activity)) return false;
+                // Exclude deleted (archived)
+                if (activity.isDeleted) return false;
                 // Exclude no elapsed time
                 const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
                 if (elapsedTimeMs <= 0) return false;
