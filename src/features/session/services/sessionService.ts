@@ -27,6 +27,10 @@ function getSessionDurationMs(session: Session): number {
     const filteredUntrackedPeriods = !threshold
         ? untrackedPeriods // <- no limit
         : untrackedPeriods.filter(track => {
+            // Subtract 1s so the inactivity threshold acts as an exclusive upper bound.
+            // This avoids borderline cases caused by millisecond-level precision where
+            // an untracked period exactly equal to the threshold would be treated
+            // differently due to rounding, and keeps session duration behavior stable.
             const maxMs = threshold - 1000;
             return timeTrackService.getElapsedMs(track) <= maxMs;
         });
