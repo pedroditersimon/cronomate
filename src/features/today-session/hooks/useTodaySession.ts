@@ -20,9 +20,7 @@ export default function useTodaySession() {
     const saveInHistoryAndReset = () => {
         sessionStorageService.saveItems("History", [todaySession.session]);
         dispatch(resetToDefaultState({ settings: todaySessionSettings }));
-        // Ya que se utiliza la variable local 'todaySession',
-        // es posible que esta cambie y al guardar no se este guardando lo ultimo que cambio
-        toast.success("Sesion guardada en history! Ver comentarios");
+        toast.success("La última sesion fue guardada en el historial");
     }
 
     return {
