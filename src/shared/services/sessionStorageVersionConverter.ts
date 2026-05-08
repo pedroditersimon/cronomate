@@ -73,6 +73,14 @@ function convertSessionToNext(session: Session, fromVersion: string) {
         }
     }
 
+    // 0.6.0 -> 0.6.1 (no schema changes)
+    if (fromVersion === '0.6.0') {
+        return {
+            value: session,
+            newVersion: '0.6.1'
+        }
+    }
+
     // keep same
     return {
         value: session,
