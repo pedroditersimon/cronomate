@@ -73,6 +73,14 @@ function convertSessionToNext(session: Session, fromVersion: string) {
         }
     }
 
+// 0.5.0 -> 0.6.0
+    if (fromVersion === '0.5.0') {
+        return {
+            value: v0_5_0_to_v0_6_0(session),
+            newVersion: '0.6.0'
+        }
+    }
+
     // 0.6.0 -> 0.6.1 (no schema changes)
     if (fromVersion === '0.6.0') {
         return {
