@@ -52,7 +52,7 @@ export default function SummaryPage() {
                 />
 
                 <h1>Summary Page</h1>
-                <p>Total hours for {month}: {selectedMonthHours.toFixed(2)} hours</p>
+                <p>Total hours for {month}: {selectedMonthHours.toFixed(3)} hours</p>
                 <BarChart></BarChart>
             </Container>
         </PageLayout>
