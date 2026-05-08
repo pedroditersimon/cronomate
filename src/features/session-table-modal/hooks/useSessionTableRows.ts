@@ -54,7 +54,7 @@ export function useSessionTableRows({
                 ? elapsedTimeMs / 3.6e+6
                 : elapsedTimeMs / 60000;
             // Ceil
-            const elapsedTimeTxt = Math.ceil(elapsedTime * 100) / 100;
+const elapsedTimeTxt = Math.ceil(elapsedTime * 1000) / 1000;
 
 
             // this is a row
