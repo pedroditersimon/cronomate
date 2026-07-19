@@ -1,5 +1,7 @@
 import { maxBy } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "src/assets/Icons";
+import Button from "src/shared/components/interactable/Button";
 import { cn } from "src/shared/utils/cn";
 
 export interface BarChartDataItem {
@@ -39,10 +41,28 @@ interface Props {
     data: BarChartDataItem[];
     thresholds?: BarChartThreshold[];
     className?: string;
+    maxSegments?: number;
+    page?: number;
+    onPageChange?: (page: number) => void;
 }
 
-export default function BarChartThreshold({ data, thresholds, className, }: Props) {
+export default function BarChartThreshold({ data, thresholds, className, maxSegments, page, onPageChange, }: Props) {
     const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+    const [internalPage, setInternalPage] = useState(0);
+    const pageCount = maxSegments ? Math.ceil(data.length / maxSegments) : 1;
+    const currentPage = Math.min(page ?? internalPage, Math.max(pageCount - 1, 0));
+    const visibleData = maxSegments
+        ? data.slice(currentPage * maxSegments, (currentPage + 1) * maxSegments)
+        : data;
+
+    useEffect(() => {
+        if (page === undefined) setInternalPage(0);
+    }, [data, maxSegments, page]);
+
+    const changePage = (nextPage: number) => {
+        if (page === undefined) setInternalPage(nextPage);
+        onPageChange?.(nextPage);
+    };
 
     const maxValue = maxBy(data, "value")?.value ?? 0;
     thresholds = thresholds ?? [{ ...defaultThreshold, value: maxValue }];
@@ -93,11 +113,29 @@ export default function BarChartThreshold({ data, thresholds, className, }: Prop
     };
 
     return (
-        <div className={cn("w-full h-44", className)}>
+        <div className={cn("w-full", className)}>
+            {pageCount > 1 && (
+                <div className="mb-2 flex justify-end gap-1">
+                    <Button
+                        icon={<ChevronLeftIcon className="size-5" />}
+                        onClick={() => changePage(currentPage - 1)}
+                        disabled={currentPage === 0}
+                        className="p-1"
+                    />
+                    <Button
+                        icon={<ChevronRightIcon className="size-5" />}
+                        onClick={() => changePage(currentPage + 1)}
+                        disabled={currentPage === pageCount - 1}
+                        className="p-1"
+                    />
+                </div>
+            )}
+
+            <div className="h-44">
             {/* Área principal del gráfico */}
             <div className="relative h-36 flex flex-row gap-2">
                 {/* Barras */}
-                {data.map((item, itemIdx) => (
+                {visibleData.map((item, itemIdx) => (
                     <div key={item.label} className="relative flex-1 flex flex-col justify-end">
                         <div
                             className={cn("absolute z-10 inset-0 flex flex-col justify-end",
@@ -149,7 +187,7 @@ export default function BarChartThreshold({ data, thresholds, className, }: Prop
 
             {/* Labels inferiores */}
             <div className="flex flex-row gap-2">
-                {data.map((item, itemIdx) => (
+                {visibleData.map((item, itemIdx) => (
                     <div
                         key={item.label}
                         className={cn(
@@ -159,6 +197,7 @@ export default function BarChartThreshold({ data, thresholds, className, }: Prop
                         {item.label}
                     </div>
                 ))}
+            </div>
             </div>
         </div>
     );
