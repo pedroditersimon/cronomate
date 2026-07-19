@@ -3,7 +3,7 @@ import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import PageLayout from "src/shared/layouts/PageLayout";
 import { DateTime } from "luxon";
 import { maxBy } from "lodash";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useSessionsHistory from "src/features/sessions-history/hooks/useSessionsHistory";
 import sessionService from "src/features/session/services/sessionService";
 import useTodaySession from "src/features/today-session/hooks/useTodaySession";
@@ -14,6 +14,7 @@ import DateRangePicker from "src/shared/components/interactable/DateRangePicker"
 
 const toRangeValue = (start: DateTime, end: DateTime) =>
     `${start.toISODate()}/${end.toISODate()}`;
+const maxChartSegments = 7;
 
 function parseRange(range: string) {
     const [start, end] = range.split("/").map(date => DateTime.fromISO(date));
@@ -26,7 +27,7 @@ export default function SummaryPage() {
 
     const [range, setRange] = useState(() => {
         const now = DateTime.now();
-        return toRangeValue(now.startOf("month"), now.endOf("month"));
+        return toRangeValue(now.startOf("month"), now);
     });
 
     const rangeDates = useMemo(() => parseRange(range), [range]);
@@ -54,6 +55,13 @@ export default function SummaryPage() {
             value: activityService.getAllElapsedTime(s.activities),
             valueLabelFormatter: v => convertElapsedTimeToText(v),
         } as BarChartDataItem));
+
+    const lastChartPage = Math.max(Math.ceil(chartData.length / maxChartSegments) - 1, 0);
+    const [chartPage, setChartPage] = useState(lastChartPage);
+
+    useEffect(() => {
+        setChartPage(lastChartPage);
+    }, [range, lastChartPage]);
 
     const maxY = maxBy(chartData, "value")?.value ?? 0;
     const sessionLimit = todaySession?.session?.durationLimit?.millis ?? 0;
@@ -87,9 +95,25 @@ export default function SummaryPage() {
                     }
                 />
 
-                <p>Total: {totalHours.toFixed(2)} hours</p>
+                <div className="flex items-center justify-between px-1 py-2">
+                    <div>
+                        <p className="text-sm font-semibold text-gray-500">Tiempo total</p>
+                        <p className="text-2xl font-semibold text-gray-300">
+                            {convertElapsedTimeToText(totalHours * 3_600_000)}
+                        </p>
+                    </div>
+                    <span className="text-sm text-gray-500">
+                        {sessionsInRange.length} {sessionsInRange.length === 1 ? "sesión" : "sesiones"}
+                    </span>
+                </div>
 
-                <BarChartThreshold data={chartData} thresholds={chartThreshold} />
+                <BarChartThreshold
+                    data={chartData}
+                    thresholds={chartThreshold}
+                    maxSegments={maxChartSegments}
+                    page={chartPage}
+                    onPageChange={setChartPage}
+                />
             </Container>
         </PageLayout>
     );
