@@ -65,10 +65,11 @@ function hasChanges(activity: Activity, mock: Activity) {
     return timeTrackService.hasAnyEndTime(activity.tracks); // tracks has changed
 }
 
-function getAllElapsedTime(activities: Array<Activity>) {
+function getAllElapsedTime(activities: Array<Activity>, excludePauses = true) {
     return activities.reduce((acc, activity) => {
         // dont include deleted activity
         if (activity.isDeleted) return acc;
+        if (excludePauses && activity.id === pauseActivityMock.id) return acc;
 
         const elapsedTime = timeTrackService.getAllElapsedMs(activity.tracks);
         return elapsedTime > 0
