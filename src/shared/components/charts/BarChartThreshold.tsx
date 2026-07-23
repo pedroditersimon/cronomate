@@ -41,23 +41,33 @@ interface Props {
     data: BarChartDataItem[];
     thresholds?: BarChartThreshold[];
     className?: string;
-    maxSegments?: number;
+    segmentsPerPage?: number;
+    minSegmentsPerPage?: number;
     page?: number;
     onPageChange?: (page: number) => void;
 }
 
-export default function BarChartThreshold({ data, thresholds, className, maxSegments, page, onPageChange, }: Props) {
+export default function BarChartThreshold({ data, thresholds, className, segmentsPerPage, minSegmentsPerPage, page, onPageChange, }: Props) {
     const [hoveredItem, setHoveredItem] = useState<number | null>(null);
     const [internalPage, setInternalPage] = useState(0);
-    const pageCount = maxSegments ? Math.ceil(data.length / maxSegments) : 1;
+    const pageCount = segmentsPerPage ? Math.ceil(data.length / segmentsPerPage) : 1;
     const currentPage = Math.min(page ?? internalPage, Math.max(pageCount - 1, 0));
-    const visibleData = maxSegments
-        ? data.slice(currentPage * maxSegments, (currentPage + 1) * maxSegments)
+    const minimumSegments = Math.min(minSegmentsPerPage ?? 0, segmentsPerPage ?? data.length);
+    const pageStart = currentPage * (segmentsPerPage ?? data.length);
+    const isShortLastPage = segmentsPerPage
+        && currentPage === pageCount - 1
+        && pageCount > 1
+        && data.length - pageStart < minimumSegments;
+    const visibleData = segmentsPerPage
+        ? data.slice(
+            isShortLastPage ? Math.max(data.length - minimumSegments, 0) : pageStart,
+            isShortLastPage ? data.length : (currentPage + 1) * segmentsPerPage
+        )
         : data;
 
     useEffect(() => {
         if (page === undefined) setInternalPage(0);
-    }, [data, maxSegments, page]);
+    }, [data, segmentsPerPage, page]);
 
     const changePage = (nextPage: number) => {
         if (page === undefined) setInternalPage(nextPage);

@@ -14,8 +14,6 @@ import DateRangePicker from "src/shared/components/interactable/DateRangePicker"
 
 const toRangeValue = (start: DateTime, end: DateTime) =>
     `${start.toISODate()}/${end.toISODate()}`;
-const maxChartSegments = 7;
-
 function parseRange(range: string) {
     const [start, end] = range.split("/").map(date => DateTime.fromISO(date));
     return start.isValid && end.isValid ? { start, end } : null;
@@ -56,7 +54,7 @@ export default function SummaryPage() {
             valueLabelFormatter: v => convertElapsedTimeToText(v),
         } as BarChartDataItem));
 
-    const lastChartPage = Math.max(Math.ceil(chartData.length / maxChartSegments) - 1, 0);
+    const lastChartPage = Math.max(Math.ceil(chartData.length / 7) - 1, 0);
     const [chartPage, setChartPage] = useState(lastChartPage);
 
     useEffect(() => {
@@ -110,7 +108,8 @@ export default function SummaryPage() {
                 <BarChartThreshold
                     data={chartData}
                     thresholds={chartThreshold}
-                    maxSegments={maxChartSegments}
+                    segmentsPerPage={7}
+                    minSegmentsPerPage={7}
                     page={chartPage}
                     onPageChange={setChartPage}
                 />
