@@ -2,98 +2,68 @@ import { DateTime } from "luxon";
 import { Activity } from "src/features/activity/types/Activity";
 import { CheckItem } from "src/features/notes/types/CheckItem";
 import sessionService from "src/features/session/services/sessionService";
-import { Session } from "src/features/session/types/Session";
 
 // [!] DONT use spread operator here
 
-function convertSession(session: any, fromVersion: string, toVersion: string): any | null {
-    let convertedSession = { value: session, newVersion: fromVersion };
+type SchemaMigration = {
+    fromVersion: string;
+    toVersion: string;
+    convert: (session: any) => any;
+};
 
-    // already in target version
-    if (fromVersion === toVersion)
-        return session;
+// Add an entry only when the persisted Session schema changes.
+const schemaMigrations: SchemaMigration[] = [
+    { fromVersion: '0.0.0', toVersion: '0.1.0', convert: v0_0_0_to_v0_1_0 },
+    { fromVersion: '0.1.0', toVersion: '0.3.0', convert: v0_2_0_to_v0_3_0 },
+    { fromVersion: '0.3.0', toVersion: '0.4.0', convert: v0_3_0_to_v0_4_0 },
+    { fromVersion: '0.4.0', toVersion: '0.6.0', convert: v0_5_0_to_v0_6_0 },
+];
 
-    while (convertedSession.newVersion !== toVersion) {
-        const previousVersion = convertedSession.newVersion;
-        convertedSession = convertSessionToNext(convertedSession.value, convertedSession.newVersion);
+function compareVersions(first: string, second: string): number {
+    const firstParts = first.split('.').map(Number);
+    const secondParts = second.split('.').map(Number);
 
-        // Cant convert anymore, return the session value
-        if (convertedSession.newVersion === previousVersion) {
-            break;
-        }
+    for (let index = 0; index < 3; index++) {
+        const difference = (firstParts[index] ?? 0) - (secondParts[index] ?? 0);
+        if (difference !== 0) return difference;
     }
 
-    // cant convert
-    if (convertedSession.newVersion !== toVersion) {
-        console.warn(`Cant convert session from v${fromVersion} to v${toVersion}`, session);
-        return null
-    }
-
-    return convertedSession.value;
+    return 0;
 }
 
-function convertSessionToNext(session: Session, fromVersion: string) {
-    // 0.0.0 -> 0.1.0
-    if (fromVersion === '0.0.0') {
-        return {
-            value: v0_0_0_to_v0_1_0(session),
-            newVersion: '0.1.0'
-        };
-    }
+function convertSession(session: any, fromVersion: string, targetVersion: string): any {
+    let convertedSession = session;
+    let currentVersion = fromVersion;
 
-    // 0.2.0 -> 0.3.0
-    if (fromVersion === '0.2.0') {
-        return {
-            value: v0_2_0_to_v0_3_0(session),
-            newVersion: '0.3.0'
+    while (compareVersions(currentVersion, targetVersion) < 0) {
+        const migration = schemaMigrations.find(({
+            fromVersion: migrationFromVersion,
+            toVersion: migrationToVersion,
+        }) => (
+            compareVersions(migrationFromVersion, currentVersion) <= 0
+            && compareVersions(currentVersion, migrationToVersion) < 0
+            && compareVersions(migrationToVersion, targetVersion) <= 0
+        ));
+
+        // Unknown version or a future schema: preserve the saved session.
+        if (!migration) {
+            const hasUnreachableMigration = schemaMigrations.some(({ fromVersion, toVersion }) => (
+                compareVersions(currentVersion, fromVersion) < 0
+                && compareVersions(toVersion, targetVersion) <= 0
+            ));
+
+            if (hasUnreachableMigration) {
+                console.warn(`Cant convert session from v${fromVersion} to v${targetVersion}`, session);
+            }
+
+            return convertedSession;
         }
+
+        convertedSession = migration.convert(convertedSession);
+        currentVersion = migration.toVersion;
     }
 
-    // 0.3.0 -> 0.4.0
-    if (fromVersion === '0.3.0') {
-        return {
-            value: v0_3_0_to_v0_4_0(session),
-            newVersion: '0.4.0'
-        }
-    }
-
-    // 0.4.0 -> 0.5.0
-    if (fromVersion === '0.4.0') {
-        return {
-            value: session, // no changes
-            newVersion: '0.5.0'
-        }
-    }
-
-    // 0.5.0 -> 0.6.0
-    if (fromVersion === '0.5.0') {
-        return {
-            value: v0_5_0_to_v0_6_0(session),
-            newVersion: '0.6.0'
-        }
-    }
-
-// 0.5.0 -> 0.6.0
-    if (fromVersion === '0.5.0') {
-        return {
-            value: v0_5_0_to_v0_6_0(session),
-            newVersion: '0.6.0'
-        }
-    }
-
-    // 0.6.0 -> 0.6.1 (no schema changes)
-    if (fromVersion === '0.6.0') {
-        return {
-            value: session,
-            newVersion: '0.6.1'
-        }
-    }
-
-    // keep same
-    return {
-        value: session,
-        newVersion: fromVersion
-    };
+    return convertedSession;
 }
 
 
