@@ -13,6 +13,10 @@ import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTr
 import ActivityTrack from "src/features/activity/components/ActivityTrack";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import { DateTime, Interval } from "luxon";
+import ProjectInput from "src/shared/components/forms/ProjectInput";
+import { useTypedSelector } from "src/shared/hooks/useTypedSelector";
+import useAppSettings from "src/features/app-settings/hooks/useAppSettings";
+import { extractProjectFromTitle } from "src/features/projects/services/projectService";
 
 export type ActivityActions = "all" | "none" | ("edit" | "archive" | "restore")[];
 
@@ -57,6 +61,8 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     const [focused, setFocused] = useState(false);
     const [title, setTitle] = useState(activity.title);
     const [isExpanded, setIsExpanded] = useState(_isExpanded);
+    const projects = useTypedSelector(state => state.projects);
+    const { appSettings } = useAppSettings();
 
     // sync isExpanded with prop
     useEffect(() => setIsExpanded(_isExpanded), [_isExpanded]);
@@ -144,8 +150,19 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     }
 
     const handleSetTitle = (newTitle: string) => {
+        if (!activity.project && appSettings.detectProjectFromActivityTitle) {
+            const extractedProject = extractProjectFromTitle(newTitle, projects);
+            onActivityChange({ ...activity, title: extractedProject.title, project: extractedProject.project });
+            return;
+        }
+
         onActivityChange({ ...activity, title: newTitle });
     }
+
+    const handleSetProject = (newProject?: string) => {
+        onActivityChange({ ...activity, project: newProject?.trim() || undefined });
+    }
+
 
     const handleDelete = () => {
         onActivityChange({
@@ -277,6 +294,13 @@ const Activity = forwardRef<ActivityHandle, Props>(({
 
             {/* Track list */}
             <div className="flex flex-col gap-1 ml-6">
+                {isExpanded && (canEdit || activity.project) &&
+                    <ProjectInput
+                        value={activity.project}
+                        onChange={handleSetProject}
+                        readOnly={!canEdit}
+                    />
+                }
                 {activity.tracks.map((track, i) => {
                     if (!showArchivedTracks && track.status === TimeTrackStatus.ARCHIVED) return;
                     if (!isExpanded && track.status !== TimeTrackStatus.RUNNING) return;

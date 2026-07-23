@@ -5,7 +5,7 @@ import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import SessionTimer from "./SessionTimer";
 import SessionSettings from "./SessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { SettingsIcon } from "src/assets/Icons";
 import clsx from "clsx";
 import { Activity } from "src/features/activity/types/Activity";
@@ -15,6 +15,7 @@ import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
 import ActivityComponent from "src/features/activity/components/Activity";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
+import useProjects from "src/features/projects/hooks/useProjects";
 
 export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
@@ -48,6 +49,7 @@ export default function Session({
 }: Props) {
     const [showSettings, setShowSettings] = useState(false);
     const [isActivityCreatorFocused, setIsActivityCreatorFocused] = useState(false);
+    const projects = useProjects();
 
     const title = formatDateToText(toDate(session.createdTimestamp));
 
@@ -159,6 +161,7 @@ export default function Session({
                 <ActivityCreator
                     onCreate={handleCreateNewActivityWithState}
                     onFocusChange={setIsActivityCreatorFocused}
+                    projects={projects}
                 />
             }
 

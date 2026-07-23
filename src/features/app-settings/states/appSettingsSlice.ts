@@ -5,12 +5,13 @@ import localSave from "src/shared/services/localSave";
 function getNewDefaultState(): AppSettings {
     return {
         soundsEnabled: true,
+        detectProjectFromActivityTitle: true,
     };
 }
 
 
 const defaultState = getNewDefaultState();
-const initialState = localSave.load("appSettings", defaultState);
+const initialState = { ...defaultState, ...localSave.load("appSettings", defaultState) };
 
 
 const appSettingsSlice = createSlice({
@@ -21,7 +22,7 @@ const appSettingsSlice = createSlice({
             localSave.save("appSettings", state);
         },
         load: (state) => {
-            return localSave.load("appSettings", state);
+            return { ...defaultState, ...localSave.load("appSettings", state) };
         },
 
         setSettings: (_, action: PayloadAction<AppSettings>) => {

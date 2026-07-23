@@ -17,6 +17,7 @@ const schemaMigrations: SchemaMigration[] = [
     { fromVersion: '0.1.0', toVersion: '0.3.0', convert: v0_2_0_to_v0_3_0 },
     { fromVersion: '0.3.0', toVersion: '0.4.0', convert: v0_3_0_to_v0_4_0 },
     { fromVersion: '0.4.0', toVersion: '0.6.0', convert: v0_5_0_to_v0_6_0 },
+    { fromVersion: '0.6.0', toVersion: '0.6.3', convert: v0_6_0_to_v0_6_3 },
 ];
 
 function compareVersions(first: string, second: string): number {
@@ -64,6 +65,31 @@ function convertSession(session: any, fromVersion: string, targetVersion: string
     }
 
     return convertedSession;
+}
+
+
+// Convert session from v0.6.0 to v0.6.3
+function v0_6_0_to_v0_6_3(session: any) {
+    // Changes:
+    // 1. Added optional project to activities
+
+    return {
+        id: session.id,
+        activities: session.activities.map((activity: any) => ({
+            id: activity.id,
+            title: activity.title,
+            project: activity.project,
+            description: activity.description,
+            tracks: activity.tracks,
+            isDeleted: activity.isDeleted,
+            isCollapsed: activity.isCollapsed,
+        })),
+        createdTimestamp: session.createdTimestamp,
+        durationLimit: session.durationLimit,
+        inactivityThresholdMs: session.inactivityThresholdMs,
+        note: session.note,
+        checklist: session.checklist,
+    };
 }
 
 

@@ -33,6 +33,24 @@ export default function AppSettings() {
                 />
             </FormField>
 
+            <FormField
+                title="Extraer proyecto desde actividad"
+                tooltip={{
+                    text: "Extrae un proyecto existente del inicio del título.",
+                    position: "left"
+                }}
+            >
+                <ToggleTabs
+                    falseLabel="No detectar"
+                    trueLabel="Detectar"
+                    onSelected={value => setAppSettings({
+                        ...appSettings,
+                        detectProjectFromActivityTitle: value
+                    })}
+                    value={appSettings.detectProjectFromActivityTitle}
+                />
+            </FormField>
+
             {showDevTools && (
                 <>
                     <ContainerTopbar title="Dev Tools" />
