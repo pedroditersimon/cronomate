@@ -15,6 +15,8 @@ interface Props {
     handleCopyTable: () => void;
     includeDateCol: boolean;
     setIncludeDateCol: (value: boolean) => void;
+    includeProjectCol: boolean;
+    setIncludeProjectCol: (value: boolean) => void;
     elapsedTimeUnit: TimeUnit;
     setElapsedTimeUnit: (value: TimeUnit) => void;
     includeUnrecordedActivity: boolean;
@@ -32,6 +34,7 @@ export default function SessionTableModalPresenter({
     rows,
     disableCopyBtn, handleCopyTable,
     includeDateCol, setIncludeDateCol,
+    includeProjectCol, setIncludeProjectCol,
     elapsedTimeUnit, setElapsedTimeUnit,
     includeUnrecordedActivity, setIncludeUnrecordedActivity,
     includePausesActivity, setIncludePausesActivity,
@@ -52,6 +55,9 @@ export default function SessionTableModalPresenter({
                         <tr className="text-neutral-300 text-left border-b border-neutral-800">
                             {includeDateCol && (
                                 <th className="px-2 py-1">Fecha</th>
+                            )}
+                            {includeProjectCol && (
+                                <th className="px-2 py-1 min-w-40">Proyecto</th>
                             )}
                             <th className="px-2 py-1 min-w-40">Titulo</th>
                             <th className="px-2 py-1 min-w-40">Descripción</th>
@@ -76,6 +82,9 @@ export default function SessionTableModalPresenter({
                                 {includeDateCol && (
                                     <td className="p-2 max-w-96 text-nowrap">{row.date}</td>
                                 )}
+                                {includeProjectCol && (
+                                    <td className="p-2 max-w-96">{row.project}</td>
+                                )}
                                 <td className="p-2 max-w-96">{row.title}</td>
                                 <td className="p-2 max-w-96">{row.description}</td>
                                 <td className="p-2 max-w-96 text-nowrap">{row.elapsedTime}</td>
@@ -93,6 +102,13 @@ export default function SessionTableModalPresenter({
                     onChange={setIncludeDateCol}
                 >
                     Incluir Fecha
+                </Checkbox>
+
+                <Checkbox
+                    value={includeProjectCol}
+                    onChange={setIncludeProjectCol}
+                >
+                    Incluir Proyecto
                 </Checkbox>
 
                 {hasUntrackedActivity &&

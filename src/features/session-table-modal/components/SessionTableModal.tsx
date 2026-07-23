@@ -18,6 +18,7 @@ export default function SessionTableModal({ id, session }: Props) {
     const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
 
     const [includeDateCol, setIncludeDateCol] = useState(true);
+    const [includeProjectCol, setIncludeProjectCol] = useState(true);
 
     // Untracked Activity
     const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
@@ -40,7 +41,7 @@ export default function SessionTableModal({ id, session }: Props) {
     const handleCopyTable = () => {
         setTableCopiedEffect(true);
         setTimeout(() => setTableCopiedEffect(false), 3000);
-        copyTable(rows, includeDateCol);
+        copyTable(rows, includeDateCol, includeProjectCol);
     };
 
     const disableCopyBtn = rows.length === 0;
@@ -56,6 +57,8 @@ export default function SessionTableModal({ id, session }: Props) {
             handleCopyTable={handleCopyTable}
             includeDateCol={includeDateCol}
             setIncludeDateCol={setIncludeDateCol}
+            includeProjectCol={includeProjectCol}
+            setIncludeProjectCol={setIncludeProjectCol}
             includeUnrecordedActivity={includeUnrecordedActivity}
             setIncludeUnrecordedActivity={setIncludeUnrecordedActivity}
             hasUntrackedActivity={hasUntrackedActivity}

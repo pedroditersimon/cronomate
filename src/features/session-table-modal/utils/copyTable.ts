@@ -1,10 +1,11 @@
 import { toast } from "sonner";
 import { SessionTableModalRow } from "src/features/session-table-modal/types/SessionTableModal";
 
-export function copyTable(rows: SessionTableModalRow[], includeDateCol: boolean) {
+export function copyTable(rows: SessionTableModalRow[], includeDateCol: boolean, includeProjectCol: boolean) {
     const tableText = rows
         .map(row => [
             ...(includeDateCol ? [row.date] : []),
+            ...(includeProjectCol ? [row.project] : []),
             row.title,
             row.description,
             row.elapsedTime
