@@ -3,7 +3,7 @@ import { TimeUnit } from "src/shared/types/TimeUnit";
 import { Session } from "src/features/session/types/Session";
 import useUntrackedActivity from "src/features/activity/hooks/useUnrecoredActivity";
 import SessionTableModalPresenter from "src/features/session-table-modal/components/SessionTableModalPresenter";
-import { SessionTableModalRow } from "src/features/session-table-modal/types/SessionTableModal";
+import { SessionTableColumn } from "src/features/session-table-modal/types/SessionTableModal";
 import { copyTable } from "src/features/session-table-modal/utils/copyTable";
 import activityService from "src/features/activity/services/activityService";
 import { useSessionTableRows } from "src/features/session-table-modal/hooks/useSessionTableRows";
@@ -17,8 +17,17 @@ export default function SessionTableModal({ id, session }: Props) {
     const [elapsedTimeUnit, setElapsedTimeUnit] = useState<TimeUnit>(TimeUnit.HOUR);
     const [tableCopiedEffect, setTableCopiedEffect] = useState(false);
 
-    const [includeDateCol, setIncludeDateCol] = useState(true);
-    const [includeProjectCol, setIncludeProjectCol] = useState(true);
+    const [activeColumnIds, setActiveColumnIds] = useState<string[]>([
+        "date", "project", "title", "description", "elapsedTime"
+    ]);
+    const [columns, setColumns] = useState<SessionTableColumn[]>([
+        { id: "date", label: "Fecha" },
+        { id: "project", label: "Proyecto" },
+        { id: "title", label: "Titulo" },
+        { id: "description", label: "Descripción" },
+        { id: "elapsedTime", label: "Tiempo" }
+    ]);
+    const [customValues, setCustomValues] = useState<Record<string, Record<string, string>>>({});
 
     // Untracked Activity
     const [includeUnrecordedActivity, setIncludeUnrecordedActivity] = useState(true);
@@ -35,13 +44,16 @@ export default function SessionTableModal({ id, session }: Props) {
         untrackedActivity,
         includePausesActivity,
         elapsedTimeUnit,
-        includeDateCol
     });
 
     const handleCopyTable = () => {
         setTableCopiedEffect(true);
         setTimeout(() => setTableCopiedEffect(false), 3000);
-        copyTable(rows, includeDateCol, includeProjectCol);
+        copyTable({
+            rows,
+            columns: columns.filter(column => column.isCustom || activeColumnIds.includes(column.id)),
+            customValues
+        });
     };
 
     const disableCopyBtn = rows.length === 0;
@@ -55,10 +67,12 @@ export default function SessionTableModal({ id, session }: Props) {
             disableCopyBtn={disableCopyBtn}
             tableCopiedEffect={tableCopiedEffect}
             handleCopyTable={handleCopyTable}
-            includeDateCol={includeDateCol}
-            setIncludeDateCol={setIncludeDateCol}
-            includeProjectCol={includeProjectCol}
-            setIncludeProjectCol={setIncludeProjectCol}
+            activeColumnIds={activeColumnIds}
+            setActiveColumnIds={setActiveColumnIds}
+            columns={columns}
+            setColumns={setColumns}
+            customValues={customValues}
+            setCustomValues={setCustomValues}
             includeUnrecordedActivity={includeUnrecordedActivity}
             setIncludeUnrecordedActivity={setIncludeUnrecordedActivity}
             hasUntrackedActivity={hasUntrackedActivity}

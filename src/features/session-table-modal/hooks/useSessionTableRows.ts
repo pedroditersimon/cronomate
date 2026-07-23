@@ -11,7 +11,6 @@ import { toDate } from "src/shared/utils/TimeUtils";
 interface Props {
     session: Session;
     elapsedTimeUnit: TimeUnit;
-    includeDateCol: boolean;
     includeUnrecordedActivity: boolean;
     untrackedActivity: Activity;
     includePausesActivity: boolean;

@@ -6,3 +6,11 @@ export interface SessionTableModalRow {
     description: string;
     elapsedTime: number;
 };
+
+export type SessionTableColumnId = "date" | "project" | "title" | "description" | "elapsedTime" | string;
+
+export interface SessionTableColumn {
+    id: SessionTableColumnId;
+    label: string;
+    isCustom?: boolean;
+}
