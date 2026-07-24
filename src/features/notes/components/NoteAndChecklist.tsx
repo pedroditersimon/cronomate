@@ -37,7 +37,6 @@ export default function NoteAndChecklist({
             note={note}
             onChange={onNoteChange}
             placeholder="Escribe tus notas aquí..."
-            autoResize={false}
         />
         <CheckItemList
             checklist={checklist}
