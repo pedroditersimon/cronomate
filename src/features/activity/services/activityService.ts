@@ -121,6 +121,14 @@ function hasUnarchivedTracks(activity: Activity): boolean {
     return timeTrackService.hasUnarchived(activity.tracks);
 }
 
+function getEarliestStartTime(activity: Activity): string | null {
+    return activity.tracks.reduce<string | null>((earliestStartTime, track) => {
+        if (!track.start) return earliestStartTime;
+        if (!earliestStartTime || track.start < earliestStartTime) return track.start;
+        return earliestStartTime;
+    }, null);
+}
+
 function orderTracksByStartTime(activity: Activity): Activity {
     return {
         ...activity,
@@ -152,6 +160,7 @@ export default {
     hasRunningTracks,
     hasArchivedTracks,
     hasUnarchivedTracks,
+    getEarliestStartTime,
     orderTracksByStartTime,
     getAllElapsedTime,
     updateRunningTracks

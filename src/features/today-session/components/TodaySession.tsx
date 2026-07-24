@@ -114,6 +114,7 @@ export default function TodaySession({ readOnly }: Props) {
             session={todaySession.session}
             onSessionChange={setSession}
             inBelowSettings={<TodaySessionSettings />}
+            activityOrder={todaySessionSettings.activityOrder}
         />
     );
 }
