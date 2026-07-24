@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import { BriefcaseIcon, SettingsIcon, InboxStackIcon, CalendarIcon, ChartNoAxesCombinedIcon } from "src/assets/Icons";
+import { BriefcaseIcon, SettingsIcon, InboxStackIcon, ChartNoAxesCombinedIcon } from "src/assets/Icons";
 import Sidebar from "./Sidebar";
 import { ROUTES } from "src/app/routing/routes";
 
@@ -15,11 +15,6 @@ export default function PageLayout({ children }: PropsWithChildren) {
                             to: ROUTES.PRIVATE.TODAY_SESSION,
                             icon: <BriefcaseIcon />,
                             text: "Hoy",
-                        },
-                        {
-                            to: "/calendar",
-                            text: "Calendario",
-                            icon: <CalendarIcon />
                         },
                         {
                             to: "/summary",

@@ -1,14 +1,18 @@
 import { toast } from "sonner";
-import { SessionTableModalRow } from "src/features/session-table-modal/types/SessionTableModal";
+import { SessionTableColumn, SessionTableModalRow } from "src/features/session-table-modal/types/SessionTableModal";
 
-export function copyTable(rows: SessionTableModalRow[], includeDateCol: boolean) {
+interface Props {
+    rows: SessionTableModalRow[];
+    columns: SessionTableColumn[];
+    customValues: Record<string, Record<string, string>>;
+}
+
+export function copyTable({ rows, columns, customValues }: Props) {
     const tableText = rows
-        .map(row => [
-            ...(includeDateCol ? [row.date] : []),
-            row.title,
-            row.description,
-            row.elapsedTime
-        ].join("\t"))
+        .map(row => columns.map(column => {
+            if (column.isCustom) return customValues[column.id]?.[row.key] || "";
+            return String(row[column.id as keyof SessionTableModalRow] ?? "");
+        }).join("\t"))
         .join("\n");
 
     navigator.clipboard.writeText(tableText)

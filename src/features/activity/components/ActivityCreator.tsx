@@ -8,18 +8,22 @@ import activityService from "src/features/activity/services/activityService";
 import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import { newActivityMock } from "src/features/activity/mocks/newActivityMock";
 import { DateTime } from "luxon";
+import useAppSettings from "src/features/app-settings/hooks/useAppSettings";
+import { extractProjectFromTitle } from "src/features/projects/services/projectService";
 
 interface Props {
     onCreate: (newActivity: Activity) => void;
     onFocusChange?: (focus: boolean) => void;
+    projects: string[];
 }
 
 
-export default function ActivityCreator({ onCreate, onFocusChange }: Props) {
+export default function ActivityCreator({ onCreate, onFocusChange, projects }: Props) {
     // local states
     const activityRef = useRef<ActivityHandle | null>(null);
     const [activity, setActivity] = useState<Activity>(newActivityMock);
     const [isFocused, setIsFocused] = useState(false);
+    const { appSettings } = useAppSettings();
 
     const handleSetFocus = (focus: boolean) => {
         // Colapsar segun el focus
@@ -73,9 +77,14 @@ export default function ActivityCreator({ onCreate, onFocusChange }: Props) {
         // If mustRun and no startTime, set it to now
         const setStartTimeToNow = mustRun && !firstTrack.start;
 
+        const extractedProject = !newActivity.project && appSettings.detectProjectFromActivityTitle
+            ? extractProjectFromTitle(newActivity.title, projects)
+            : { project: undefined, title: newActivity.title };
+
         const newActivityWithRecord: Activity = {
             id: generateId(),
-            title: newActivity.title,
+            title: extractedProject.title,
+            project: newActivity.project ?? extractedProject.project,
             tracks: [{
                 id: generateId(),
                 start: setStartTimeToNow ? hhmm_now : firstTrack.start, // Keep existing if not starting now

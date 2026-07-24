@@ -114,7 +114,7 @@ export default function DateRangePicker({ value, onChange }: Props) {
                 {formatRange(value)}
             </Button>
 
-            <div className={`absolute right-0 top-full z-50 mt-2 rounded-lg border-2 border-gray-700 bg-bg-primary p-3 shadow-lg ${isOpen ? "" : "hidden"}`}>
+            <div className={`absolute right-0 top-full z-[99999] mt-2 rounded-lg border-2 border-gray-700 bg-bg-primary p-3 shadow-lg ${isOpen ? "" : "hidden"}`}>
                 <calendar-range ref={calendarRef} value={value} months={1} locale="es-AR">
                     <span slot="previous" aria-label="Mes anterior" onClick={() => setPageDate(date => date.minus({ months: 1 }))}>
                         <ChevronLeftIcon className="size-5" />

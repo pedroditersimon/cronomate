@@ -10,6 +10,7 @@ interface Props {
     onNoteChange?: (newNote: NoteType) => void;
 
     checklist: CheckItemType[];
+    currentTime?: number;
     onChecklistChange?: (items: CheckItemType[]) => void;
     onCheckItemAdd?: (item: CheckItemType) => void;
     onCheckItemDelete?: (id: string) => void;
@@ -23,6 +24,7 @@ export default function NoteAndChecklist({
     onNoteChange,
 
     checklist,
+    currentTime,
     onChecklistChange,
     onCheckItemAdd,
     onCheckItemDelete,
@@ -37,10 +39,10 @@ export default function NoteAndChecklist({
             note={note}
             onChange={onNoteChange}
             placeholder="Escribe tus notas aquí..."
-            autoResize={false}
         />
         <CheckItemList
             checklist={checklist}
+            currentTime={currentTime}
             onChange={onChecklistChange}
             onAdd={onCheckItemAdd}
             onDelete={onCheckItemDelete}

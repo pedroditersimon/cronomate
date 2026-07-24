@@ -5,7 +5,7 @@ import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import SessionTimer from "./SessionTimer";
 import SessionSettings from "./SessionSettings";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { SettingsIcon } from "src/assets/Icons";
 import clsx from "clsx";
 import { Activity } from "src/features/activity/types/Activity";
@@ -15,6 +15,8 @@ import activityService from "src/features/activity/services/activityService";
 import ActivityCreator from "src/features/activity/components/ActivityCreator";
 import ActivityComponent from "src/features/activity/components/Activity";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
+import useProjects from "src/features/projects/hooks/useProjects";
+import type { ActivityOrder } from "src/features/today-session/types/TodaySessionSettings";
 
 export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
@@ -31,6 +33,7 @@ interface Props {
     canCreate?: boolean;
     canArchive?: boolean;
     canRestore?: boolean;
+    activityOrder?: ActivityOrder;
 }
 
 
@@ -45,14 +48,26 @@ export default function Session({
     canCreate = true,
     canArchive = true,
     canRestore = true,
+    activityOrder = "creation",
 }: Props) {
     const [showSettings, setShowSettings] = useState(false);
     const [isActivityCreatorFocused, setIsActivityCreatorFocused] = useState(false);
+    const projects = useProjects();
 
     const title = formatDateToText(toDate(session.createdTimestamp));
 
     // Filter deleted activities and activities without tracks
     const filteredActivities = session.activities.filter(act => !act.isDeleted && activityService.hasUnarchivedTracks(act));
+    const displayedActivities = activityOrder === "startTime"
+        ? [...filteredActivities].sort((firstActivity, secondActivity) => {
+            const firstStartTime = activityService.getEarliestStartTime(firstActivity);
+            const secondStartTime = activityService.getEarliestStartTime(secondActivity);
+
+            if (!firstStartTime) return secondStartTime ? 1 : 0;
+            if (!secondStartTime) return -1;
+            return firstStartTime.localeCompare(secondStartTime);
+        })
+        : filteredActivities;
 
     // Untracked Activity
     const untrackedActivity = useUntrackedActivity(filteredActivities);
@@ -159,6 +174,7 @@ export default function Session({
                 <ActivityCreator
                     onCreate={handleCreateNewActivityWithState}
                     onFocusChange={setIsActivityCreatorFocused}
+                    projects={projects}
                 />
             }
 
@@ -168,7 +184,7 @@ export default function Session({
                 )}
             >
                 { // Activities list
-                    filteredActivities.map(activity => (
+                    displayedActivities.map(activity => (
                         <ActivityComponent
                             key={activity.id}
                             activity={activity}

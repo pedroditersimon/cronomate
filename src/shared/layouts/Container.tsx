@@ -4,9 +4,10 @@ import { HTMLProps, ReactNode } from "react";
 interface Props extends Omit<HTMLProps<HTMLDivElement>, "width"> {
     width?: ClassValue;
     children: ReactNode;
+    scrollable?: boolean;
 }
 
-export default function Container({ width, children, ...props }: Props) {
+export default function Container({ width, children, scrollable = true, ...props }: Props) {
     return (
         <div
             {...props}
@@ -17,7 +18,8 @@ export default function Container({ width, children, ...props }: Props) {
             )}
         >
             <div className={clsx(
-                "flex h-full flex-col gap-5 p-5 pr-4 overflow-y-scroll overflow-x-hidden",
+                "flex h-full flex-col gap-5 p-5 pr-4",
+                scrollable ? "overflow-y-scroll overflow-x-hidden" : "overflow-visible",
                 `${width ?? "min-w-96"}`
             )}>
                 {children}

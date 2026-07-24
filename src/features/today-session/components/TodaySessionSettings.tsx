@@ -19,6 +19,22 @@ export default function TodaySessionSettings({ readOnly }: Props) {
     return (
         <>
             <FormField
+                title="Orden de tareas"
+                show={!readOnly}
+                tooltip={{
+                    text: "Ordena las tareas por su primera hora cargada o por el orden en que fueron creadas."
+                }}
+            >
+                <ToggleTabs falseLabel="Creación" trueLabel="Hora"
+                    value={todaySessionSettings.activityOrder === "startTime"}
+                    onSelected={(value) => handleSetSettings({
+                        ...todaySessionSettings,
+                        activityOrder: value ? "startTime" : "creation"
+                    })}
+                />
+            </FormField>
+
+            <FormField
                 title="Guardar limites"
                 show={!readOnly}
                 tooltip={{

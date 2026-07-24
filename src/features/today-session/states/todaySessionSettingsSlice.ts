@@ -8,13 +8,17 @@ const getNewDefaultState = (): TodaySessionSettings => {
         stopOnClose: true,
         stopOnSessionEnd: true,
         saveSessionLimits: false,
+        activityOrder: "startTime",
     };
 }
 
 // 1. Estado incial
 const defaultState = getNewDefaultState();
 
-const initialState = localSave.load("todaySessionSettings", defaultState);
+const initialState = {
+    ...defaultState,
+    ...localSave.load("todaySessionSettings", defaultState),
+};
 
 // 2. Creamos el slice
 const todaySessionSettingsSlice = createSlice({

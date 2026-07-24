@@ -3,9 +3,11 @@ import { CheckCircle, CircleIcon, CrossIcon } from "src/assets/Icons";
 import { cn } from "src/shared/utils/cn";
 import InputField from "src/shared/components/forms/InputField";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
+import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStatus";
 
 interface Props {
     item: CheckItemType;
+    currentTime?: number;
     onChange?: (newItem: CheckItemType) => void;
     onEnterPressed?: () => void;
     onDelete?: () => void;
@@ -16,10 +18,10 @@ interface Props {
     canDelete?: boolean;
 }
 
-export default function CheckItem({ item, onChange, onEnterPressed, onDelete, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
-
-    // TODO: Add due date color indicator (yellow for upcoming, red for overdue)
+export default function CheckItem({ item, currentTime = Date.now(), onChange, onEnterPressed, onDelete, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
     // TODO: Add drag and drop 
+    const dueStatus = getCheckItemDueStatus(item, currentTime);
+    const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
 
 
     const toggle = () => {
@@ -58,8 +60,13 @@ export default function CheckItem({ item, onChange, onEnterPressed, onDelete, pl
                 onClick={toggle}
             >
                 <CircleIcon
-                    className={cn("bg-transparent group-hover:border-green-300 border-2 border-gray-400 mx-1 p-2",
-                        { "hidden": item.isDone, }
+                    className={cn("bg-transparent border-2 mx-1 p-2",
+                        {
+                            "border-gray-400 group-hover:border-green-300": !dueStatus,
+                            "border-red-400": dueStatus === "overdue",
+                            "border-yellow-400": dueStatus === "upcoming",
+                            "hidden": item.isDone,
+                        }
                     )}
                 />
                 <CheckCircle
@@ -74,13 +81,17 @@ export default function CheckItem({ item, onChange, onEnterPressed, onDelete, pl
                 onEnterPressed={onEnterPressed}
                 onChange={handleInputChange}
                 className={cn("border-transparent",
-                    { "opacity-50 text-green-300": item.isDone, })}
+                    {
+                        "opacity-50 text-green-300": item.isDone,
+                        [dueColorClass]: !item.isDone && !!dueStatus,
+                    })}
                 placeholder={placeholder}
             />
 
             <TimeInputHHmm
                 timeHHmm={item.due || null}
                 onChange={newTime => handleDueChange(newTime)}
+                className={dueStatus ? dueColorClass : undefined}
             />
 
             <div
