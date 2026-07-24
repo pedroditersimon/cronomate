@@ -14,6 +14,7 @@ interface Props {
     onNoteChange?: (newNote: NoteType) => void;
 
     checklist: CheckItemType[];
+    currentTime?: number;
     onChecklistChange?: (items: CheckItemType[]) => void;
     onCheckItemAdd?: (item: CheckItemType) => void;
     onCheckItemDelete?: (id: string) => void;
@@ -27,6 +28,7 @@ export default function NoteAndChecklistPlinth({
     onNoteChange,
 
     checklist,
+    currentTime,
     onChecklistChange,
     onCheckItemAdd,
     onCheckItemDelete,
@@ -57,6 +59,7 @@ export default function NoteAndChecklistPlinth({
                 onNoteChange={onNoteChange}
 
                 checklist={checklist}
+                currentTime={currentTime}
                 onChecklistChange={onChecklistChange}
                 onCheckItemAdd={onCheckItemAdd}
                 onCheckItemDelete={onCheckItemDelete}

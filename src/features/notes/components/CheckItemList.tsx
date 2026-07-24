@@ -6,6 +6,7 @@ import { DateTime } from "luxon";
 
 interface Props {
     checklist: CheckItemType[];
+    currentTime?: number;
     onChange?: (items: CheckItemType[]) => void;
 
     onAdd?: (item: CheckItemType) => void;
@@ -23,6 +24,7 @@ const defaultGhostItem: CheckItemType = {
 
 export default function CheckItemList({
     checklist,
+    currentTime,
     onChange,
     onAdd,
     onDelete,
@@ -62,6 +64,7 @@ export default function CheckItemList({
                         <CheckItem
                             key={item.id}
                             item={item}
+                            currentTime={currentTime}
                             onChange={updateItem}
                             onDelete={() => deleteItem(item.id)}
                         />
