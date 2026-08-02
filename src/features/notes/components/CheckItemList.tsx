@@ -1,6 +1,6 @@
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
 import CheckItem from "src/features/notes/components/CheckItem";
-import { useState } from "react";
+import { ClipboardEvent, useState } from "react";
 import { generateId } from "src/shared/utils/generateId";
 import { DateTime } from "luxon";
 
@@ -9,7 +9,7 @@ interface Props {
     currentTime?: number;
     onChange?: (items: CheckItemType[]) => void;
 
-    onAdd?: (item: CheckItemType) => void;
+    onAdd?: (items: CheckItemType[]) => void;
     onDelete?: (id: string) => void;
     onUpdate?: (item: CheckItemType) => void;
 }
@@ -43,16 +43,32 @@ export default function CheckItemList({
         if (onChange) onChange(checklist.filter(i => i.id !== id));
     }
 
-    const addGhostToList = () => {
-        if (ghost.content.trim() === '') return;
+    const splitContents = (content: string) => content
+        .split(/\r?\n/)
+        .flatMap(line => line.split(/\s+[-*]\s+/))
+        .map(item => item.replace(/^\s*[-*]\s+/, "").trim())
+        .filter(Boolean);
 
-        const newItem: CheckItemType = { ...ghost, id: generateId() };
-        if (onAdd) onAdd(newItem);
-        if (onChange) onChange([...checklist, newItem]);
+    const addItems = (contents: string[]) => {
+        if (contents.length === 0) return;
+
+        const newItems = contents.map(content => ({ ...ghost, id: generateId(), content }));
+        if (onAdd) onAdd(newItems);
+        if (onChange) onChange([...checklist, ...newItems]);
 
         // reset
         setGhost(defaultGhostItem);
     }
+
+    const addGhostToList = () => addItems(splitContents(ghost.content));
+
+    const handleGhostPaste = (event: ClipboardEvent<HTMLInputElement>) => {
+        const content = event.clipboardData.getData("text");
+        if (!/\r?\n|(?:^|\s)[*-]\s+/.test(content)) return;
+
+        event.preventDefault();
+        addItems(splitContents(content));
+    };
 
     return (
         <div className="flex flex-col gap-1">
@@ -75,6 +91,7 @@ export default function CheckItemList({
                     item={ghost}
                     onChange={setGhost}
                     onEnterPressed={addGhostToList}
+                    onPaste={handleGhostPaste}
                     canDelete={false}
                     canToggle={false}
                     placeholder="Agregar item..."

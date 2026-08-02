@@ -4,6 +4,7 @@ import { cn } from "src/shared/utils/cn";
 import InputField from "src/shared/components/forms/InputField";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
 import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStatus";
+import { ClipboardEvent } from "react";
 
 interface Props {
     item: CheckItemType;
@@ -11,6 +12,7 @@ interface Props {
     onChange?: (newItem: CheckItemType) => void;
     onEnterPressed?: () => void;
     onDelete?: () => void;
+    onPaste?: (event: ClipboardEvent<HTMLInputElement>) => void;
 
     placeholder?: string;
     hideToggle?: boolean;
@@ -18,7 +20,7 @@ interface Props {
     canDelete?: boolean;
 }
 
-export default function CheckItem({ item, currentTime = Date.now(), onChange, onEnterPressed, onDelete, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
+export default function CheckItem({ item, currentTime = Date.now(), onChange, onEnterPressed, onDelete, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
     // TODO: Add drag and drop 
     const dueStatus = getCheckItemDueStatus(item, currentTime);
     const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
@@ -79,6 +81,7 @@ export default function CheckItem({ item, currentTime = Date.now(), onChange, on
             <InputField
                 value={item.content}
                 onEnterPressed={onEnterPressed}
+                onPaste={onPaste}
                 onChange={handleInputChange}
                 className={cn("border-transparent",
                     {

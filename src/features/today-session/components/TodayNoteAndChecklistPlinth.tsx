@@ -61,8 +61,8 @@ export default function TodayNoteAndChecklistPlinth() {
         setSession(updatedSession);
     }
 
-    const addCheckItem = (item: CheckItem) => {
-        const updatedSession = sessionService.createCheckItem(todaySession.session, item.content, item.due);
+    const addCheckItems = (items: CheckItem[]) => {
+        const updatedSession = sessionService.createCheckItems(todaySession.session, items);
         setSession(updatedSession);
     }
 
@@ -78,7 +78,7 @@ export default function TodayNoteAndChecklistPlinth() {
             onNoteChange={updateNote}
             checklist={checklist}
             currentTime={currentTime}
-            onCheckItemAdd={addCheckItem}
+            onCheckItemAdd={addCheckItems}
             onCheckItemDelete={deleteCheckItem}
             onCheckItemUpdate={updateChecklist}
         />

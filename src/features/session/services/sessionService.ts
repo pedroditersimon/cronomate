@@ -130,6 +130,13 @@ function createCheckItem(session: Session, content: string, due?: string): Sessi
     };
 }
 
+function createCheckItems(session: Session, items: CheckItem[]): Session {
+    return {
+        ...session,
+        checklist: [...session.checklist, ...items]
+    };
+}
+
 function removeCheckItem(session: Session, itemId: string): Session {
     if (session.checklist?.length === 0) return session;
     return {
@@ -177,6 +184,7 @@ export default {
     updateTimerAndTracks,
 
     createCheckItem,
+    createCheckItems,
     removeCheckItem,
     updateCheckItem,
     updateNote

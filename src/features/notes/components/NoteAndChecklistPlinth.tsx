@@ -16,7 +16,7 @@ interface Props {
     checklist: CheckItemType[];
     currentTime?: number;
     onChecklistChange?: (items: CheckItemType[]) => void;
-    onCheckItemAdd?: (item: CheckItemType) => void;
+    onCheckItemAdd?: (items: CheckItemType[]) => void;
     onCheckItemDelete?: (id: string) => void;
     onCheckItemUpdate?: (item: CheckItemType) => void;
 
