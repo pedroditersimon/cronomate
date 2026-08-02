@@ -27,10 +27,10 @@ export default function ActivityCreator({ onCreate, onFocusChange, projects }: P
 
     const handleSetFocus = (focus: boolean) => {
         // Colapsar segun el focus
-        setActivity({
-            ...activity,
+        setActivity(currentActivity => ({
+            ...currentActivity,
             isCollapsed: !focus
-        });
+        }));
 
         setIsFocused(focus);
         if (onFocusChange) onFocusChange(focus);
@@ -134,7 +134,9 @@ export default function ActivityCreator({ onCreate, onFocusChange, projects }: P
                 "opacity-100": isFocused || hasChanges
             })}
             onFocus={() => handleSetFocus(true)}
-            onBlur={() => handleSetFocus(false)}
+            onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget)) handleSetFocus(false);
+            }}
         >
             <ActivityComponent
                 ref={activityRef}
