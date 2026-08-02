@@ -7,7 +7,6 @@ import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
-import { DateTime } from "luxon";
 
 
 interface Props {
@@ -92,9 +91,7 @@ export default function ActivityTrack({
                 })}
                 onChange={newEnd => {
                     const updatedEndTime = newEnd ?? track.end;
-                    const newEndDate = DateTime.fromFormat(newEnd ?? "", "HH:mm");
-                    const diffMs = newEndDate.diffNow().toMillis();
-                    const shouldStop = newEnd !== null && diffMs <= 59 * 1000; // 59s
+                    const shouldStop = track.status === TimeTrackStatus.RUNNING && newEnd !== null;
 
                     onChange({
                         ...track,
