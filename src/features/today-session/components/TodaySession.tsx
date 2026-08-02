@@ -35,6 +35,7 @@ export default function TodaySession({ readOnly }: Props) {
         if (isPastSession) {
             if (hasActivities) saveInHistoryAndReset();
             else resetToDefaultState();
+            return;
         }
 
         // save in every change

@@ -36,6 +36,7 @@ export default function NoteAndChecklist({
 
     return (<>
         <Note
+            key={note.id}
             note={note}
             onChange={onNoteChange}
             placeholder="Escribe tus notas aquí..."
