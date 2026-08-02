@@ -49,7 +49,7 @@ export default function Dropdown({ value, options, labels, onOption, icon, class
                 }}
             />
 
-            <div className={clsx("w-min-full absolute left-1/2 transform -translate-x-1/2 bg-bg-primary mt-1 border-2 border-gray-700 rounded-lg shadow-lg",
+            <div className={clsx("w-min-full absolute left-1/2 z-[99999] transform -translate-x-1/2 bg-bg-primary mt-1 border-2 border-gray-700 rounded-lg shadow-lg",
                 { "invisible": !isOpen }
             )}>
                 {options.map(option => {
