@@ -5,10 +5,13 @@ import PageLayout from 'src/shared/layouts/PageLayout';
 import { NotFoundPage } from 'src/shared/pages/NotFoundPage';
 import useSessionsHistory from 'src/features/sessions-history/hooks/useSessionsHistory';
 import NoteAndChecklistPlinth from 'src/features/notes/components/NoteAndChecklistPlinth';
+import TodaySessionSettings from 'src/features/today-session/components/TodaySessionSettings';
+import useTodaySessionSettigs from 'src/features/today-session/hooks/useTodaySessionSettigs';
 
 
 export function SessionHistoryDetailPage() {
     const history = useSessionsHistory();
+    const { todaySessionSettings } = useTodaySessionSettigs();
     const { id } = useParams();
 
     const selectedSession = useMemo(
@@ -27,6 +30,8 @@ export function SessionHistoryDetailPage() {
             <WorkSessionComponent
                 session={selectedSession}
                 onSessionChange={() => { }}
+                inBelowSettings={<TodaySessionSettings readOnly />}
+                activityOrder={todaySessionSettings.activityOrder}
 
                 // Disable all actions
                 canEdit={false}
