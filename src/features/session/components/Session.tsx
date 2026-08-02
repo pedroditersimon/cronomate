@@ -17,6 +17,7 @@ import ActivityComponent from "src/features/activity/components/Activity";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import useProjects from "src/features/projects/hooks/useProjects";
 import type { ActivityOrder } from "src/features/today-session/types/TodaySessionSettings";
+import { TimeTrack } from "src/features/time-track/types/TimeTrack";
 
 export type WorkSessionActions = "all" | "none" | ("edit" | "create" | "archive" | "restore")[];
 
@@ -52,6 +53,7 @@ export default function Session({
 }: Props) {
     const [showSettings, setShowSettings] = useState(false);
     const [isActivityCreatorFocused, setIsActivityCreatorFocused] = useState(false);
+    const [trackToCreate, setTrackToCreate] = useState<TimeTrack | null>(null);
     const projects = useProjects();
 
     const title = formatDateToText(toDate(session.createdTimestamp));
@@ -172,9 +174,13 @@ export default function Session({
 
             {canCreate &&
                 <ActivityCreator
-                    onCreate={handleCreateNewActivityWithState}
+                    onCreate={newActivity => {
+                        setTrackToCreate(null);
+                        handleCreateNewActivityWithState(newActivity);
+                    }}
                     onFocusChange={setIsActivityCreatorFocused}
                     projects={projects}
+                    trackToCreate={trackToCreate}
                 />
             }
 
@@ -206,6 +212,7 @@ export default function Session({
                     key={untrackedActivity.id}
                     activity={untrackedActivity}
                     onActivityChange={newActivity => setUntrackedActIsCollapsed(newActivity.isCollapsed ?? false)}
+                    onTrackConvert={canCreate ? setTrackToCreate : undefined}
 
                     // disable actions on untrackedActivity
                     canEdit={false}

@@ -5,7 +5,7 @@ import { toDate } from "src/shared/utils/TimeUtils";
 import { Activity } from "src/features/activity/types/Activity";
 import ActivityComponent, { ActivityHandle } from "src/features/activity/components/Activity";
 import activityService from "src/features/activity/services/activityService";
-import { TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import { newActivityMock } from "src/features/activity/mocks/newActivityMock";
 import { DateTime } from "luxon";
 import useAppSettings from "src/features/app-settings/hooks/useAppSettings";
@@ -15,15 +15,30 @@ interface Props {
     onCreate: (newActivity: Activity) => void;
     onFocusChange?: (focus: boolean) => void;
     projects: string[];
+    trackToCreate?: TimeTrack | null;
 }
 
-
-export default function ActivityCreator({ onCreate, onFocusChange, projects }: Props) {
+export default function ActivityCreator({ onCreate, onFocusChange, projects, trackToCreate }: Props) {
     // local states
     const activityRef = useRef<ActivityHandle | null>(null);
     const [activity, setActivity] = useState<Activity>(newActivityMock);
     const [isFocused, setIsFocused] = useState(false);
     const { appSettings } = useAppSettings();
+
+    // Only prepare a newly selected track; do not reopen it when focus changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        if (!trackToCreate || isFocused) return;
+
+        setActivity({
+            ...newActivityMock,
+            tracks: [{ ...trackToCreate, status: TimeTrackStatus.STOPPED }],
+            isCollapsed: false
+        });
+        setIsFocused(true);
+        onFocusChange?.(true);
+        requestAnimationFrame(() => activityRef.current?.focusTitle());
+    }, [trackToCreate]);
 
     const handleSetFocus = (focus: boolean) => {
         // Colapsar segun el focus

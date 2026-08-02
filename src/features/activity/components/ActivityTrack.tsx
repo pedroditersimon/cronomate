@@ -1,4 +1,4 @@
-import { CircleIcon, TrashIcon, UndoIcon } from "src/assets/Icons";
+import { CircleIcon, PlusIcon, TrashIcon, UndoIcon } from "src/assets/Icons";
 import { getElapsedTime, isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import { useMemo } from "react";
 import clsx from "clsx";
@@ -17,6 +17,7 @@ interface Props {
     canEdit?: boolean;
     canArchive?: boolean;
     canRestore?: boolean;
+    onConvert?: (track: TimeTrack) => void;
 }
 
 
@@ -27,7 +28,8 @@ export default function ActivityTrack({
     // Allowed actions
     canEdit = true,
     canArchive = true,
-    canRestore = true
+    canRestore = true,
+    onConvert
 }: Props) {
 
     // calculate elapsed time in text format
@@ -113,6 +115,16 @@ export default function ActivityTrack({
                 )}
                 children={elapsedTimeTxt}
             />
+
+            {/* Archive btn */}
+            {onConvert &&
+                <Clickable
+                    className="hidden group-hover:block hover:bg-gray-700"
+                    children={<PlusIcon className="size-5" />}
+                    onClick={() => onConvert(track)}
+                    tooltip={{ text: "Convertir en actividad", position: "left" }}
+                />
+            }
 
             {/* Archive btn */}
             {canArchive && track.status !== TimeTrackStatus.ARCHIVED &&
