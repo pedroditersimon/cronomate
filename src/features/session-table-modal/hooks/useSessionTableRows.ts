@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { DateTime } from "luxon";
 import activityService from "src/features/activity/services/activityService";
 import { Activity } from "src/features/activity/types/Activity";
 import { SessionTableModalRow } from "src/features/session-table-modal/types/SessionTableModal";
@@ -59,7 +60,7 @@ export function useSessionTableRows({
             // this is a row
             return {
                 key: activity.id,
-                date: toDate(session.createdTimestamp).toLocaleString(undefined, { day: "2-digit", month: "2-digit", year: "numeric" }),
+                date: DateTime.fromJSDate(toDate(session.createdTimestamp)).toFormat("dd/MM/yyyy"),
                 project: activity.project || "",
                 title: activity.title,
                 description: activity.description || "",
