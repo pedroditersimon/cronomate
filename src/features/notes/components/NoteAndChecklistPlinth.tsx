@@ -1,13 +1,14 @@
 import { Note as NoteType } from "src/features/notes/types/Note";
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
 import { SettingsIcon } from "src/assets/Icons";
-import { PomodoroSettings } from "src/features/pomodoro/components/PomodoroSettings";
+import { NotesSettings } from "src/features/notes/components/NotesSettings";
 import Container from "src/shared/layouts/Container";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
 import { ClassValue } from "clsx";
 import { cn } from "src/shared/utils/cn";
 import NoteAndChecklist from "src/features/notes/components/NoteAndChecklist";
+import { useState } from "react";
 
 interface Props {
     note: NoteType;
@@ -15,6 +16,7 @@ interface Props {
 
     checklist: CheckItemType[];
     currentTime?: number;
+    alertWindowMs?: number;
     onChecklistChange?: (items: CheckItemType[]) => void;
     onCheckItemAdd?: (items: CheckItemType[]) => void;
     onCheckItemDelete?: (id: string) => void;
@@ -30,21 +32,23 @@ export default function NoteAndChecklistPlinth({
 
     checklist,
     currentTime,
+    alertWindowMs,
     onChecklistChange,
     onCheckItemAdd,
     onCheckItemDelete,
     onCheckItemUpdate,
     onCheckItemReorder,
 
-    className
+    className,
 }: Props) {
+    const [showSettings, setShowSettings] = useState(false);
 
     return (
         <Container className={cn("h-fit", className)}>
 
             {/* Settings panel */}
-            <ContainerOverlay show={false}>
-                <PomodoroSettings onClose={() => { }} />
+            <ContainerOverlay show={showSettings}>
+                <NotesSettings onClose={() => setShowSettings(false)} />
             </ContainerOverlay>
 
             {/* Topbar */}
@@ -53,7 +57,7 @@ export default function NoteAndChecklistPlinth({
                 title="Notas"
 
                 icon={<SettingsIcon />}
-                onIconClick={() => { }}
+                onIconClick={() => setShowSettings(true)}
             />
 
             <NoteAndChecklist
@@ -62,6 +66,7 @@ export default function NoteAndChecklistPlinth({
 
                 checklist={checklist}
                 currentTime={currentTime}
+                alertWindowMs={alertWindowMs}
                 onChecklistChange={onChecklistChange}
                 onCheckItemAdd={onCheckItemAdd}
                 onCheckItemDelete={onCheckItemDelete}

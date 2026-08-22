@@ -11,6 +11,7 @@ interface Props {
 
     checklist: CheckItemType[];
     currentTime?: number;
+    alertWindowMs?: number;
     onChecklistChange?: (items: CheckItemType[]) => void;
     onCheckItemAdd?: (items: CheckItemType[]) => void;
     onCheckItemDelete?: (id: string) => void;
@@ -26,6 +27,7 @@ export default function NoteAndChecklist({
 
     checklist,
     currentTime,
+    alertWindowMs,
     onChecklistChange,
     onCheckItemAdd,
     onCheckItemDelete,
@@ -46,6 +48,7 @@ export default function NoteAndChecklist({
         <CheckItemList
             checklist={checklist}
             currentTime={currentTime}
+            alertWindowMs={alertWindowMs}
             onChange={onChecklistChange}
             onAdd={onCheckItemAdd}
             onDelete={onCheckItemDelete}

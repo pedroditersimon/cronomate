@@ -9,9 +9,11 @@ import { Note } from "src/features/notes/types/Note";
 import { CheckItem } from "src/features/notes/types/CheckItem";
 import useTimer from "src/shared/hooks/useTimer";
 import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStatus";
+import { useNotesSettings } from "src/features/notes/hooks/useNotesSettings";
 
 export default function TodayNoteAndChecklistPlinth() {
     const { note, checklist, todaySession, setSession } = useTodaySession();
+    const { settings } = useNotesSettings();
     const { playAudio } = useAudioPlayer({ volume: 0.5 });
     const alertedItems = useRef(new Set<string>());
     const [currentTime, setCurrentTime] = useState(() => Date.now());
@@ -21,7 +23,7 @@ export default function TodayNoteAndChecklistPlinth() {
         setCurrentTime(now);
 
         checklist.forEach(item => {
-            const dueStatus = getCheckItemDueStatus(item, now);
+            const dueStatus = getCheckItemDueStatus(item, now, settings.alertBeforeDueMs);
             if (!dueStatus) return;
 
             const alertKey = `${item.id}-${item.due}`;
@@ -31,7 +33,7 @@ export default function TodayNoteAndChecklistPlinth() {
                 playAudio(sessionEndAudio);
                 alertedItems.current.add(`${alertKey}-due`);
             } else if (dueStatus === "upcoming" && !alertedItems.current.has(`${alertKey}-upcoming`)) {
-                toast.info(`La tarea "${item.content}" vence en menos de 10 minutos`);
+                toast.info(`La tarea "${item.content}" vence pronto`);
                 playAudio(sessionEndAudio);
                 alertedItems.current.add(`${alertKey}-upcoming`);
             }
@@ -80,6 +82,7 @@ export default function TodayNoteAndChecklistPlinth() {
             onNoteChange={updateNote}
             checklist={checklist}
             currentTime={currentTime}
+            alertWindowMs={settings.alertBeforeDueMs}
             onCheckItemAdd={addCheckItems}
             onCheckItemDelete={deleteCheckItem}
             onCheckItemUpdate={updateChecklist}

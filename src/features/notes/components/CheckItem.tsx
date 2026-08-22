@@ -9,6 +9,7 @@ import { ClipboardEvent } from "react";
 interface Props {
     item: CheckItemType;
     currentTime?: number;
+    alertWindowMs?: number;
     onChange?: (newItem: CheckItemType) => void;
     onEnterPressed?: () => void;
     onDelete?: () => void;
@@ -20,8 +21,8 @@ interface Props {
     canDelete?: boolean;
 }
 
-export default function CheckItem({ item, currentTime = Date.now(), onChange, onEnterPressed, onDelete, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
-    const dueStatus = getCheckItemDueStatus(item, currentTime);
+export default function CheckItem({ item, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onDelete, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
+    const dueStatus = getCheckItemDueStatus(item, currentTime, alertWindowMs);
     const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
 
 

@@ -6,6 +6,7 @@ import { todaySessionSettingsReducer } from "src/features/today-session/states/t
 import { appSettingsReducer } from "src/features/app-settings/states/appSettingsSlice";
 import { pomodoroReducer } from "src/features/pomodoro/states/pomodoroSlice";
 import { pomodoroSettingsReducer } from "src/features/pomodoro/states/pomodoroSettingsSlice";
+import { notesSettingsReducer } from "src/features/notes/states/notesSettingsSlice";
 import { projectsReducer } from "src/features/projects/states/projectsSlice";
 
 // 2. Configuramos la Store
@@ -16,6 +17,7 @@ const store = configureStore({
         appSettings: appSettingsReducer,
         pomodoro: pomodoroReducer,
         pomodoroSettings: pomodoroSettingsReducer,
+        notesSettings: notesSettingsReducer,
         projects: projectsReducer
     }
 });
