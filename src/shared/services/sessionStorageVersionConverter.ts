@@ -18,6 +18,7 @@ const schemaMigrations: SchemaMigration[] = [
     { fromVersion: '0.3.0', toVersion: '0.4.0', convert: v0_3_0_to_v0_4_0 },
     { fromVersion: '0.4.0', toVersion: '0.6.0', convert: v0_5_0_to_v0_6_0 },
     { fromVersion: '0.6.0', toVersion: '0.6.3', convert: v0_6_0_to_v0_6_3 },
+    { fromVersion: '0.6.3', toVersion: '0.11.0', convert: v0_6_3_to_v0_11_0 },
 ];
 
 function compareVersions(first: string, second: string): number {
@@ -65,6 +66,30 @@ function convertSession(session: any, fromVersion: string, targetVersion: string
     }
 
     return convertedSession;
+}
+
+
+// Convert session from v0.6.3 to v0.11.0
+function v0_6_3_to_v0_11_0(session: any) {
+    // Changes:
+    // 1. Replaced the single note with titled notes
+
+    const notes = (session.notes ?? [session.note]).map((note: any) => ({
+        id: note.id,
+        title: note.title ?? "Nota",
+        content: note.content,
+        createdAt: note.createdAt,
+    }));
+
+    return {
+        id: session.id,
+        activities: session.activities,
+        createdTimestamp: session.createdTimestamp,
+        durationLimit: session.durationLimit,
+        inactivityThresholdMs: session.inactivityThresholdMs,
+        notes,
+        checklist: session.checklist,
+    };
 }
 
 

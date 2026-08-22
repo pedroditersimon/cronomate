@@ -3,6 +3,7 @@ import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
 import CheckItemList from "src/features/notes/components/CheckItemList";
 import Note from "src/features/notes/components/Note";
 import { ClassValue } from "clsx";
+import { cn } from "src/shared/utils/cn";
 
 
 interface Props {
@@ -38,7 +39,7 @@ export default function NoteAndChecklist({
 }: Props) {
     // const { playAudio } = useAudioPlayer({ volume: 0.5 });
 
-    return (<>
+    return (<div className={cn("flex flex-col gap-5", className)}>
         <Note
             key={note.id}
             note={note}
@@ -55,5 +56,5 @@ export default function NoteAndChecklist({
             onUpdate={onCheckItemUpdate}
             onReorder={onCheckItemReorder}
         />
-    </>);
+    </div>);
 }

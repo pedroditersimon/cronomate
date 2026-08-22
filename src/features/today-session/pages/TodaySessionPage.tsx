@@ -11,7 +11,7 @@ export default function TodaySessionPage() {
 
             <TodaySession />
 
-            <div className="flex flex-col gap-3 h-full">
+            <div className="flex h-full w-96 min-w-0 flex-col gap-3">
                 <PomodoroPlinth />
                 <TodayNoteAndChecklistPlinth />
             </div>

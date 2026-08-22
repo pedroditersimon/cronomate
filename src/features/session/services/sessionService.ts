@@ -5,6 +5,7 @@ import timeTrackService from "src/features/time-track/services/timeTrackService"
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import { Session } from "src/features/session/types/Session";
 import { CheckItem } from "src/features/notes/types/CheckItem";
+import { Note } from "src/features/notes/types/Note";
 import { generateId } from "src/shared/utils/generateId";
 
 
@@ -194,14 +195,32 @@ function reorderCheckItems(session: Session, itemId: string, targetItemId?: stri
     return { ...session, checklist };
 }
 
-function updateNote(session: Session, content: string): Session {
-    return {
-        ...session,
-        note: {
-            ...session.note,
-            content,
-        }
-    };
+function createNote(session: Session, note: Note): Session {
+    return { ...session, notes: [...session.notes, note] };
+}
+
+function removeNote(session: Session, noteId: string): Session {
+    return { ...session, notes: session.notes.filter(note => note.id !== noteId) };
+}
+
+function reorderNotes(session: Session, noteId: string, targetNoteId: string): Session {
+    if (noteId === targetNoteId) return session;
+
+    const notes = [...session.notes];
+    const noteIndex = notes.findIndex(note => note.id === noteId);
+    if (noteIndex < 0) return session;
+
+    const [note] = notes.splice(noteIndex, 1);
+    const targetIndex = notes.findIndex(note => note.id === targetNoteId);
+    if (targetIndex < 0) return session;
+
+    notes.splice(targetIndex, 0, note);
+
+    return { ...session, notes };
+}
+
+function updateNote(session: Session, updatedNote: Note): Session {
+    return { ...session, notes: session.notes.map(note => note.id === updatedNote.id ? updatedNote : note) };
 }
 
 export default {
@@ -220,5 +239,8 @@ export default {
     removeCheckItem,
     updateCheckItem,
     reorderCheckItems,
+    createNote,
+    removeNote,
+    reorderNotes,
     updateNote
 };

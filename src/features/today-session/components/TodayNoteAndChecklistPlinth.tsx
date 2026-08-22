@@ -12,7 +12,7 @@ import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStat
 import { useNotesSettings } from "src/features/notes/hooks/useNotesSettings";
 
 export default function TodayNoteAndChecklistPlinth() {
-    const { note, checklist, todaySession, setSession } = useTodaySession();
+    const { notes, checklist, todaySession, setSession } = useTodaySession();
     const { settings } = useNotesSettings();
     const { playAudio } = useAudioPlayer({ volume: 0.5 });
     const alertedItems = useRef(new Set<string>());
@@ -51,8 +51,20 @@ export default function TodayNoteAndChecklistPlinth() {
     }, checkDueAlerts);
 
     const updateNote = (note: Note) => {
-        const updatedSession = sessionService.updateNote(todaySession.session, note.content);
+        const updatedSession = sessionService.updateNote(todaySession.session, note);
         setSession(updatedSession);
+    }
+
+    const addNote = (note: Note) => {
+        setSession(sessionService.createNote(todaySession.session, note));
+    }
+
+    const deleteNote = (noteId: string) => {
+        setSession(sessionService.removeNote(todaySession.session, noteId));
+    }
+
+    const reorderNotes = (noteId: string, targetNoteId: string) => {
+        setSession(sessionService.reorderNotes(todaySession.session, noteId, targetNoteId));
     }
 
     const updateChecklist = (item: CheckItem) => {
@@ -78,8 +90,11 @@ export default function TodayNoteAndChecklistPlinth() {
     return (
         <NoteAndChecklistPlinth
             className="h-[26rem]"
-            note={note}
+            notes={notes}
             onNoteChange={updateNote}
+            onNoteAdd={addNote}
+            onNoteDelete={deleteNote}
+            onNoteReorder={reorderNotes}
             checklist={checklist}
             currentTime={currentTime}
             alertWindowMs={settings.alertBeforeDueMs}

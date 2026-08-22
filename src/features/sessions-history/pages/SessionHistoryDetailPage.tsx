@@ -22,7 +22,7 @@ export function SessionHistoryDetailPage() {
     if (!selectedSession)
         return <NotFoundPage />;
 
-    const note = selectedSession.note;
+    const notes = selectedSession.notes;
     const checklist = selectedSession.checklist;
 
     return (
@@ -42,7 +42,7 @@ export function SessionHistoryDetailPage() {
 
             <NoteAndChecklistPlinth
                 className="h-[26rem]"
-                note={note}
+                notes={notes}
                 checklist={checklist}
             />
         </PageLayout>
