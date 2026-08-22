@@ -15,6 +15,7 @@ interface Props {
     onCheckItemAdd?: (items: CheckItemType[]) => void;
     onCheckItemDelete?: (id: string) => void;
     onCheckItemUpdate?: (item: CheckItemType) => void;
+    onCheckItemReorder?: (itemId: string, targetItemId?: string) => void;
 
     className?: ClassValue;
 }
@@ -29,6 +30,7 @@ export default function NoteAndChecklist({
     onCheckItemAdd,
     onCheckItemDelete,
     onCheckItemUpdate,
+    onCheckItemReorder,
 
     className
 }: Props) {
@@ -48,6 +50,7 @@ export default function NoteAndChecklist({
             onAdd={onCheckItemAdd}
             onDelete={onCheckItemDelete}
             onUpdate={onCheckItemUpdate}
+            onReorder={onCheckItemReorder}
         />
     </>);
 }

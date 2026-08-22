@@ -21,7 +21,6 @@ interface Props {
 }
 
 export default function CheckItem({ item, currentTime = Date.now(), onChange, onEnterPressed, onDelete, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
-    // TODO: Add drag and drop 
     const dueStatus = getCheckItemDueStatus(item, currentTime);
     const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
 
@@ -59,6 +58,7 @@ export default function CheckItem({ item, currentTime = Date.now(), onChange, on
                         "hidden": hideToggle,
                     }
                 )}
+                onPointerDown={event => event.stopPropagation()}
                 onClick={toggle}
             >
                 <CircleIcon
@@ -101,6 +101,7 @@ export default function CheckItem({ item, currentTime = Date.now(), onChange, on
                 className={cn("flex flex-row items-center cursor-pointer",
                     { "hidden": !canDelete }
                 )}
+                onPointerDown={event => event.stopPropagation()}
                 onClick={onDelete}
             >
                 <CrossIcon

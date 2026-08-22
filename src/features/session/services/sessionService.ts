@@ -115,25 +115,24 @@ function updateTimerAndTracks(session: Session) {
 
 
 function createCheckItem(session: Session, content: string, due?: string): Session {
+    const item: CheckItem = {
+        id: generateId(),
+        createdAt: DateTime.now().toFormat("dd-MM-yyyy HH:mm:ss"),
+        isDone: false,
+        content,
+        due,
+    };
+
     return {
         ...session,
-        checklist: [
-            ...session.checklist,
-            {
-                id: generateId(),
-                createdAt: DateTime.now().toFormat("dd-MM-yyyy HH:mm:ss"),
-                isDone: false,
-                content,
-                due,
-            }
-        ]
+        checklist: placeCheckItemByDue(session.checklist, item)
     };
 }
 
 function createCheckItems(session: Session, items: CheckItem[]): Session {
     return {
         ...session,
-        checklist: [...session.checklist, ...items]
+        checklist: items.reduce(placeCheckItemByDue, session.checklist)
     };
 }
 
@@ -146,20 +145,53 @@ function removeCheckItem(session: Session, itemId: string): Session {
 }
 
 
-function updateCheckItem(session: Session, itemId: string, content?: string, due?: string, isDone?: boolean): Session {
+function updateCheckItem(session: Session, updatedItem: CheckItem): Session {
     if (session.checklist?.length === 0) return session;
+
+    const currentItem = session.checklist.find(item => item.id === updatedItem.id);
+    if (!currentItem) return session;
+
     return {
         ...session,
-        checklist: session.checklist.map(item => {
-            if (item.id !== itemId) return item;
-            return {
-                ...item,
-                content: content !== undefined ? content : item.content,
-                due: due !== undefined ? due : item.due,
-                isDone: isDone !== undefined ? isDone : item.isDone,
-            }
-        })
+        checklist: currentItem.due === updatedItem.due
+            ? session.checklist.map(item => item.id === updatedItem.id ? updatedItem : item)
+            : placeCheckItemByDue(session.checklist.filter(item => item.id !== updatedItem.id), updatedItem)
     };
+}
+
+function placeCheckItemByDue(checklist: CheckItem[], item: CheckItem): CheckItem[] {
+    const due = item.due;
+    if (!due) return [...checklist, item];
+
+    const nextItemIndex = checklist.findIndex(checkItem =>
+        !!checkItem.due && checkItem.due > due
+    );
+
+    if (nextItemIndex < 0) return [...checklist, item];
+
+    return [
+        ...checklist.slice(0, nextItemIndex),
+        item,
+        ...checklist.slice(nextItemIndex),
+    ];
+}
+
+function reorderCheckItems(session: Session, itemId: string, targetItemId?: string): Session {
+    if (itemId === targetItemId) return session;
+
+    const fromIndex = session.checklist.findIndex(item => item.id === itemId);
+    if (fromIndex < 0) return session;
+
+    const checklist = [...session.checklist];
+    const [item] = checklist.splice(fromIndex, 1);
+    const targetIndex = targetItemId
+        ? checklist.findIndex(checkItem => checkItem.id === targetItemId)
+        : checklist.length;
+    if (targetIndex < 0) return session;
+
+    checklist.splice(targetIndex, 0, item);
+
+    return { ...session, checklist };
 }
 
 function updateNote(session: Session, content: string): Session {
@@ -187,5 +219,6 @@ export default {
     createCheckItems,
     removeCheckItem,
     updateCheckItem,
+    reorderCheckItems,
     updateNote
 };

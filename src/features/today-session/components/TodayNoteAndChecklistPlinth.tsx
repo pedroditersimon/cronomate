@@ -54,10 +54,7 @@ export default function TodayNoteAndChecklistPlinth() {
     }
 
     const updateChecklist = (item: CheckItem) => {
-        const updatedSession = sessionService.updateCheckItem(
-            todaySession.session,
-            item.id, item.content, item.due, item.isDone
-        );
+        const updatedSession = sessionService.updateCheckItem(todaySession.session, item);
         setSession(updatedSession);
     }
 
@@ -71,6 +68,11 @@ export default function TodayNoteAndChecklistPlinth() {
         setSession(updatedSession);
     }
 
+    const reorderCheckItems = (itemId: string, targetItemId?: string) => {
+        const updatedSession = sessionService.reorderCheckItems(todaySession.session, itemId, targetItemId);
+        setSession(updatedSession);
+    }
+
     return (
         <NoteAndChecklistPlinth
             className="h-[26rem]"
@@ -81,6 +83,7 @@ export default function TodayNoteAndChecklistPlinth() {
             onCheckItemAdd={addCheckItems}
             onCheckItemDelete={deleteCheckItem}
             onCheckItemUpdate={updateChecklist}
+            onCheckItemReorder={reorderCheckItems}
         />
     );
 }
