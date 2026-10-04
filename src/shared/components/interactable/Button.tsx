@@ -1,6 +1,7 @@
 import clsx, { ClassValue } from "clsx";
 import { MouseEventHandler, PropsWithChildren, ReactNode } from "react";
 import { ForbiddenIcon } from "src/assets/Icons";
+import { ButtonVariant } from "src/shared/types/ButtonVariant";
 
 interface Props extends PropsWithChildren {
     icon?: ReactNode;
@@ -8,10 +9,11 @@ interface Props extends PropsWithChildren {
     textOnly?: boolean;
 
     disabled?: boolean;
+    variant?: ButtonVariant;
     className?: ClassValue;
 }
 
-export default function Button({ icon, onClick, disabled, textOnly, className, children }: Props) {
+export default function Button({ icon, onClick, disabled, textOnly, variant = ButtonVariant.Secondary, className, children }: Props) {
 
     const isTextOnly = textOnly || disabled;
 
@@ -21,7 +23,8 @@ export default function Button({ icon, onClick, disabled, textOnly, className, c
                 "transition-colors bg-transparent border-2",
                 { "border-transparent": isTextOnly },
                 { "border-gray-700": !isTextOnly },
-                { "hover:bg-gray-700 hover:text-blue-300 hover:shadow": !disabled }, // <- hover
+                { "hover:bg-gray-700 hover:text-blue-300 hover:shadow": !disabled && variant === ButtonVariant.Secondary }, // <- hover
+                { "hover:bg-red-500 hover:text-red-100 hover:shadow hover:border-transparent": !disabled && variant === ButtonVariant.Danger },
                 { "opacity-50 hover:text-blue-300": disabled },
                 className,
             )}
