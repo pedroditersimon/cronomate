@@ -12,6 +12,7 @@ import NoteAndChecklist from "src/features/notes/components/NoteAndChecklist";
 import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { generateId } from "src/shared/utils/generateId";
+import ConfirmationService from "src/shared/services/confirmationService";
 
 interface Props {
     notes: NoteType[];
@@ -73,12 +74,21 @@ export default function NoteAndChecklistPlinth({
 
     const deleteNote = (noteId: string) => {
         const note = notes.find(note => note.id === noteId);
-        if (!note || !window.confirm(`¿Eliminar la nota "${note.title}"?`)) return;
+        if (!note) return;
 
         const deletedIndex = notes.findIndex(note => note.id === noteId);
         const nextNote = notes[deletedIndex + 1] ?? notes[deletedIndex - 1];
-        setActiveNoteId(nextNote?.id);
-        onNoteDelete?.(noteId);
+
+        ConfirmationService.confirm({
+            title: "Eliminar nota",
+            description: `¿Seguro que quieres eliminar la nota "${note.title}"?`,
+            confirmText: "Eliminar",
+            cancelText: "Cancelar",
+            onConfirm: () => {
+                setActiveNoteId(nextNote?.id);
+                onNoteDelete?.(noteId);
+            },
+        });
     };
 
     return (
