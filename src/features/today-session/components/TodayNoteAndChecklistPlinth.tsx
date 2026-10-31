@@ -1,54 +1,20 @@
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
-import sessionEndAudio from "src/assets/audio/399191__spiceprogram__drip-echo.wav";
+import { useEffect, useState } from "react";
 import useTodaySession from "src/features/today-session/hooks/useTodaySession";
-import { useAudioPlayer } from "src/shared/hooks/useAudioPlayer";
 import NoteAndChecklistPlinth from "src/features/notes/components/NoteAndChecklistPlinth";
 import sessionService from "src/features/session/services/sessionService";
 import { Note } from "src/features/notes/types/Note";
 import { CheckItem } from "src/features/notes/types/CheckItem";
-import useTimer from "src/shared/hooks/useTimer";
-import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStatus";
+import { subscribeToTimers } from "src/shared/services/timerRegistry";
 import { useNotesSettings } from "src/features/notes/hooks/useNotesSettings";
 
 export default function TodayNoteAndChecklistPlinth() {
     const { notes, checklist, todaySession, setSession } = useTodaySession();
     const { settings } = useNotesSettings();
-    const { playAudio } = useAudioPlayer({ volume: 0.5 });
-    const alertedItems = useRef(new Set<string>());
     const [currentTime, setCurrentTime] = useState(() => Date.now());
-
-    const checkDueAlerts = () => {
-        const now = Date.now();
-        setCurrentTime(now);
-
-        checklist.forEach(item => {
-            const dueStatus = getCheckItemDueStatus(item, now, settings.alertBeforeDueMs);
-            if (!dueStatus) return;
-
-            const alertKey = `${item.id}-${item.due}`;
-
-            if (dueStatus === "overdue" && !alertedItems.current.has(`${alertKey}-due`)) {
-                toast.warning(`La tarea "${item.content}" terminó`);
-                playAudio(sessionEndAudio);
-                alertedItems.current.add(`${alertKey}-due`);
-            } else if (dueStatus === "upcoming" && !alertedItems.current.has(`${alertKey}-upcoming`)) {
-                toast.info(`La tarea "${item.content}" vence pronto`);
-                playAudio(sessionEndAudio);
-                alertedItems.current.add(`${alertKey}-upcoming`);
-            }
-        });
-    };
-
     useEffect(() => {
-        checkDueAlerts();
-    }, [checkDueAlerts]);
-
-    useTimer({
-        timerMs: 30 * 1000,
-        isRunning: true,
-        pauseOnPageNotVisible: false,
-    }, checkDueAlerts);
+        const timer = subscribeToTimers({ everyMs: 1000, onTick: ({ now }) => setCurrentTime(now) });
+        return timer.cancel;
+    }, []);
 
     const updateNote = (note: Note) => {
         const updatedSession = sessionService.updateNote(todaySession.session, note);

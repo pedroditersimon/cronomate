@@ -25,13 +25,6 @@ export function TimeInput({ time, onChange, running, readOnly, className }: Prop
     }, [time]);
 
 
-    // constantly update to now if its running
-    // useTimer(() => {
-    //     if (onTimeChange) onTimeChange(toDate().getTime());
-    //     console.log("TimeInput timer");
-    // }, 5000, running);
-
-
     // convert text input to date and call 'onTimeChange'
     const handleConfirmTime = useCallback(() => {
         const keywordTime = parseTimeKeywords(inputTime);

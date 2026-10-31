@@ -61,7 +61,7 @@ const pomodoroSlice = createSlice({
             const newRemainingMs = getRemainingTime(pomodoro.startTime, maxDurationMs);
 
             // move to next state if settings says so
-            if (continueOnEnd && newRemainingMs < 0) {
+            if (continueOnEnd && newRemainingMs <= 0) {
                 return pomodoroService.changeToNextState(pomodoro, action.payload);
             }
 

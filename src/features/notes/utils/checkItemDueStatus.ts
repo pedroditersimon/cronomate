@@ -8,7 +8,7 @@ export function getCheckItemDueStatus(item: CheckItem, now: number, alertWindowM
     if (!item.due || item.isDone) return undefined;
 
     const [hours, minutes] = item.due.split(":").map(Number);
-    if (!Number.isInteger(hours) || !Number.isInteger(minutes)) return undefined;
+    if (!Number.isInteger(hours) || !Number.isInteger(minutes) || hours < 0 || hours > 23 || minutes < 0 || minutes > 59) return undefined;
 
     const dueDate = new Date(now);
     dueDate.setHours(hours, minutes, 0, 0);
