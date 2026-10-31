@@ -21,8 +21,8 @@ const appSettingsSlice = createSlice({
         save: (state) => {
             localSave.save("appSettings", state);
         },
-        load: (state) => {
-            return { ...defaultState, ...localSave.load("appSettings", state) };
+        load: () => {
+            return { ...defaultState, ...localSave.load("appSettings", defaultState) };
         },
 
         setSettings: (_, action: PayloadAction<AppSettings>) => {
