@@ -2,6 +2,7 @@ import useTodaySessionSettigs from "src/features/today-session/hooks/useTodaySes
 import { TodaySessionSettings as TodaySessionSettingsType } from "src/features/today-session/types/TodaySessionSettings";
 import FormField from "src/shared/components/forms/FormField";
 import ToggleTabs from "src/shared/components/interactable/ToggleTabs";
+import useAppSettings from "src/features/app-settings/hooks/useAppSettings";
 
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
 
 export default function TodaySessionSettings({ readOnly }: Props) {
     const { todaySessionSettings, setSettings, save } = useTodaySessionSettigs();
+    const { appSettings, setAppSettings } = useAppSettings();
 
     const handleSetSettings = (newSettings: TodaySessionSettingsType) => {
         setSettings(newSettings);
@@ -20,7 +22,6 @@ export default function TodaySessionSettings({ readOnly }: Props) {
         <>
             <FormField
                 title="Orden de tareas"
-                show={!readOnly}
                 tooltip={{
                     text: "Ordena las tareas por su primera hora cargada o por el orden en que fueron creadas."
                 }}
@@ -80,6 +81,25 @@ export default function TodaySessionSettings({ readOnly }: Props) {
                     onSelected={(value) => handleSetSettings({
                         ...todaySessionSettings,
                         stopOnClose: value
+                    })}
+                />
+            </FormField>
+
+            <FormField
+                title="Extraer proyecto desde actividad"
+                show={!readOnly}
+                tooltip={{
+                    text: "Extrae un proyecto existente del inicio del título.",
+                    position: "left"
+                }}
+            >
+                <ToggleTabs
+                    falseLabel="No detectar"
+                    trueLabel="Detectar"
+                    value={appSettings.detectProjectFromActivityTitle}
+                    onSelected={value => setAppSettings({
+                        ...appSettings,
+                        detectProjectFromActivityTitle: value
                     })}
                 />
             </FormField>

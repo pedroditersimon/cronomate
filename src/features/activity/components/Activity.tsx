@@ -35,6 +35,7 @@ interface Props {
     canEdit?: boolean;
     canArchive?: boolean;
     canRestore?: boolean;
+    onTrackConvert?: (track: TimeTrack) => void;
 }
 
 export type ActivityHandle = {
@@ -54,7 +55,8 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     // Allowed actions
     canEdit = true,
     canArchive = true,
-    canRestore = true
+    canRestore = true,
+    onTrackConvert
 }, ref) => {
     // local states
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -309,6 +311,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                             key={track.id}
                             track={track}
                             onChange={handleSetTrack}
+                            onConvert={onTrackConvert}
 
                             canEdit={canEdit}
                             canArchive={canArchive}

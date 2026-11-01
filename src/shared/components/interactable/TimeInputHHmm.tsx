@@ -76,7 +76,7 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
                     "hover:cursor-pointer": !focused && !readOnly,
                 })}
 
-                value={!inputTime ? "-" : inputTime}
+                value={!inputTime && !focused ? "-" : inputTime}
                 maxLength={5}
                 readOnly={readOnly || !focused}
                 onChange={e => setInputTime(e.target.value)}

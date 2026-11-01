@@ -5,6 +5,7 @@ import timeTrackService from "src/features/time-track/services/timeTrackService"
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import { Session } from "src/features/session/types/Session";
 import { CheckItem } from "src/features/notes/types/CheckItem";
+import { Note } from "src/features/notes/types/Note";
 import { generateId } from "src/shared/utils/generateId";
 
 
@@ -115,18 +116,24 @@ function updateTimerAndTracks(session: Session) {
 
 
 function createCheckItem(session: Session, content: string, due?: string): Session {
+    const item: CheckItem = {
+        id: generateId(),
+        createdAt: DateTime.now().toFormat("dd-MM-yyyy HH:mm:ss"),
+        isDone: false,
+        content,
+        due,
+    };
+
     return {
         ...session,
-        checklist: [
-            ...session.checklist,
-            {
-                id: generateId(),
-                createdAt: DateTime.now().toFormat("dd-MM-yyyy HH:mm:ss"),
-                isDone: false,
-                content,
-                due,
-            }
-        ]
+        checklist: placeCheckItemByDue(session.checklist, item)
+    };
+}
+
+function createCheckItems(session: Session, items: CheckItem[]): Session {
+    return {
+        ...session,
+        checklist: items.reduce(placeCheckItemByDue, session.checklist)
     };
 }
 
@@ -139,30 +146,81 @@ function removeCheckItem(session: Session, itemId: string): Session {
 }
 
 
-function updateCheckItem(session: Session, itemId: string, content?: string, due?: string, isDone?: boolean): Session {
+function updateCheckItem(session: Session, updatedItem: CheckItem): Session {
     if (session.checklist?.length === 0) return session;
+
+    const currentItem = session.checklist.find(item => item.id === updatedItem.id);
+    if (!currentItem) return session;
+
     return {
         ...session,
-        checklist: session.checklist.map(item => {
-            if (item.id !== itemId) return item;
-            return {
-                ...item,
-                content: content !== undefined ? content : item.content,
-                due: due !== undefined ? due : item.due,
-                isDone: isDone !== undefined ? isDone : item.isDone,
-            }
-        })
+        checklist: currentItem.due === updatedItem.due
+            ? session.checklist.map(item => item.id === updatedItem.id ? updatedItem : item)
+            : placeCheckItemByDue(session.checklist.filter(item => item.id !== updatedItem.id), updatedItem)
     };
 }
 
-function updateNote(session: Session, content: string): Session {
-    return {
-        ...session,
-        note: {
-            ...session.note,
-            content,
-        }
-    };
+function placeCheckItemByDue(checklist: CheckItem[], item: CheckItem): CheckItem[] {
+    const due = item.due;
+    if (!due) return [...checklist, item];
+
+    const nextItemIndex = checklist.findIndex(checkItem =>
+        !!checkItem.due && checkItem.due > due
+    );
+
+    if (nextItemIndex < 0) return [...checklist, item];
+
+    return [
+        ...checklist.slice(0, nextItemIndex),
+        item,
+        ...checklist.slice(nextItemIndex),
+    ];
+}
+
+function reorderCheckItems(session: Session, itemId: string, targetItemId?: string): Session {
+    if (itemId === targetItemId) return session;
+
+    const fromIndex = session.checklist.findIndex(item => item.id === itemId);
+    if (fromIndex < 0) return session;
+
+    const checklist = [...session.checklist];
+    const [item] = checklist.splice(fromIndex, 1);
+    const targetIndex = targetItemId
+        ? checklist.findIndex(checkItem => checkItem.id === targetItemId)
+        : checklist.length;
+    if (targetIndex < 0) return session;
+
+    checklist.splice(targetIndex, 0, item);
+
+    return { ...session, checklist };
+}
+
+function createNote(session: Session, note: Note): Session {
+    return { ...session, notes: [...session.notes, note] };
+}
+
+function removeNote(session: Session, noteId: string): Session {
+    return { ...session, notes: session.notes.filter(note => note.id !== noteId) };
+}
+
+function reorderNotes(session: Session, noteId: string, targetNoteId: string): Session {
+    if (noteId === targetNoteId) return session;
+
+    const notes = [...session.notes];
+    const noteIndex = notes.findIndex(note => note.id === noteId);
+    if (noteIndex < 0) return session;
+
+    const [note] = notes.splice(noteIndex, 1);
+    const targetIndex = notes.findIndex(note => note.id === targetNoteId);
+    if (targetIndex < 0) return session;
+
+    notes.splice(targetIndex, 0, note);
+
+    return { ...session, notes };
+}
+
+function updateNote(session: Session, updatedNote: Note): Session {
+    return { ...session, notes: session.notes.map(note => note.id === updatedNote.id ? updatedNote : note) };
 }
 
 export default {
@@ -177,7 +235,12 @@ export default {
     updateTimerAndTracks,
 
     createCheckItem,
+    createCheckItems,
     removeCheckItem,
     updateCheckItem,
+    reorderCheckItems,
+    createNote,
+    removeNote,
+    reorderNotes,
     updateNote
 };

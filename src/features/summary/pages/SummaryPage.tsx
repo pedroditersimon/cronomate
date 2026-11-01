@@ -11,6 +11,7 @@ import BarChartThreshold, { BarChartDataItem, BarChartThreshold as BarChartThres
 import activityService from "src/features/activity/services/activityService";
 import { convertElapsedTimeToText } from "src/shared/utils/TimeUtils";
 import DateRangePicker from "src/shared/components/interactable/DateRangePicker";
+import ProjectSelect, { ALL_PROJECTS } from "src/features/projects/components/ProjectSelect";
 
 const toRangeValue = (start: DateTime, end: DateTime) =>
     `${start.toISODate()}/${end.toISODate()}`;
@@ -22,6 +23,7 @@ function parseRange(range: string) {
 export default function SummaryPage() {
     const sessionsHistory = useSessionsHistory();
     const { todaySession } = useTodaySession();
+    const [selectedProject, setSelectedProject] = useState(ALL_PROJECTS);
 
     const [range, setRange] = useState(() => {
         const now = DateTime.now();
@@ -47,19 +49,28 @@ export default function SummaryPage() {
     ), [sessionsInRange]);
 
     const chartData = sessionsInRange
+        .filter(session => selectedProject === ALL_PROJECTS
+            || session.activities.some(activity => activity.project === selectedProject)
+        )
         .sort((a, b) => a.createdTimestamp - b.createdTimestamp)
-        .map(s => ({
-            label: DateTime.fromMillis(s.createdTimestamp).toFormat("d LLL"),
-            value: activityService.getAllElapsedTime(s.activities),
-            valueLabelFormatter: v => convertElapsedTimeToText(v),
-        } as BarChartDataItem));
+        .map(session => {
+            const activities = selectedProject === ALL_PROJECTS
+                ? session.activities
+                : session.activities.filter(activity => activity.project === selectedProject);
+
+            return {
+                label: DateTime.fromMillis(session.createdTimestamp).toFormat("d LLL"),
+                value: activityService.getAllElapsedTime(activities),
+                valueLabelFormatter: v => convertElapsedTimeToText(v),
+            } as BarChartDataItem;
+        });
 
     const lastChartPage = Math.max(Math.ceil(chartData.length / 7) - 1, 0);
     const [chartPage, setChartPage] = useState(lastChartPage);
 
     useEffect(() => {
         setChartPage(lastChartPage);
-    }, [range, lastChartPage]);
+    }, [range, selectedProject, lastChartPage]);
 
     const maxY = maxBy(chartData, "value")?.value ?? 0;
     const sessionLimit = todaySession?.session?.durationLimit?.millis ?? 0;
@@ -85,13 +96,18 @@ export default function SummaryPage() {
                 {/* Topbar */}
                 <ContainerTopbar
                     title='Resumen'
-                    right={
-                        <DateRangePicker
-                            value={range}
-                            onChange={setRange}
-                        />
-                    }
                 />
+
+                <div className="flex items-center justify-end gap-2 py-2">
+                    <ProjectSelect
+                        value={selectedProject}
+                        onChange={setSelectedProject}
+                    />
+                    <DateRangePicker
+                        value={range}
+                        onChange={setRange}
+                    />
+                </div>
 
                 <div className="flex items-center justify-between px-1 py-2">
                     <div>

@@ -1,5 +1,5 @@
 import clsx, { ClassValue } from "clsx";
-import { CSSProperties } from "react";
+import { ClipboardEvent, CSSProperties } from "react";
 
 interface Props {
     value: string;
@@ -13,9 +13,10 @@ interface Props {
     plain?: boolean;
     onFocus?: () => void;
     onBlur?: () => void;
+    onPaste?: (event: ClipboardEvent<HTMLInputElement>) => void;
 }
 
-export default function InputField({ value, onChange, onEnterPressed, disabled, placeholder, className, style, readOnly, plain, onFocus, onBlur }: Props) {
+export default function InputField({ value, onChange, onEnterPressed, disabled, placeholder, className, style, readOnly, plain, onFocus, onBlur, onPaste }: Props) {
     return (
         <input
             className={clsx(
@@ -38,6 +39,7 @@ export default function InputField({ value, onChange, onEnterPressed, disabled, 
             style={style}
             onFocus={onFocus}
             onBlur={onBlur}
+            onPaste={onPaste}
         />
     );
 }

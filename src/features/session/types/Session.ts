@@ -26,7 +26,7 @@ export interface Session {
 
     inactivityThresholdMs: number | null;
 
-    note: Note;
+    notes: Note[];
     checklist: CheckItem[];
 }
 

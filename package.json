@@ -1,9 +1,10 @@
 {
   "name": "cronomate",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.12.0",
   "type": "module",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "dev": "vite --port 5555",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

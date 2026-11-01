@@ -1,6 +1,6 @@
 import { Pomodoro } from "src/features/pomodoro/types/Pomodoro";
 import { useTypedSelector } from "src/shared/hooks/useTypedSelector";
-import { changeToNextState, reset, update, setEndAlertStatus, save } from "src/features/pomodoro/states/pomodoroSlice";
+import { changeToNextState, reset, update, setEndAlertStatus } from "src/features/pomodoro/states/pomodoroSlice";
 import { useDispatch } from "react-redux";
 import { PomodoroSettings } from "src/features/pomodoro/types/PomodoroSettings";
 import { setSettings } from "src/features/pomodoro/states/pomodoroSettingsSlice";
@@ -13,22 +13,18 @@ export function usePomodoro() {
 
     function _changeToNextState() {
         dispatch(changeToNextState(settings));
-        dispatch(save());
     }
 
     function _stop() {
         dispatch(reset());
-        dispatch(save());
     }
 
     function _setEndAlertStatus(status: Pomodoro["endAlertStatus"]) {
         dispatch(setEndAlertStatus(status));
-        dispatch(save());
     }
 
     function _update() {
         dispatch(update(settings));
-        dispatch(save());
     }
 
     function _setSettings(newSettings: PomodoroSettings) {
