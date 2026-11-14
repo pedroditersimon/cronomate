@@ -29,6 +29,7 @@ interface Props {
     onCheckItemDelete?: (id: string) => void;
     onCheckItemUpdate?: (item: CheckItemType) => void;
     onCheckItemReorder?: (itemId: string, targetItemId?: string) => void;
+    onCheckItemCreateActivity?: (item: CheckItemType) => void;
 
     className?: ClassValue;
 }
@@ -48,6 +49,7 @@ export default function NoteAndChecklistPlinth({
     onCheckItemDelete,
     onCheckItemUpdate,
     onCheckItemReorder,
+    onCheckItemCreateActivity,
 
     className,
 }: Props) {
@@ -177,6 +179,7 @@ export default function NoteAndChecklistPlinth({
                     onCheckItemDelete={onCheckItemDelete}
                     onCheckItemUpdate={onCheckItemUpdate}
                     onCheckItemReorder={onCheckItemReorder}
+                    onCheckItemCreateActivity={onCheckItemCreateActivity}
                 />}
             </div>
         </Container>

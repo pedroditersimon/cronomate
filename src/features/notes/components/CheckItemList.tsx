@@ -14,6 +14,7 @@ interface Props {
     onDelete?: (id: string) => void;
     onUpdate?: (item: CheckItemType) => void;
     onReorder?: (itemId: string, targetItemId?: string) => void;
+    onCreateActivity?: (item: CheckItemType) => void;
 }
 
 const defaultGhostItem: CheckItemType = {
@@ -32,7 +33,8 @@ export default function CheckItemList({
     onAdd,
     onDelete,
     onUpdate,
-    onReorder
+    onReorder,
+    onCreateActivity
 }: Props) {
 
     const [ghost, setGhost] = useState<CheckItemType>(defaultGhostItem);
@@ -135,6 +137,7 @@ export default function CheckItemList({
                                 alertWindowMs={alertWindowMs}
                                 onChange={updateItem}
                                 onDelete={() => deleteItem(item.id)}
+                                onCreateActivity={onCreateActivity ? () => onCreateActivity(item) : undefined}
                             />
                         </div>
                     ))

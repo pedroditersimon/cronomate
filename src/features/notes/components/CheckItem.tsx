@@ -1,5 +1,5 @@
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
-import { CheckCircle, CircleIcon, CrossIcon } from "src/assets/Icons";
+import { CheckCircle, CircleIcon, CrossIcon, PlayIcon } from "src/assets/Icons";
 import { cn } from "src/shared/utils/cn";
 import InputField from "src/shared/components/forms/InputField";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
@@ -13,6 +13,7 @@ interface Props {
     onChange?: (newItem: CheckItemType) => void;
     onEnterPressed?: () => void;
     onDelete?: () => void;
+    onCreateActivity?: () => void;
     onPaste?: (event: ClipboardEvent<HTMLInputElement>) => void;
 
     placeholder?: string;
@@ -21,7 +22,7 @@ interface Props {
     canDelete?: boolean;
 }
 
-export default function CheckItem({ item, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onDelete, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
+export default function CheckItem({ item, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onDelete, onCreateActivity, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
     const dueStatus = getCheckItemDueStatus(item, currentTime, alertWindowMs);
     const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
 
@@ -84,7 +85,7 @@ export default function CheckItem({ item, currentTime = Date.now(), alertWindowM
                 onEnterPressed={onEnterPressed}
                 onPaste={onPaste}
                 onChange={handleInputChange}
-                className={cn("border-transparent",
+                className={cn("min-w-0 flex-1 border-transparent",
                     {
                         "opacity-50 text-green-300": item.isDone,
                         [dueColorClass]: !item.isDone && !!dueStatus,
@@ -95,8 +96,20 @@ export default function CheckItem({ item, currentTime = Date.now(), alertWindowM
             <TimeInputHHmm
                 timeHHmm={item.due || null}
                 onChange={newTime => handleDueChange(newTime)}
-                className={dueStatus ? dueColorClass : undefined}
+                className={cn("w-12 shrink-0", dueStatus && dueColorClass)}
             />
+
+            {onCreateActivity && <button
+                type="button"
+                title="Iniciar actividad"
+                aria-label={`Iniciar actividad: ${item.content}`}
+                disabled={!item.content.trim()}
+                className="invisible shrink-0 rounded p-1 text-gray-400 group-hover:visible hover:text-green-300 disabled:opacity-30"
+                onPointerDown={event => event.stopPropagation()}
+                onClick={onCreateActivity}
+            >
+                <PlayIcon className="size-5" />
+            </button>}
 
             <div
                 className={cn("flex flex-row items-center cursor-pointer",
