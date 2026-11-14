@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useState } from "react";
 import clsx, { ClassValue } from "clsx";
 import { DateTime } from "luxon";
 import { convert24HourFormatTextToTimeObj, parseTimeKeywords } from "src/shared/utils/TimeUtils";
@@ -6,6 +6,7 @@ import { convert24HourFormatTextToTimeObj, parseTimeKeywords } from "src/shared/
 interface Props {
     timeHHmm: string | null; // time in HH:mm format
     onChange?: (newTime: string | null) => void;
+    onBlur?: (newTime: string | null) => void;
 
     readOnly?: boolean;
     className?: ClassValue;
@@ -13,7 +14,7 @@ interface Props {
 
 
 // TimeInput based in Date
-export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props) {
+export const TimeInputHHmm = forwardRef<HTMLInputElement, Props>(function TimeInputHHmm({ timeHHmm, onChange, onBlur, readOnly, className }, ref) {
     const [focused, setFocused] = useState(false);
     const [inputTime, setInputTime] = useState<string>(timeHHmm ?? "");
 
@@ -29,7 +30,7 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
         if (!inputTime?.trim()) {
             setInputTime("");
             if (onChange) onChange(null);
-            return;
+            return null;
         }
 
         const keywordTime = parseTimeKeywords(inputTime);
@@ -38,12 +39,12 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
             const newFormattedTime = DateTime.fromJSDate(keywordTime).toFormat("HH:mm");
             setInputTime(newFormattedTime);
             if (onChange) onChange(newFormattedTime);
-            return;
+            return newFormattedTime;
         }
 
         const newTimeObj = convert24HourFormatTextToTimeObj(inputTime);
         if (!newTimeObj) {
-            setInputTime(timeHHmm ?? ""); return;
+            setInputTime(timeHHmm ?? ""); return timeHHmm;
         }
 
         const newTime = DateTime.fromObject({
@@ -51,7 +52,7 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
             minute: newTimeObj.minutes
         });
         if (!newTime.isValid) {
-            setInputTime(timeHHmm ?? ""); return;
+            setInputTime(timeHHmm ?? ""); return timeHHmm;
         }
 
         const newFormattedTime = newTime.toFormat("HH:mm");
@@ -59,6 +60,7 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
 
         setInputTime(newInput);
         if (onChange) onChange(newFormattedTime);
+        return newFormattedTime;
     }, [inputTime, onChange, timeHHmm]);
 
 
@@ -70,6 +72,7 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
             )}
         >
             <input
+                ref={ref}
                 className={clsx(
                     `w-full bg-transparent outline-none text-center`, {
                     "hover:cursor-text": focused,
@@ -90,8 +93,9 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
 
                 // on confirm input
                 onBlur={() => {
-                    handleConfirmTime();
+                    const confirmedTime = handleConfirmTime();
                     setFocused(false);
+                    onBlur?.(confirmedTime);
                 }}
                 onKeyUp={e => {
                     if (e.key === "Enter") {
@@ -106,4 +110,4 @@ export function TimeInputHHmm({ timeHHmm, onChange, readOnly, className }: Props
             />
         </div>
     );
-}
+});

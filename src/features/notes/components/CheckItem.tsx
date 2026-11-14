@@ -4,14 +4,16 @@ import { cn } from "src/shared/utils/cn";
 import InputField from "src/shared/components/forms/InputField";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
 import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStatus";
-import { ClipboardEvent } from "react";
+import { ClipboardEvent, Ref } from "react";
 
 interface Props {
     item: CheckItemType;
+    timerRef?: Ref<HTMLInputElement>;
     currentTime?: number;
     alertWindowMs?: number;
     onChange?: (newItem: CheckItemType) => void;
     onEnterPressed?: () => void;
+    onCommit?: (item: CheckItemType, focusTimer?: boolean) => void;
     onDelete?: () => void;
     onCreateActivity?: () => void;
     onPaste?: (event: ClipboardEvent<HTMLInputElement>) => void;
@@ -22,7 +24,7 @@ interface Props {
     canDelete?: boolean;
 }
 
-export default function CheckItem({ item, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onDelete, onCreateActivity, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
+export default function CheckItem({ item, timerRef, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onCommit, onDelete, onCreateActivity, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
     const dueStatus = getCheckItemDueStatus(item, currentTime, alertWindowMs);
     const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
 
@@ -83,6 +85,7 @@ export default function CheckItem({ item, currentTime = Date.now(), alertWindowM
             <InputField
                 value={item.content}
                 onEnterPressed={onEnterPressed}
+                onBlur={() => onCommit?.(item)}
                 onPaste={onPaste}
                 onChange={handleInputChange}
                 className={cn("min-w-0 flex-1 border-transparent",
@@ -93,11 +96,21 @@ export default function CheckItem({ item, currentTime = Date.now(), alertWindowM
                 placeholder={placeholder}
             />
 
+            <div className="contents" onPointerDownCapture={event => {
+                if (!onCommit || !item.content.trim()) return;
+                // Commit before the browser can focus the ghost timer.
+                event.preventDefault();
+                event.stopPropagation();
+                onCommit(item, true);
+            }}>
             <TimeInputHHmm
                 timeHHmm={item.due || null}
+                ref={timerRef}
                 onChange={newTime => handleDueChange(newTime)}
+                onBlur={newTime => onCommit?.({ ...item, due: newTime || undefined })}
                 className={cn("w-12 shrink-0", dueStatus && dueColorClass)}
             />
+            </div>
 
             {onCreateActivity && <button
                 type="button"
