@@ -1,7 +1,10 @@
 import { Activity } from "src/features/activity/types/Activity";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
-import { TimeTrack } from "src/features/time-track/types/TimeTrack";
+import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
+import { DateTime, Interval } from "luxon";
+import { findLast } from "lodash";
+import { generateId } from "src/shared/utils/generateId";
 import { Result, ok } from "src/shared/types/Result";
 
 
@@ -17,6 +20,9 @@ function add(list: Array<Activity>, activity: Activity, fusion: boolean = true):
         item.title.toLowerCase().trim() === activity.title.toLowerCase().trim());
 
     if (matchingActivity && fusion) {
+        if (activity.tracks.length === 1 && activity.tracks[0].status === TimeTrackStatus.RUNNING) {
+            return set(list, start(matchingActivity));
+        }
         return set(list, {
             ...matchingActivity,
             // fusion tracks
@@ -47,6 +53,26 @@ function set(list: Array<Activity>, activity: Activity): Array<Activity> {
     return updatedList;
 }
 
+
+function start(activity: Activity): Activity {
+    if (hasRunningTracks(activity)) return activity;
+
+    const now = DateTime.now();
+    const resumable = findLast(activity.tracks, track => {
+        if (!track.end) return true;
+        const interval = Interval.fromDateTimes(DateTime.fromFormat(track.end, "HH:mm"), now);
+        return !interval.isValid || interval.length("milliseconds") <= 59 * 1000;
+    });
+    if (resumable) {
+        return setTrack(activity, { ...resumable, status: TimeTrackStatus.RUNNING });
+    }
+
+    const hhmm = now.toFormat("HH:mm");
+    const result = addTrack(activity, {
+        id: generateId(), start: hhmm, end: hhmm, status: TimeTrackStatus.RUNNING,
+    });
+    return result.success ? result.data : activity;
+}
 
 function stop(activity: Activity): Activity {
     return {
@@ -149,6 +175,7 @@ export default {
     // Handle activities
     add,
     set,
+    start,
     stop,
     stopAll,
     hasChanges,

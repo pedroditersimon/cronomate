@@ -4,15 +4,13 @@ import { isNow, toDate, convertElapsedTimeToText } from "src/shared/utils/TimeUt
 import { Activity as ActivityType } from "src/features/activity/types/Activity";
 import clsx, { ClassValue } from "clsx";
 import HSeparator from "src/shared/layouts/HSeparator";
-import { generateId } from "src/shared/utils/generateId";
-import { findLast } from "lodash";
 import timeTrackService from "src/features/time-track/services/timeTrackService";
 import activityService from "../services/activityService";
 import Clickable from "src/shared/components/interactable/Clickable";
 import { TimeTrack, TimeTrackStatus } from "src/features/time-track/types/TimeTrack";
 import ActivityTrack from "src/features/activity/components/ActivityTrack";
 import { pauseActivityMock } from "src/features/session/mocks/pauseActivityMock";
-import { DateTime, Interval } from "luxon";
+import { DateTime } from "luxon";
 import ProjectInput from "src/shared/components/forms/ProjectInput";
 import { useTypedSelector } from "src/shared/hooks/useTypedSelector";
 import useAppSettings from "src/features/app-settings/hooks/useAppSettings";
@@ -108,42 +106,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
             return; // dont do more
         }
 
-        function isResumable(track: TimeTrack, threholdMs: number) {
-            if (!track.end) return true;
-
-            const now = DateTime.now();
-            const endTime = DateTime.fromFormat(track.end, "HH:mm");
-
-            const interval = Interval.fromDateTimes(endTime, now);
-            if (!interval.isValid) return true;
-
-            const durationMs = interval.length("milliseconds");
-            return durationMs <= threholdMs;
-        }
-
-        // Find the last resumable track (within one minute of current time) 
-        const lastResumableRecord = findLast(activity.tracks, track => isResumable(track, 59 * 1000));
-
-        // Resume running the last record if found
-        if (lastResumableRecord) {
-            handleSetTrack({
-                ...lastResumableRecord,
-                status: TimeTrackStatus.RUNNING
-            });
-            return; // dont do more
-        }
-
-        // add a new running track
-        const newActivityResult = activityService.addTrack(activity, {
-            id: generateId(),
-            start: hhmm_now,
-            end: hhmm_now,
-            status: TimeTrackStatus.RUNNING,
-        });
-        if (!newActivityResult.success)
-            return;
-
-        onActivityChange(newActivityResult.data);
+        onActivityChange(activityService.start(activity));
     }
 
 
