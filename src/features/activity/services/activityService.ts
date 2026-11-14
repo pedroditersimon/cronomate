@@ -17,7 +17,7 @@ function add(list: Array<Activity>, activity: Activity, fusion: boolean = true):
 
     // activity title already exists, fusion tracks
     const matchingActivity = list.find(item =>
-        item.title.toLowerCase().trim() === activity.title.toLowerCase().trim());
+        !item.isDeleted && item.title.toLowerCase().trim() === activity.title.toLowerCase().trim());
 
     if (matchingActivity && fusion) {
         if (activity.tracks.length === 1 && activity.tracks[0].status === TimeTrackStatus.RUNNING) {
