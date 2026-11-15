@@ -85,14 +85,16 @@ export const TimeInputHHmm = forwardRef<HTMLInputElement, Props>(function TimeIn
                 onChange={e => setInputTime(e.target.value)}
 
                 onClick={(e: React.MouseEvent<HTMLInputElement>) => {
+                    if (readOnly) return;
                     e.currentTarget.select();
                     setFocused(true);
                 }}
                 // select all text on click
-                onFocus={() => setFocused(true)}
+                onFocus={() => { if (!readOnly) setFocused(true); }}
 
                 // on confirm input
                 onBlur={() => {
+                    if (readOnly) return;
                     const confirmedTime = handleConfirmTime();
                     setFocused(false);
                     onBlur?.(confirmedTime);

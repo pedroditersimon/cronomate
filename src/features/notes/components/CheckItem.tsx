@@ -84,6 +84,7 @@ export default function CheckItem({ item, timerRef, currentTime = Date.now(), al
 
             <InputField
                 value={item.content}
+                readOnly={!onChange}
                 onEnterPressed={onEnterPressed}
                 onBlur={() => onCommit?.(item)}
                 onPaste={onPaste}
@@ -105,6 +106,7 @@ export default function CheckItem({ item, timerRef, currentTime = Date.now(), al
             }}>
             <TimeInputHHmm
                 timeHHmm={item.due || null}
+                readOnly={!onChange}
                 ref={timerRef}
                 onChange={newTime => handleDueChange(newTime)}
                 onBlur={newTime => onCommit?.({ ...item, due: newTime || undefined })}

@@ -152,14 +152,16 @@ export default function CheckItemList({
                                 timerRef={item.id === timerFocusId.current ? timerRef : undefined}
                                 currentTime={currentTime}
                                 alertWindowMs={alertWindowMs}
-                                onChange={updateItem}
-                                onDelete={() => deleteItem(item.id)}
+                                onChange={onUpdate || onChange ? updateItem : undefined}
+                                onDelete={onDelete || onChange ? () => deleteItem(item.id) : undefined}
+                                canToggle={!!(onUpdate || onChange)}
+                                canDelete={!!(onDelete || onChange)}
                                 onCreateActivity={onCreateActivity ? () => onCreateActivity(item) : undefined}
                             />
                         </div>
                     ))
                 }
-                <CheckItem
+                {(onAdd || onChange) && <CheckItem
                     key={ghost.id}
                     item={ghost}
                     onChange={updateGhost}
@@ -169,7 +171,7 @@ export default function CheckItemList({
                     canDelete={false}
                     canToggle={false}
                     placeholder="Agregar item..."
-                />
+                />}
             </div>
         </div>
     );

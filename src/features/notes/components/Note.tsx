@@ -42,6 +42,7 @@ export default function Note({ note, onChange, disabled, placeholder, className 
             )}
             placeholder={placeholder}
             value={note.content}
+            readOnly={!onChange || disabled}
             onInput={e => resizeToContent(e.currentTarget)}
             onChange={e => {
                 if (onChange)

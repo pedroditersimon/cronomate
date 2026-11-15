@@ -138,7 +138,7 @@ export default function Session({
         >
 
             {/* Settings panel */}
-            <ContainerOverlay show={showSettings} >
+            <ContainerOverlay show={canEdit && showSettings} >
                 <SessionSettings
                     session={session}
                     onSessionChange={onSessionChange}
@@ -167,8 +167,8 @@ export default function Session({
                     onSessionChange={onSessionChange}
                 />}
 
-                icon={<SettingsIcon />}
-                onIconClick={() => setShowSettings(true)}
+                icon={canEdit ? <SettingsIcon /> : undefined}
+                onIconClick={canEdit ? () => setShowSettings(true) : undefined}
             />
 
 

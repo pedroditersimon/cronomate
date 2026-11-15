@@ -54,6 +54,8 @@ export default function NoteAndChecklistPlinth({
     className,
 }: Props) {
     const [showSettings, setShowSettings] = useState(false);
+    const readOnly = !onNoteChange && !onNoteAdd && !onNoteDelete && !onChecklistChange
+        && !onCheckItemAdd && !onCheckItemDelete && !onCheckItemUpdate;
     const [activeNoteId, setActiveNoteId] = useState(notes[0]?.id);
     const [draggedNoteId, setDraggedNoteId] = useState<string>();
     const activeNote = notes.find(note => note.id === activeNoteId);
@@ -101,15 +103,15 @@ export default function NoteAndChecklistPlinth({
         >
 
             {/* Settings panel */}
-            <ContainerOverlay show={showSettings}>
+            <ContainerOverlay show={!readOnly && showSettings}>
                 <NotesSettings onClose={() => setShowSettings(false)} />
             </ContainerOverlay>
 
             <ContainerTopbar
                 className="group"
                 title="Notas"
-                icon={<SettingsIcon />}
-                onIconClick={() => setShowSettings(true)}
+                icon={readOnly ? undefined : <SettingsIcon />}
+                onIconClick={readOnly ? undefined : () => setShowSettings(true)}
             />
 
             <div className="flex flex-col gap-1">
