@@ -1,7 +1,7 @@
 import "cally";
 import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon } from "src/assets/Icons";
+import { CalendarIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "src/assets/Icons";
 import Button from "src/shared/components/interactable/Button";
 
 interface Props {
@@ -54,6 +54,12 @@ export default function DateRangePicker({ value, onChange }: Props) {
     const pickerRef = useRef<HTMLDivElement>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [pageDate, setPageDate] = useState(() => DateTime.now().startOf("month"));
+    const [selectingMonth, setSelectingMonth] = useState(false);
+
+    useEffect(() => {
+        const calendar = calendarRef.current as (HTMLElement & { focusedDate: string }) | null;
+        if (calendar) calendar.focusedDate = pageDate.toISODate()!;
+    }, [pageDate]);
 
     useEffect(() => {
         const calendar = calendarRef.current;
@@ -108,22 +114,53 @@ export default function DateRangePicker({ value, onChange }: Props) {
         <div ref={pickerRef} className="relative">
             <Button
                 icon={<CalendarIcon className="size-5" />}
-                onClick={() => setIsOpen(open => !open)}
+                onClick={() => { setSelectingMonth(false); setIsOpen(open => !open); }}
                 className={isOpen ? "bg-neutral-800 text-blue-300 shadow border-gray-700" : undefined}
             >
                 {formatRange(value)}
             </Button>
 
             <div className={`absolute right-0 top-full z-[99999] mt-2 rounded-lg border-2 border-gray-700 bg-bg-primary p-3 shadow-lg ${isOpen ? "" : "hidden"}`}>
-                <calendar-range ref={calendarRef} value={value} months={1} locale="es-AR">
-                    <span slot="previous" aria-label="Mes anterior" onClick={() => setPageDate(date => date.minus({ months: 1 }))}>
+                <calendar-range ref={calendarRef} value={value} months={1} locale="es-AR"
+                    onClickCapture={event => {
+                        const navigation = event.nativeEvent.composedPath().find(target =>
+                            target instanceof HTMLElement && (target.part.contains("previous") || target.part.contains("next"))
+                        ) as HTMLElement | undefined;
+                        if (!navigation) return;
+                        event.preventDefault();
+                        event.stopPropagation();
+                        const amount = navigation.part.contains("previous") ? -1 : 1;
+                        setPageDate(date => date.plus(selectingMonth ? { years: amount } : { months: amount }));
+                    }}>
+                    <span slot="previous" aria-label={selectingMonth ? "Año anterior" : "Mes anterior"}>
                         <ChevronLeftIcon className="size-5" />
                     </span>
-                    <span slot="heading">{formatPageTitle(pageDate)}</span>
-                    <span slot="next" aria-label="Mes siguiente" onClick={() => setPageDate(date => date.plus({ months: 1 }))}>
+                    <button slot="heading" type="button" aria-label={selectingMonth ? "Elegir días" : "Elegir mes"}
+                        aria-expanded={selectingMonth}
+                        className="flex items-center gap-1 rounded-lg px-2 py-1 font-semibold text-gray-300 hover:bg-gray-700 hover:text-blue-300"
+                        onClick={() => setSelectingMonth(selecting => !selecting)}>
+                        {selectingMonth ? pageDate.year : formatPageTitle(pageDate)}
+                        <ChevronDownIcon className={`size-4 transition-transform ${selectingMonth ? "rotate-180" : ""}`} />
+                    </button>
+                    <span slot="next" aria-label={selectingMonth ? "Año siguiente" : "Mes siguiente"}>
                         <ChevronRightIcon className="size-5" />
                     </span>
-                    <calendar-month />
+                    <calendar-month style={{ display: selectingMonth ? "none" : undefined }} />
+                {selectingMonth && <div className="grid min-w-64 grid-cols-3 gap-2" aria-label="Meses">
+                    {Array.from({ length: 12 }, (_, index) => {
+                        const month = pageDate.set({ month: index + 1 });
+                        const selected = value === `${month.startOf("month").toISODate()}/${month.endOf("month").toISODate()}`;
+                        return <button key={index} type="button" aria-pressed={selected}
+                            className={`rounded-lg px-2 py-3 capitalize hover:bg-gray-700 hover:text-blue-300 ${selected ? "bg-gray-700 text-blue-300" : "text-gray-400"}`}
+                            onClick={() => {
+                                onChange(`${month.startOf("month").toISODate()}/${month.endOf("month").toISODate()}`);
+                                setPageDate(month);
+                                setSelectingMonth(false);
+                            }}>
+                            {month.setLocale("es-AR").toFormat("LLL")}
+                        </button>;
+                    })}
+                </div>}
                 </calendar-range>
             </div>
         </div>
