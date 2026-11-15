@@ -4,6 +4,7 @@ import { SavedObject } from "src/shared/types/SavedObject";
 import { version } from '../../../../package.json';
 import indexedDBSave from "src/shared/services/indexedDBSave";
 import sessionStorageService from "src/shared/services/sessionStorageService";
+import { recordBackup } from "./historyBackupStorage";
 
 function exportHistoryWithFileDownload(sessions: Session[]): { fileName: string } {
     // 1. Create a saved object
@@ -28,6 +29,7 @@ function exportHistoryWithFileDownload(sessions: Session[]): { fileName: string 
     a.download = `${fileName}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    recordBackup();
 
     return {
         fileName: `${fileName}.json`

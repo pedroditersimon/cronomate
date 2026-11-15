@@ -8,7 +8,9 @@ import sessionHistoryService from "src/features/sessions-history/services/sessio
 import { ConfirmDestructiveActionModal } from "src/shared/components/ConfirmDestructiveActionModal";
 import { Modal, showModal } from "src/shared/components/Modal";
 import SelectFileField from "src/shared/components/SelectFileField";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { DateTime } from "luxon";
+import { getLastBackup, subscribeToBackups } from "../services/historyBackupStorage";
 
 interface Props {
     sessions: Array<Session>;
@@ -18,6 +20,7 @@ interface Props {
 export default function SessionsHistorySettings({ sessions, onClose }: Props) {
     const [importedFiles, setImportedFiles] = useState<File[]>([]);
     const [copySaved, setCopySaved] = useState(false);
+    const lastBackup = useSyncExternalStore(subscribeToBackups, getLastBackup);
 
     const handleExport = () => {
         const { fileName } = sessionHistoryService.exportHistoryWithFileDownload(sessions);
@@ -156,6 +159,10 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                         Guardar
                     </Button>
                 </div>
+
+                {lastBackup && <p className="text-xs text-gray-500">
+                    Último guardado el {DateTime.fromISO(lastBackup).toFormat("dd/MM/yyyy HH:mm")}
+                </p>}
             </FormField>
 
             {/* Delete history */}
