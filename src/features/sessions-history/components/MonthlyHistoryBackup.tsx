@@ -14,13 +14,13 @@ export default function MonthlyHistoryBackup() {
         let cancelled = false;
         const download = async () => {
             const sessions = await sessionStorageService.getItems<Session>("History");
-            if (sessions.length) sessionHistoryService.exportHistoryWithFileDownload(sessions);
+            sessionHistoryService.exportHistoryWithFileDownload(sessions);
         };
         const check = async () => {
             if (isCurrentMonth(getLastBackup())) return;
             if (!automaticBackupOnStartup && isCurrentMonth(getLastBackupReminder())) return;
             const sessions = await sessionStorageService.getItems<Session>("History");
-            if (cancelled || !sessions.length || isCurrentMonth(getLastBackup())) return;
+            if (cancelled || isCurrentMonth(getLastBackup())) return;
             if (automaticBackupOnStartup) {
                 sessionHistoryService.exportHistoryWithFileDownload(sessions);
                 toast.success("Backup del mes realizado");

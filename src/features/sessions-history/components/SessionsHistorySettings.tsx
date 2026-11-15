@@ -91,12 +91,11 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                 onClose={() => setImportedFiles([])}
             >
 
-                <FormField title="1. Copia de seguridad" show={sessions.length > 0}>
+                <FormField title="1. Copia de seguridad">
                     <p className="text-gray-500">
                         Por seguridad, es recomendable guardar el historial antes de continuar.
                     </p>
                     <Button
-                        disabled={sessions.length === 0}
                         onClick={handleExport}
                         icon={copySaved
                             ? <CheckIcon className="size-5" />
@@ -108,7 +107,7 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                     </Button>
                 </FormField>
 
-                <FormField title={`${sessions.length > 0 ? "2. " : " "}Importar`}>
+                <FormField title="2. Importar">
                     <p className="text-gray-500">
                         Selecciona el archivo de historial que deseas importar.
                     </p>
@@ -153,7 +152,6 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                     <Button
                         className="flex-1"
                         onClick={handleExport}
-                        disabled={sessions.length === 0}
                         icon={<DocDownIcon className="size-5" />}
                     >
                         Guardar
