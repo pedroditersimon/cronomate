@@ -1,6 +1,6 @@
 import { Note as NoteType } from "src/features/notes/types/Note";
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
-import { CrossIcon, PlusIcon, SettingsIcon } from "src/assets/Icons";
+import { CrossIcon, FloatingWindowIcon, PlusIcon, SettingsIcon } from "src/assets/Icons";
 import { NotesSettings } from "src/features/notes/components/NotesSettings";
 import Container from "src/shared/layouts/Container";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
@@ -13,6 +13,8 @@ import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 import { generateId } from "src/shared/utils/generateId";
 import ConfirmationService from "src/shared/services/confirmationService";
+import { createPortal } from "react-dom";
+import { useFloatingNotesWindow } from "src/features/notes/hooks/useFloatingNotesWindow";
 
 interface Props {
     notes: NoteType[];
@@ -32,27 +34,31 @@ interface Props {
     onCheckItemCreateActivity?: (item: CheckItemType) => void;
 
     className?: ClassValue;
+    floating?: boolean;
 }
 
-export default function NoteAndChecklistPlinth({
-    notes,
-    onNoteChange,
-    onNoteAdd,
-    onNoteDelete,
-    onNoteReorder,
+export default function NoteAndChecklistPlinth(props: Props) {
+    const {
+        notes,
+        onNoteChange,
+        onNoteAdd,
+        onNoteDelete,
+        onNoteReorder,
 
-    checklist,
-    currentTime,
-    alertWindowMs,
-    onChecklistChange,
-    onCheckItemAdd,
-    onCheckItemDelete,
-    onCheckItemUpdate,
-    onCheckItemReorder,
-    onCheckItemCreateActivity,
+        checklist,
+        currentTime,
+        alertWindowMs,
+        onChecklistChange,
+        onCheckItemAdd,
+        onCheckItemDelete,
+        onCheckItemUpdate,
+        onCheckItemReorder,
+        onCheckItemCreateActivity,
 
-    className,
-}: Props) {
+        className,
+        floating = false,
+    } = props;
+    const { floatingWindow, error: floatingError, open: openFloatingWindow } = useFloatingNotesWindow();
     const [showSettings, setShowSettings] = useState(false);
     const readOnly = !onNoteChange && !onNoteAdd && !onNoteDelete && !onChecklistChange
         && !onCheckItemAdd && !onCheckItemDelete && !onCheckItemUpdate;
@@ -110,9 +116,21 @@ export default function NoteAndChecklistPlinth({
             <ContainerTopbar
                 className="group"
                 title="Notas"
+                right={!floating && <Clickable
+                    type="button"
+                    aria-label="Abrir notas en ventana flotante"
+                    className="mr-2 flex shrink-0 items-center justify-center p-0 text-neutral-200 hover:bg-gray-700"
+                    onClick={openFloatingWindow}
+                ><FloatingWindowIcon className="size-5 p-0.5" /></Clickable>}
                 icon={readOnly ? undefined : <SettingsIcon />}
                 onIconClick={readOnly ? undefined : () => setShowSettings(true)}
             />
+
+            {floatingError && <p role="alert" className="text-xs text-amber-300">{floatingError}</p>}
+            {floatingWindow && createPortal(
+                <NoteAndChecklistPlinth {...props} floating className="w-full" />,
+                floatingWindow.document.body,
+            )}
 
             <div className="flex flex-col gap-1">
                 <div className="flex w-full min-w-0 items-center gap-1 overflow-x-auto">

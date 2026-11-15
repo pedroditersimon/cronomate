@@ -3,6 +3,13 @@ interface Props {
     className?: string;
 }
 
+export const FloatingWindowIcon = ({ className }: Props) => (
+    <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className={className}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M20 10V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5" />
+        <rect x="12" y="12" width="9" height="8" rx="1" />
+    </svg>
+);
+
 export const PlayIcon = ({ className }: Props) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={"self-center p-0.5 rounded-full " + className}>
         < path fillRule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clipRule="evenodd" />
