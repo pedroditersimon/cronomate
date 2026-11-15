@@ -1,6 +1,6 @@
 import { Note as NoteType } from "src/features/notes/types/Note";
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
-import { CrossIcon, FloatingWindowIcon, PlusIcon, SettingsIcon } from "src/assets/Icons";
+import { CrossIcon, FloatingWindowIcon, SettingsIcon } from "src/assets/Icons";
 import { NotesSettings } from "src/features/notes/components/NotesSettings";
 import Container from "src/shared/layouts/Container";
 import ContainerOverlay from "src/shared/layouts/ContainerOverlay";
@@ -15,6 +15,9 @@ import { generateId } from "src/shared/utils/generateId";
 import ConfirmationService from "src/shared/services/confirmationService";
 import { createPortal } from "react-dom";
 import { useFloatingNotesWindow } from "src/features/notes/hooks/useFloatingNotesWindow";
+import { useNotesSettings } from "src/features/notes/hooks/useNotesSettings";
+import { NoteTemplate } from "src/features/notes/types/NotesSettings";
+import AddNoteMenu from "src/features/notes/components/AddNoteMenu";
 
 interface Props {
     notes: NoteType[];
@@ -60,6 +63,7 @@ export default function NoteAndChecklistPlinth(props: Props) {
     } = props;
     const { floatingWindow, error: floatingError, open: openFloatingWindow } = useFloatingNotesWindow();
     const [showSettings, setShowSettings] = useState(false);
+    const { settings } = useNotesSettings();
     const readOnly = !onNoteChange && !onNoteAdd && !onNoteDelete && !onChecklistChange
         && !onCheckItemAdd && !onCheckItemDelete && !onCheckItemUpdate;
     const [activeNoteId, setActiveNoteId] = useState(notes[0]?.id);
@@ -70,11 +74,11 @@ export default function NoteAndChecklistPlinth(props: Props) {
         setActiveNoteId(id => notes.some(note => note.id === id) ? id : notes[0]?.id);
     }, [notes]);
 
-    const addNote = () => {
+    const addNote = (template?: NoteTemplate) => {
         const note = {
             id: generateId(),
-            title: "Nota",
-            content: "",
+            title: template?.name ?? "Nota",
+            content: template?.content ?? "",
             createdAt: DateTime.now().toFormat("dd/MM/yyyy HH:mm"),
         };
 
@@ -110,7 +114,7 @@ export default function NoteAndChecklistPlinth(props: Props) {
 
             {/* Settings panel */}
             <ContainerOverlay show={!readOnly && showSettings}>
-                <NotesSettings onClose={() => setShowSettings(false)} />
+                {showSettings && <NotesSettings onClose={() => setShowSettings(false)} />}
             </ContainerOverlay>
 
             <ContainerTopbar
@@ -133,6 +137,7 @@ export default function NoteAndChecklistPlinth(props: Props) {
             )}
 
             <div className="flex flex-col gap-1">
+                <div className="flex min-w-0 items-center gap-1">
                 <div className="flex w-full min-w-0 items-center gap-1 overflow-x-auto">
                     {notes.map((note, index) => (
                         <div
@@ -177,15 +182,10 @@ export default function NoteAndChecklistPlinth(props: Props) {
                             }
                         </div>
                     ))}
-                    {onNoteAdd &&
-                        <Clickable
-                            className="size-7 shrink-0 p-0 flex items-center justify-center text-gray-400 hover:bg-gray-700 hover:text-blue-300"
-                            onClick={addNote}
-                        >
-                            <PlusIcon className="size-5" />
-                        </Clickable>
-                    }
             </div>
+                {onNoteAdd && <AddNoteMenu templates={settings.templates} onAdd={addNote} onViewTemplates={() => setShowSettings(true)} />}
+                </div>
+
 
                 {activeNote && <NoteAndChecklist
                     note={activeNote}

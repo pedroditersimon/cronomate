@@ -4,6 +4,7 @@ import localSave from "src/shared/services/localSave";
 
 const defaultState: NotesSettings = {
     alertBeforeDueMs: 10 * 60 * 1000,
+    templates: [],
 };
 
 const initialState = {

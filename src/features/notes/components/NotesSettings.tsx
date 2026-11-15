@@ -3,6 +3,7 @@ import { useNotesSettings } from "src/features/notes/hooks/useNotesSettings";
 import FormField from "src/shared/components/forms/FormField";
 import { TimeDurationInput } from "src/shared/components/interactable/TimeDurationInput";
 import ContainerTopbar from "src/shared/layouts/ContainerTopbar";
+import NoteTemplatesSettings from "src/features/notes/components/NoteTemplatesSettings";
 
 interface Props {
     onClose: () => void;
@@ -18,18 +19,21 @@ export function NotesSettings({ onClose }: Props) {
             onIconClick={onClose}
         />
 
-        <FormField
-            title="Anticipacion de alerta"
-            tooltip={{ text: "Define con cuánta anticipación se avisa que vence un ítem." }}
-        >
-            <TimeDurationInput
-                className="max-w-full w-full"
-                millis={settings.alertBeforeDueMs}
-                onChange={millis => {
-                    if (millis === null) return;
-                    setSettings({ ...settings, alertBeforeDueMs: millis });
-                }}
-            />
-        </FormField>
+        <div className="flex min-h-0 flex-col gap-5 overflow-y-auto">
+            <FormField
+                title="Anticipación de alerta"
+                tooltip={{ text: "Define con cuánta anticipación se avisa que vence un ítem." }}
+            >
+                <TimeDurationInput
+                    className="max-w-full w-full"
+                    millis={settings.alertBeforeDueMs}
+                    onChange={millis => {
+                        if (millis === null) return;
+                        setSettings({ ...settings, alertBeforeDueMs: millis });
+                    }}
+                />
+            </FormField>
+            <NoteTemplatesSettings />
+        </div>
     </>;
 }
