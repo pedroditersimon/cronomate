@@ -26,10 +26,10 @@ export default function ConfirmationDialog() {
             }}
         >
             {options &&
-                <Container width="min-w-0" className="size-fit max-w-full">
+                <Container className="h-fit max-h-[calc(100dvh-2rem)] max-w-full">
                     <h1 className="text-xl font-bold text-neutral-200">{options.title}</h1>
                     <p className="text-gray-500">{options.description}</p>
-                    <div className="flex justify-end gap-2">
+                    <div className="flex min-w-0 flex-wrap items-center justify-end gap-2">
                         <Button onClick={() => ConfirmationService.resolve(false)}>{options.cancelText}</Button>
                         <Button variant={ButtonVariant.Danger} onClick={() => ConfirmationService.resolve(true)}>
                             {options.confirmText}

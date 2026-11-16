@@ -144,8 +144,8 @@ const Activity = forwardRef<ActivityHandle, Props>(({
     };
 
     return (
-        <div className={clsx("flex flex-col gap-1 min-w-80", className)}  >
-            <div className="flex flex-row gap-1">
+        <div className={clsx("flex min-w-0 flex-col gap-1", className)}  >
+            <div className="flex min-w-0 flex-wrap items-center gap-1">
                 {/* Collapse btn */}
                 <Clickable
                     className="hover:bg-gray-700"
@@ -158,7 +158,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                 {/* Title input */}
                 <div
                     className={clsx(
-                        "group flex flex-row gap-1 w-full box-border rounded-md pl-2 transition-all duration-300",
+                        "group flex min-w-0 flex-wrap items-center flex-1 gap-1 box-border rounded-md pl-2 transition-all duration-300",
                         {
                             "strike-div": activity.isDeleted,
                             "bg-red-400": hasRunningTracks,
@@ -169,7 +169,7 @@ const Activity = forwardRef<ActivityHandle, Props>(({
                 >
                     <input
                         ref={inputRef}
-                        className={clsx("bg-transparent outline-none mr-auto basis-1/2 group",
+                        className={clsx("min-w-0 flex-1 basis-24 bg-transparent outline-none mr-auto group",
                             { "opacity-50": activity.isDeleted })}
                         placeholder={activity.title}
                         value={title}

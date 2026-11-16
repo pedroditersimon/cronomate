@@ -128,8 +128,8 @@ export default function SessionSettings({
 
             {inAboveContent}
 
-            <div className="flex flex-row gap-5">
-                <FormField title="Inicio" className="text-center">
+            <div className="flex min-w-0 flex-wrap gap-5">
+                <FormField title="Inicio" className="flex-1 basis-32 min-w-0 text-center">
                     <TimeInputHHmm
                         className={clsx(
                             "max-w-full",
@@ -146,7 +146,7 @@ export default function SessionSettings({
                     />
                 </FormField>
 
-                <FormField title="Fin" className="text-center">
+                <FormField title="Fin" className="flex-1 basis-32 min-w-0 text-center">
                     <TimeInputHHmm
                         className={clsx(
                             "max-w-full",

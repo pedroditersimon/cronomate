@@ -43,7 +43,7 @@ export function SessionsHistoryPlinth({ sessions, onSessionSelected }: Props) {
     }, [rangeDates, sessions]);
 
     return (
-        <Container className='min-w-80' scrollable={false}>
+        <Container scrollable={false}>
 
             {/* Settings panel */}
             <ContainerOverlay show={showSettings} >

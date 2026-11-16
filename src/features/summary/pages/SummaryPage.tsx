@@ -92,13 +92,13 @@ export default function SummaryPage() {
 
     return (
         <PageLayout>
-            <Container className='min-w-80'>
+            <Container>
                 {/* Topbar */}
                 <ContainerTopbar
                     title='Resumen'
                 />
 
-                <div className="flex items-center justify-end gap-2 py-2">
+                <div className="flex min-w-0 flex-wrap items-center justify-end gap-2 py-2">
                     <ProjectSelect
                         value={selectedProject}
                         onChange={setSelectedProject}
@@ -109,7 +109,7 @@ export default function SummaryPage() {
                     />
                 </div>
 
-                <div className="flex items-center justify-between px-1 py-2">
+                <div className="flex min-w-0 flex-wrap items-center justify-between gap-2 px-1 py-2">
                     <div>
                         <p className="text-sm font-semibold text-gray-500">Tiempo total</p>
                         <p className="text-2xl font-semibold text-gray-300">

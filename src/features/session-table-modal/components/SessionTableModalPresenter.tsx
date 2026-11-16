@@ -114,8 +114,9 @@ export default function SessionTableModalPresenter({
             id={id}
             title="Tabla de actividades"
             closeOnClickOut
+            containerClassName="w-[64rem]"
         >
-            <div className="size-full mr-4 overflow-y-auto overflow-x-hidden _text-sm">
+            <div className="min-h-0 min-w-0 flex-1 overflow-auto _text-sm">
                 <table className="w-full">
                     <thead>
                         <tr className="text-neutral-300 text-left border-b border-neutral-800">
@@ -233,7 +234,7 @@ export default function SessionTableModalPresenter({
             </div>
 
             {/* bottom */}
-            <div className="flex flex-row gap-3 items-center">
+            <div className="flex min-w-0 flex-wrap items-center gap-3">
 
                 {hasUntrackedActivity &&
                     <Checkbox

@@ -54,8 +54,8 @@ export function PomodoroSettings({ onClose, }: Props) {
                 onIconClick={onClose}
             />
 
-            <div className="flex flex-row gap-5">
-                <FormField title="Descanso" className="flex items-center">
+            <div className="flex min-w-0 flex-wrap gap-5">
+                <FormField title="Descanso" className="flex-1 basis-32 min-w-0 items-center">
                     <TimeDurationInput
                         className="max-w-full w-full"
                         millis={settings.restDurationMs ?? undefined}
@@ -63,7 +63,7 @@ export function PomodoroSettings({ onClose, }: Props) {
                     />
                 </FormField>
 
-                <FormField title="Focus" className="w-full flex items-center">
+                <FormField title="Focus" className="flex-1 basis-32 min-w-0 items-center">
                     <TimeDurationInput
                         className="max-w-full w-full"
                         millis={settings.focusDurationMs}

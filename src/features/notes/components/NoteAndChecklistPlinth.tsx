@@ -156,9 +156,7 @@ export default function NoteAndChecklistPlinth(props: Props) {
 
     return (
         <Container
-            width="min-w-0"
             className={cn("h-fit", className)}
-            style={{ width: "24rem", maxWidth: "100%" }}
         >
 
             {/* Settings panel */}

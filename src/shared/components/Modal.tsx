@@ -41,12 +41,12 @@ export function Modal({ id, title, closeOnClickOut, hideCloseBtn, onClose, class
         <dialog
             id={id}
             className={clsx(
-                "w-full h-full bg-transparent backdrop:bg-black backdrop:bg-opacity-75",
+                "w-full h-full max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] bg-transparent backdrop:bg-black backdrop:bg-opacity-75",
                 className
             )}
         >
             <Container
-                className={clsx("m-auto size-fit", containerClassName)}
+                className={clsx("m-auto h-fit max-h-[calc(100dvh-2rem)]", containerClassName)}
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
             >

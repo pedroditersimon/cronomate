@@ -6,9 +6,9 @@ import { ROUTES } from "src/app/routing/routes";
 
 export default function PageLayout({ children }: PropsWithChildren) {
     return (
-        <div className='p-5 w-screen h-screen flex flex-row gap-5 items-center'>
+        <div className='flex h-dvh w-full flex-wrap items-center gap-5 overflow-y-auto p-5'>
 
-            <div className='h-full w-60'>
+            <div className='h-full min-w-0 max-w-full shrink-0 basis-60 max-sm:h-auto max-sm:basis-full'>
                 <Sidebar
                     linksTop={[
                         {
@@ -39,9 +39,9 @@ export default function PageLayout({ children }: PropsWithChildren) {
                 />
             </div>
 
-            <div className="flex-grow flex flex-row h-full gap-5 items-center justify-center overflow-auto">
+            <main className="flex h-full min-h-0 min-w-0 flex-1 basis-0 flex-wrap content-start items-center justify-center gap-5 overflow-y-auto max-sm:h-auto max-sm:basis-full">
                 {children}
-            </div>
+            </main>
         </div>
     );
 }

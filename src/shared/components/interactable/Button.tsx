@@ -19,7 +19,7 @@ export default function Button({ icon, onClick, disabled, textOnly, variant = Bu
 
     return (
         <button
-            className={clsx("flex flex-row gap-1 py-1 px-2 rounded-lg text-center font-semibold text-gray-500",
+            className={clsx("flex min-w-0 max-w-full flex-row gap-1 py-1 px-2 rounded-lg text-center font-semibold text-gray-500",
                 "transition-colors bg-transparent border-2",
                 { "border-transparent": isTextOnly },
                 { "border-gray-700": !isTextOnly },
@@ -31,7 +31,7 @@ export default function Button({ icon, onClick, disabled, textOnly, variant = Bu
             disabled={disabled}
             onClick={onClick}
         >
-            <div className="flex-grow flex flex-row gap-0.5 justify-center items-center select-none">
+            <div className="flex min-w-0 flex-wrap items-center flex-grow gap-0.5 justify-center select-none">
                 {disabled
                     ? <ForbiddenIcon className="size-5" />
                     : icon

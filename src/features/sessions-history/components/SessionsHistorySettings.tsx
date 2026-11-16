@@ -140,7 +140,7 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
 
             {/* Export/Import history */}
             <FormField title="Transferir">
-                <div className="w-full flex flex-row gap-2">
+                <div className="flex min-w-0 flex-wrap items-center w-full gap-2">
                     <Button
                         className="flex-1"
                         onClick={() => showModal("import-history-modal", true)}

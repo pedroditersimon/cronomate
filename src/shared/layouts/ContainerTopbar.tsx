@@ -19,11 +19,11 @@ interface Props {
 
 export default function ContainerTopbar({ left, title, middle, right, icon, onIconClick, iconOnHover, className }: Props) {
     return (
-        <div className={clsx("flex flex-row pb-1 justify-between", className)}>
-            <div className="justify-start flex flex-row gap-1">
+        <div className={clsx("flex min-w-0 flex-wrap items-center shrink-0 gap-x-1 gap-y-2 pb-1 justify-between", className)}>
+            <div className="flex min-w-0 flex-wrap items-center justify-start gap-1">
                 {left}
                 {title &&
-                    <h1 className="text-xl font-bold text-neutral-200">{title}</h1>
+                    <h1 className="break-words text-xl font-bold text-neutral-200">{title}</h1>
                 }
             </div>
 
@@ -31,7 +31,7 @@ export default function ContainerTopbar({ left, title, middle, right, icon, onIc
                 {middle}
             </div>
 
-            <div className="flex flex-row gap-1">
+            <div className="flex min-w-0 flex-wrap items-center ml-auto gap-1">
                 {right}
                 {icon &&
                     <Clickable className={clsx("p-0 text-neutral-200 hover:bg-gray-700", {

@@ -19,18 +19,18 @@ interface Props {
 export default function Sidebar({ linksTop, linksBottom }: Props) {
 
     return (
-        <Container width="min-w-56">
+        <Container className="w-full max-sm:h-auto">
 
             <span className='text-center text-2xl font-bold font-["Mulish"]'>
                 <span className='text-slate-200 '>crono</span>
                 <span className='text-green-300 '>mate</span>
             </span>
 
-            <div className="flex flex-col flex-1 gap-1">
+            <nav className="flex flex-1 flex-col gap-1 max-sm:flex-row max-sm:flex-wrap">
                 {linksTop.map((link, index) => <SidebarLink key={link.to || index} link={link} />)}
                 <div className='flex-1'></div>
                 {linksBottom.map((link, index) => <SidebarLink key={link.to || index} link={link} />)}
-            </div>
+            </nav>
 
             <span className='text-center text-sm font-semibold text-slate-600'>
                 v{appVersion}

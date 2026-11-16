@@ -146,12 +146,12 @@ export default function DateRangePicker({ value, onChange }: Props) {
                         <ChevronRightIcon className="size-5" />
                     </span>
                     <calendar-month style={{ display: selectingMonth ? "none" : undefined }} />
-                {selectingMonth && <div className="grid min-w-64 grid-cols-3 gap-2" aria-label="Meses">
+                {selectingMonth && <div className="flex w-64 max-w-full flex-wrap gap-2" aria-label="Meses">
                     {Array.from({ length: 12 }, (_, index) => {
                         const month = pageDate.set({ month: index + 1 });
                         const selected = value === `${month.startOf("month").toISODate()}/${month.endOf("month").toISODate()}`;
                         return <button key={index} type="button" aria-pressed={selected}
-                            className={`rounded-lg px-2 py-3 capitalize hover:bg-gray-700 hover:text-blue-300 ${selected ? "bg-gray-700 text-blue-300" : "text-gray-400"}`}
+                            className={`min-w-0 flex-[1_1_4.5rem] rounded-lg px-2 py-3 capitalize hover:bg-gray-700 hover:text-blue-300 ${selected ? "bg-gray-700 text-blue-300" : "text-gray-400"}`}
                             onClick={() => {
                                 onChange(`${month.startOf("month").toISODate()}/${month.endOf("month").toISODate()}`);
                                 setPageDate(month);
