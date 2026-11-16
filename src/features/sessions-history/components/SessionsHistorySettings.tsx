@@ -8,7 +8,9 @@ import sessionHistoryService from "src/features/sessions-history/services/sessio
 import { ConfirmDestructiveActionModal } from "src/shared/components/ConfirmDestructiveActionModal";
 import { Modal, showModal } from "src/shared/components/Modal";
 import SelectFileField from "src/shared/components/SelectFileField";
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+import { DateTime } from "luxon";
+import { getLastBackup, subscribeToBackups } from "../services/historyBackupStorage";
 
 interface Props {
     sessions: Array<Session>;
@@ -18,6 +20,7 @@ interface Props {
 export default function SessionsHistorySettings({ sessions, onClose }: Props) {
     const [importedFiles, setImportedFiles] = useState<File[]>([]);
     const [copySaved, setCopySaved] = useState(false);
+    const lastBackup = useSyncExternalStore(subscribeToBackups, getLastBackup);
 
     const handleExport = () => {
         const { fileName } = sessionHistoryService.exportHistoryWithFileDownload(sessions);
@@ -88,12 +91,11 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                 onClose={() => setImportedFiles([])}
             >
 
-                <FormField title="1. Copia de seguridad" show={sessions.length > 0}>
+                <FormField title="1. Copia de seguridad">
                     <p className="text-gray-500">
                         Por seguridad, es recomendable guardar el historial antes de continuar.
                     </p>
                     <Button
-                        disabled={sessions.length === 0}
                         onClick={handleExport}
                         icon={copySaved
                             ? <CheckIcon className="size-5" />
@@ -105,7 +107,7 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                     </Button>
                 </FormField>
 
-                <FormField title={`${sessions.length > 0 ? "2. " : " "}Importar`}>
+                <FormField title="2. Importar">
                     <p className="text-gray-500">
                         Selecciona el archivo de historial que deseas importar.
                     </p>
@@ -138,7 +140,7 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
 
             {/* Export/Import history */}
             <FormField title="Transferir">
-                <div className="w-full flex flex-row gap-2">
+                <div className="flex min-w-0 flex-wrap items-center w-full gap-2">
                     <Button
                         className="flex-1"
                         onClick={() => showModal("import-history-modal", true)}
@@ -150,12 +152,15 @@ export default function SessionsHistorySettings({ sessions, onClose }: Props) {
                     <Button
                         className="flex-1"
                         onClick={handleExport}
-                        disabled={sessions.length === 0}
                         icon={<DocDownIcon className="size-5" />}
                     >
                         Guardar
                     </Button>
                 </div>
+
+                {lastBackup && <p className="text-xs text-gray-500">
+                    Último guardado el {DateTime.fromISO(lastBackup).toFormat("dd/MM/yyyy HH:mm")}
+                </p>}
             </FormField>
 
             {/* Delete history */}

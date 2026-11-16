@@ -15,7 +15,9 @@ interface Props {
 function resizeToContent(textarea: HTMLTextAreaElement) {
     textarea.style.height = "0px";
 
-    const maxHeight = 20 * Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const ownerDocument = textarea.ownerDocument;
+    const fontSize = ownerDocument.defaultView?.getComputedStyle(ownerDocument.documentElement).fontSize ?? "16px";
+    const maxHeight = 20 * Number.parseFloat(fontSize);
     const height = Math.min(textarea.scrollHeight, maxHeight);
 
     textarea.style.height = `${height}px`;
@@ -42,6 +44,7 @@ export default function Note({ note, onChange, disabled, placeholder, className 
             )}
             placeholder={placeholder}
             value={note.content}
+            readOnly={!onChange || disabled}
             onInput={e => resizeToContent(e.currentTarget)}
             onChange={e => {
                 if (onChange)

@@ -6,6 +6,7 @@ function getNewDefaultState(): AppSettings {
     return {
         soundsEnabled: true,
         detectProjectFromActivityTitle: true,
+        automaticMonthlyBackup: false,
     };
 }
 

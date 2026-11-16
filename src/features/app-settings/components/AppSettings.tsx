@@ -33,6 +33,15 @@ export default function AppSettings() {
                 />
             </FormField>
 
+            <FormField title="Backup mensual automático">
+                <ToggleTabs
+                    falseLabel="Desactivado"
+                    trueLabel="Activado"
+                    value={appSettings.automaticMonthlyBackup}
+                    onSelected={value => setAppSettings({ ...appSettings, automaticMonthlyBackup: value })}
+                />
+            </FormField>
+
             {showDevTools && (
                 <>
                     <ContainerTopbar title="Dev Tools" />

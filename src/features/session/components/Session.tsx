@@ -134,11 +134,11 @@ export default function Session({
 
     return (
         <Container
-            className={clsx({ "border-red-400": hasRunningTracks })}
+            className={clsx("max-sm:min-h-[26rem]", { "border-red-400": hasRunningTracks })}
         >
 
             {/* Settings panel */}
-            <ContainerOverlay show={showSettings} >
+            <ContainerOverlay show={canEdit && showSettings} >
                 <SessionSettings
                     session={session}
                     onSessionChange={onSessionChange}
@@ -167,8 +167,8 @@ export default function Session({
                     onSessionChange={onSessionChange}
                 />}
 
-                icon={<SettingsIcon />}
-                onIconClick={() => setShowSettings(true)}
+                icon={canEdit ? <SettingsIcon /> : undefined}
+                onIconClick={canEdit ? () => setShowSettings(true) : undefined}
             />
 
 

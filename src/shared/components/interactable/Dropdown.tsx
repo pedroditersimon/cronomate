@@ -1,8 +1,8 @@
-import { ReactNode, useState } from "react";
+import { ReactNode, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Button from "./Button";
 import { ClassValue } from "clsx";
 import clsx from "clsx";
-import useClickOut from "src/shared/hooks/useClickOut";
 
 function getLabel(option: string, labels: undefined | Record<string, string>) {
     return labels?.[option] ?? option;
@@ -17,52 +17,77 @@ interface Props {
     className?: ClassValue;
 }
 
-
 export default function Dropdown({ value, options, labels, onOption, icon, className }: Props) {
     const [isOpen, setIsOpen] = useState(false);
-    const { handleMouseEnter, handleMouseLeave } = useClickOut(() => setIsOpen(false));
+    const triggerRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null);
 
-    const selectOption = (option: string) => {
-        setIsOpen(false);
-        onOption(option);
-    }
+    useLayoutEffect(() => {
+        if (!isOpen) return;
+        const trigger = triggerRef.current;
+        const menu = menuRef.current;
+        const doc = trigger?.ownerDocument;
+        const view = doc?.defaultView;
+        if (!trigger || !menu || !doc || !view) return;
 
-    const selectedOptLabel = getLabel(value, labels);
+        const position = () => {
+            const rect = trigger.getBoundingClientRect();
+            const below = view.innerHeight - rect.bottom - 12;
+            const above = rect.top - 12;
+            const openAbove = below < Math.min(menu.scrollHeight, 200) && above > below;
+            menu.style.maxHeight = `${Math.max(0, openAbove ? above : below)}px`;
+            menu.style.minWidth = `${Math.min(rect.width, view.innerWidth - 16)}px`;
+            menu.style.left = `${Math.max(8, Math.min(rect.left + rect.width / 2 - menu.offsetWidth / 2, view.innerWidth - menu.offsetWidth - 8))}px`;
+            menu.style.top = `${openAbove ? rect.top - menu.offsetHeight - 4 : rect.bottom + 4}px`;
+        };
+        const dismiss = (event: PointerEvent) => {
+            const target = event.target as Node;
+            if (!trigger.contains(target) && !menu.contains(target)) setIsOpen(false);
+        };
+        const escape = (event: KeyboardEvent) => {
+            if (event.key === "Escape") {
+                setIsOpen(false);
+                trigger.querySelector("button")?.focus();
+            }
+        };
+        position();
+        doc.addEventListener("pointerdown", dismiss);
+        doc.addEventListener("keydown", escape);
+        doc.addEventListener("scroll", position, true);
+        view.addEventListener("resize", position);
+        return () => {
+            doc.removeEventListener("pointerdown", dismiss);
+            doc.removeEventListener("keydown", escape);
+            doc.removeEventListener("scroll", position, true);
+            view.removeEventListener("resize", position);
+        };
+    }, [isOpen, options, labels]);
 
     return (
-        <div
-            className="relative group"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-        >
+        <div ref={triggerRef} className="relative group shrink-0">
             <Button
-                className={clsx(className,
-                    { "bg-neutral-800 text-blue-300 shadow border-gray-700": isOpen }
-                )}
+                className={clsx(className, { "bg-neutral-800 text-blue-300 shadow border-gray-700": isOpen })}
                 icon={icon}
-                children={selectedOptLabel}
                 onClick={() => {
-                    setIsOpen(prev => !prev);
-
-                    // cancelar seleccion de texto
-                    window.getSelection()?.removeAllRanges();
+                    setIsOpen(previous => !previous);
+                    triggerRef.current?.ownerDocument.defaultView?.getSelection()?.removeAllRanges();
                 }}
-            />
-
-            <div className={clsx("w-min-full absolute left-1/2 z-[99999] transform -translate-x-1/2 bg-bg-primary mt-1 border-2 border-gray-700 rounded-lg shadow-lg",
-                { "invisible": !isOpen }
-            )}>
-                {options.map(option => {
-                    const label = getLabel(option, labels);
-
-                    return (<Button
-                        className="w-full text-left text-sm border-none rounded-none select-none"
-                        children={label}
-                        onClick={() => selectOption(option)}
-                    />)
-                })}
-            </div>
-
+            >{getLabel(value, labels)}</Button>
+            {isOpen && triggerRef.current && createPortal(
+                <div ref={menuRef}
+                    className="fixed z-[99999] m-0 max-w-[calc(100vw-1rem)] overflow-y-auto rounded-lg border-2 border-gray-700 bg-bg-primary shadow-lg"
+                >
+                    {options.map(option => <Button
+                        key={option}
+                        className="w-full text-left text-sm border-none rounded-none select-none whitespace-nowrap"
+                        onClick={() => {
+                            setIsOpen(false);
+                            onOption(option);
+                        }}
+                    >{getLabel(option, labels)}</Button>)}
+                </div>,
+                triggerRef.current.ownerDocument.body,
+            )}
         </div>
     );
 }

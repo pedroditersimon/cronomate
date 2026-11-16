@@ -63,7 +63,7 @@ export default function ActivityTrack({
 
     return (
         <div
-            className={clsx("flex flex-row gap-1 transition-opacity duration-300 group",
+            className={clsx("flex min-w-0 flex-wrap items-center gap-1 transition-opacity duration-300 group",
                 { "strike-div": track.status === TimeTrackStatus.ARCHIVED }
             )}
         >

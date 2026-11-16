@@ -1,4 +1,4 @@
-import clsx from "clsx";
+import { cn } from "src/shared/utils/cn";
 import { ClassValue } from "clsx";
 import { PropsWithChildren } from "react";
 import { QuestionIcon } from "src/assets/Icons";
@@ -27,12 +27,12 @@ interface Props extends PropsWithChildren {
 export default function FormField({ title, show = true, className, hint, tooltip, children }: Props) {
 
     return (
-        <div className={clsx("flex flex-col gap-1 mb-1 w-full", className,
+        <div className={cn("flex min-w-0 flex-none flex-col gap-1 mb-1 w-full", className,
             { "hidden": !show }
         )}>
 
             {/* Title */}
-            <div className="flex items-center justify-between">
+            <div className="flex min-w-0 flex-wrap items-center justify-between gap-1">
                 <p className="flex-1 text-gray-400 font-semibold">{title}</p>
 
                 {tooltip && (tooltip.showOn ?? "icon") === "icon" && (
@@ -56,7 +56,7 @@ export default function FormField({ title, show = true, className, hint, tooltip
             {/* Hint text */}
             {
                 hint?.show && (
-                    <p className={clsx("text-gray-500 text-sm", hint.className)}>
+                    <p className={cn("text-gray-500 text-sm", hint.className)}>
                         {hint.text}
                     </p>
                 )

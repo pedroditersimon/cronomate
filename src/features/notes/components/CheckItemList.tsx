@@ -1,6 +1,6 @@
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
 import CheckItem from "src/features/notes/components/CheckItem";
-import { ClipboardEvent, PointerEvent, useRef, useState } from "react";
+import { ClipboardEvent, PointerEvent, useLayoutEffect, useRef, useState } from "react";
 import { generateId } from "src/shared/utils/generateId";
 import { DateTime } from "luxon";
 
@@ -14,6 +14,7 @@ interface Props {
     onDelete?: (id: string) => void;
     onUpdate?: (item: CheckItemType) => void;
     onReorder?: (itemId: string, targetItemId?: string) => void;
+    onCreateActivity?: (item: CheckItemType) => void;
 }
 
 const defaultGhostItem: CheckItemType = {
@@ -32,10 +33,24 @@ export default function CheckItemList({
     onAdd,
     onDelete,
     onUpdate,
-    onReorder
+    onReorder,
+    onCreateActivity
 }: Props) {
 
     const [ghost, setGhost] = useState<CheckItemType>(defaultGhostItem);
+    const ghostRef = useRef(ghost);
+    const timerFocusId = useRef<string>();
+    const timerRef = useRef<HTMLInputElement>(null);
+    useLayoutEffect(() => {
+        if (!timerFocusId.current || !timerRef.current) return;
+        timerRef.current.focus();
+        timerRef.current.select();
+        timerFocusId.current = undefined;
+    }, [checklist]);
+    const updateGhost = (item: CheckItemType) => {
+        ghostRef.current = item;
+        setGhost(item);
+    };
     const draggedItemIdRef = useRef<string | null>(null);
     const lastReorderTargetRef = useRef<string | null>(null);
 
@@ -55,18 +70,21 @@ export default function CheckItemList({
         .map(item => item.replace(/^\s*[-*]\s+/, "").trim())
         .filter(Boolean);
 
-    const addItems = (contents: string[]) => {
+    const addItems = (contents: string[], source = ghostRef.current, focusTimer = false) => {
         if (contents.length === 0) return;
 
-        const newItems = contents.map(content => ({ ...ghost, id: generateId(), content }));
+        const newItems = contents.map(content => ({ ...source, id: generateId(), content }));
+        timerFocusId.current = focusTimer ? newItems[0].id : undefined;
+        updateGhost(defaultGhostItem);
         if (onAdd) onAdd(newItems);
         if (onChange) onChange([...checklist, ...newItems]);
-
-        // reset
-        setGhost(defaultGhostItem);
     }
 
-    const addGhostToList = () => addItems(splitContents(ghost.content));
+    const addGhostToList = () => addItems(splitContents(ghostRef.current.content));
+    const commitGhost = (item: CheckItemType, focusTimer = false) => {
+        if (!ghostRef.current.content.trim()) return;
+        addItems(splitContents(item.content), item, focusTimer);
+    };
 
     const handleGhostPaste = (event: ClipboardEvent<HTMLInputElement>) => {
         const content = event.clipboardData.getData("text");
@@ -131,24 +149,29 @@ export default function CheckItemList({
                         >
                             <CheckItem
                                 item={item}
+                                timerRef={item.id === timerFocusId.current ? timerRef : undefined}
                                 currentTime={currentTime}
                                 alertWindowMs={alertWindowMs}
-                                onChange={updateItem}
-                                onDelete={() => deleteItem(item.id)}
+                                onChange={onUpdate || onChange ? updateItem : undefined}
+                                onDelete={onDelete || onChange ? () => deleteItem(item.id) : undefined}
+                                canToggle={!!(onUpdate || onChange)}
+                                canDelete={!!(onDelete || onChange)}
+                                onCreateActivity={onCreateActivity ? () => onCreateActivity(item) : undefined}
                             />
                         </div>
                     ))
                 }
-                <CheckItem
+                {(onAdd || onChange) && <CheckItem
                     key={ghost.id}
                     item={ghost}
-                    onChange={setGhost}
+                    onChange={updateGhost}
+                    onCommit={commitGhost}
                     onEnterPressed={addGhostToList}
                     onPaste={handleGhostPaste}
                     canDelete={false}
                     canToggle={false}
                     placeholder="Agregar item..."
-                />
+                />}
             </div>
         </div>
     );

@@ -25,6 +25,9 @@ interface Props {
     setIncludePausesActivity: (value: boolean) => void;
     hasUntrackedActivity: boolean;
     hasPausesActivity: boolean;
+    splitDaily: boolean;
+    setSplitDaily: (value: boolean) => void;
+    hasDailyActivity: boolean;
     tableCopiedEffect: boolean;
     columns: SessionTableColumn[];
     setColumns: Dispatch<SetStateAction<SessionTableColumn[]>>;
@@ -43,6 +46,7 @@ export default function SessionTableModalPresenter({
     includePausesActivity, setIncludePausesActivity,
     hasUntrackedActivity,
     hasPausesActivity,
+    splitDaily, setSplitDaily, hasDailyActivity,
     tableCopiedEffect,
     columns, setColumns,
     customValues, setCustomValues
@@ -114,8 +118,9 @@ export default function SessionTableModalPresenter({
             id={id}
             title="Tabla de actividades"
             closeOnClickOut
+            containerClassName="w-[64rem]"
         >
-            <div className="size-full mr-4 overflow-y-auto overflow-x-hidden _text-sm">
+            <div className="min-h-0 min-w-0 flex-1 overflow-auto _text-sm">
                 <table className="w-full">
                     <thead>
                         <tr className="text-neutral-300 text-left border-b border-neutral-800">
@@ -233,7 +238,7 @@ export default function SessionTableModalPresenter({
             </div>
 
             {/* bottom */}
-            <div className="flex flex-row gap-3 items-center">
+            <div className="flex min-w-0 flex-wrap items-center gap-3">
 
                 {hasUntrackedActivity &&
                     <Checkbox
@@ -250,6 +255,12 @@ export default function SessionTableModalPresenter({
                         onChange={setIncludePausesActivity}
                     >
                         Incluir Pausas
+                    </Checkbox>
+                }
+
+                {hasDailyActivity &&
+                    <Checkbox value={splitDaily} onChange={setSplitDaily}>
+                        Dividir daily
                     </Checkbox>
                 }
 

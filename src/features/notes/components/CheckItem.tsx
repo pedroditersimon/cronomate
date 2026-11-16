@@ -1,18 +1,21 @@
 import { CheckItem as CheckItemType } from "src/features/notes/types/CheckItem";
-import { CheckCircle, CircleIcon, CrossIcon } from "src/assets/Icons";
+import { CheckCircle, CircleIcon, CrossIcon, PlayIcon } from "src/assets/Icons";
 import { cn } from "src/shared/utils/cn";
 import InputField from "src/shared/components/forms/InputField";
 import { TimeInputHHmm } from "src/shared/components/interactable/TimeInputHHmm";
 import { getCheckItemDueStatus } from "src/features/notes/utils/checkItemDueStatus";
-import { ClipboardEvent } from "react";
+import { ClipboardEvent, Ref } from "react";
 
 interface Props {
     item: CheckItemType;
+    timerRef?: Ref<HTMLInputElement>;
     currentTime?: number;
     alertWindowMs?: number;
     onChange?: (newItem: CheckItemType) => void;
     onEnterPressed?: () => void;
+    onCommit?: (item: CheckItemType, focusTimer?: boolean) => void;
     onDelete?: () => void;
+    onCreateActivity?: () => void;
     onPaste?: (event: ClipboardEvent<HTMLInputElement>) => void;
 
     placeholder?: string;
@@ -21,7 +24,7 @@ interface Props {
     canDelete?: boolean;
 }
 
-export default function CheckItem({ item, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onDelete, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
+export default function CheckItem({ item, timerRef, currentTime = Date.now(), alertWindowMs, onChange, onEnterPressed, onCommit, onDelete, onCreateActivity, onPaste, placeholder, hideToggle, canToggle = true, canDelete = true }: Props) {
     const dueStatus = getCheckItemDueStatus(item, currentTime, alertWindowMs);
     const dueColorClass = dueStatus === "overdue" ? "text-red-400" : "text-yellow-400";
 
@@ -81,10 +84,12 @@ export default function CheckItem({ item, currentTime = Date.now(), alertWindowM
 
             <InputField
                 value={item.content}
+                readOnly={!onChange}
                 onEnterPressed={onEnterPressed}
+                onBlur={() => onCommit?.(item)}
                 onPaste={onPaste}
                 onChange={handleInputChange}
-                className={cn("border-transparent",
+                className={cn("min-w-0 flex-1 border-transparent",
                     {
                         "opacity-50 text-green-300": item.isDone,
                         [dueColorClass]: !item.isDone && !!dueStatus,
@@ -92,11 +97,34 @@ export default function CheckItem({ item, currentTime = Date.now(), alertWindowM
                 placeholder={placeholder}
             />
 
+            <div className="contents" onPointerDownCapture={event => {
+                if (!onCommit || !item.content.trim()) return;
+                // Commit before the browser can focus the ghost timer.
+                event.preventDefault();
+                event.stopPropagation();
+                onCommit(item, true);
+            }}>
             <TimeInputHHmm
                 timeHHmm={item.due || null}
+                readOnly={!onChange}
+                ref={timerRef}
                 onChange={newTime => handleDueChange(newTime)}
-                className={dueStatus ? dueColorClass : undefined}
+                onBlur={newTime => onCommit?.({ ...item, due: newTime || undefined })}
+                className={cn("w-12 shrink-0", dueStatus && dueColorClass)}
             />
+            </div>
+
+            {onCreateActivity && <button
+                type="button"
+                title="Iniciar actividad"
+                aria-label={`Iniciar actividad: ${item.content}`}
+                disabled={!item.content.trim()}
+                className="invisible shrink-0 rounded p-1 text-gray-400 group-hover:visible hover:text-green-300 disabled:opacity-30"
+                onPointerDown={event => event.stopPropagation()}
+                onClick={onCreateActivity}
+            >
+                <PlayIcon className="size-5" />
+            </button>}
 
             <div
                 className={cn("flex flex-row items-center cursor-pointer",
