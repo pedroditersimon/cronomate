@@ -37,6 +37,7 @@ export default function SessionTableModal({ id, session }: Props) {
     // Pauses Activity
     const [includePausesActivity, setIncludePausesActivity] = useState(false);
     const hasPausesActivity = session.activities.some(activityService.isPauseActivity);
+    const [splitDaily, setSplitDaily] = useState(false);
 
     const rows = useSessionTableRows({
         session,
@@ -44,7 +45,9 @@ export default function SessionTableModal({ id, session }: Props) {
         untrackedActivity,
         includePausesActivity,
         elapsedTimeUnit,
+        splitDaily,
     });
+    const hasDailyActivity = rows.some(row => row.title.toLowerCase().includes("daily"));
 
     const handleCopyTable = () => {
         setTableCopiedEffect(true);
@@ -79,6 +82,9 @@ export default function SessionTableModal({ id, session }: Props) {
             includePausesActivity={includePausesActivity}
             setIncludePausesActivity={setIncludePausesActivity}
             hasPausesActivity={hasPausesActivity}
+            splitDaily={splitDaily}
+            setSplitDaily={setSplitDaily}
+            hasDailyActivity={hasDailyActivity}
         />
     );
 }

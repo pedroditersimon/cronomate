@@ -25,6 +25,9 @@ interface Props {
     setIncludePausesActivity: (value: boolean) => void;
     hasUntrackedActivity: boolean;
     hasPausesActivity: boolean;
+    splitDaily: boolean;
+    setSplitDaily: (value: boolean) => void;
+    hasDailyActivity: boolean;
     tableCopiedEffect: boolean;
     columns: SessionTableColumn[];
     setColumns: Dispatch<SetStateAction<SessionTableColumn[]>>;
@@ -43,6 +46,7 @@ export default function SessionTableModalPresenter({
     includePausesActivity, setIncludePausesActivity,
     hasUntrackedActivity,
     hasPausesActivity,
+    splitDaily, setSplitDaily, hasDailyActivity,
     tableCopiedEffect,
     columns, setColumns,
     customValues, setCustomValues
@@ -251,6 +255,12 @@ export default function SessionTableModalPresenter({
                         onChange={setIncludePausesActivity}
                     >
                         Incluir Pausas
+                    </Checkbox>
+                }
+
+                {hasDailyActivity &&
+                    <Checkbox value={splitDaily} onChange={setSplitDaily}>
+                        Dividir daily
                     </Checkbox>
                 }
 

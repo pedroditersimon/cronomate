@@ -15,6 +15,7 @@ interface Props {
     includeUnrecordedActivity: boolean;
     untrackedActivity: Activity;
     includePausesActivity: boolean;
+    splitDaily: boolean;
 }
 
 export function useSessionTableRows({
@@ -23,6 +24,7 @@ export function useSessionTableRows({
     includeUnrecordedActivity,
     untrackedActivity,
     includePausesActivity,
+    splitDaily,
 }: Props): SessionTableModalRow[] {
     const hasUntrackedActivity = untrackedActivity.tracks.length > 0;
 
@@ -48,7 +50,7 @@ export function useSessionTableRows({
             })
         };
 
-        return _session.activities.map(activity => {
+        return _session.activities.flatMap(activity => {
             const elapsedTimeMs = timeTrackService.getAllElapsedMs(activity.tracks);
             const elapsedTime = elapsedTimeUnit === TimeUnit.HOUR
                 ? elapsedTimeMs / 3.6e+6
@@ -58,7 +60,7 @@ export function useSessionTableRows({
 
 
             // this is a row
-            return {
+            const row = {
                 key: activity.id,
                 date: DateTime.fromJSDate(toDate(session.createdTimestamp)).toFormat("dd/MM/yyyy"),
                 project: activity.project || "",
@@ -66,7 +68,12 @@ export function useSessionTableRows({
                 description: activity.description || "",
                 elapsedTime: elapsedTimeTxt,
             };
+            if (splitDaily && activity.title.toLowerCase().includes("daily")) {
+                const half = { ...row, elapsedTime: elapsedTimeTxt / 2 };
+                return [half, { ...half, key: `${activity.id}:daily-half` }];
+            }
+            return [row];
         });
 
-    }, [includePausesActivity, includeUnrecordedActivity, hasUntrackedActivity, session, untrackedActivity, elapsedTimeUnit]);
+    }, [includePausesActivity, includeUnrecordedActivity, hasUntrackedActivity, session, untrackedActivity, elapsedTimeUnit, splitDaily]);
 }
