@@ -29,7 +29,7 @@ export function SessionsHistoryPlinth({ sessions, onSessionSelected }: Props) {
     const [sortBy, setSortBy] = useState(SortBy.CREATED_AT);
     const [range, setRange] = useState(() => {
         const now = DateTime.now();
-        return toRangeValue(now.startOf('month'), now);
+        return toRangeValue(now.startOf('month'), now.endOf('month'));
     });
     const rangeDates = useMemo(() => parseRange(range), [range]);
     const sessionsInRange = useMemo(() => {
